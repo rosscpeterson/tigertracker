@@ -44,8 +44,7 @@
             this.cancelButton = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.releaseComboBox = new System.Windows.Forms.ComboBox();
-            this.releaseTable = new System.Windows.Forms.DataGridView();
-            ((System.ComponentModel.ISupportInitialize)(this.releaseTable)).BeginInit();
+            this.releasesListBox = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // label1
@@ -196,21 +195,20 @@
             this.releaseComboBox.Size = new System.Drawing.Size(202, 21);
             this.releaseComboBox.TabIndex = 15;
             // 
-            // releaseTable
+            // releasesListBox
             // 
-            this.releaseTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.releaseTable.Location = new System.Drawing.Point(27, 148);
-            this.releaseTable.Name = "releaseTable";
-            this.releaseTable.Size = new System.Drawing.Size(290, 114);
-            this.releaseTable.TabIndex = 16;
-            this.releaseTable.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.releaseTable_CellContentClick);
+            this.releasesListBox.FormattingEnabled = true;
+            this.releasesListBox.Location = new System.Drawing.Point(27, 149);
+            this.releasesListBox.Name = "releasesListBox";
+            this.releasesListBox.Size = new System.Drawing.Size(275, 95);
+            this.releasesListBox.TabIndex = 16;
             // 
             // NewReq
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(625, 488);
-            this.Controls.Add(this.releaseTable);
+            this.Controls.Add(this.releasesListBox);
             this.Controls.Add(this.releaseComboBox);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.cancelButton);
@@ -230,7 +228,6 @@
             this.Name = "NewReq";
             this.Text = "NewReq";
             this.Load += new System.EventHandler(this.NewReq_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.releaseTable)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -254,6 +251,6 @@
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox releaseComboBox;
-        private System.Windows.Forms.DataGridView releaseTable;
+        private System.Windows.Forms.ListBox releasesListBox;
     }
 }

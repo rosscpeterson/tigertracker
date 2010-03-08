@@ -48,48 +48,6 @@ namespace CSCE431Project1
             
         }
 
-        private int getNewID(string tableName, string idField) {
-            //returns a valid ID to be used for the table
-
-            MySqlDataAdapter adap = new MySqlDataAdapter();
-            MySqlCommand command = conSQL.CreateCommand();
-
-            //formulate the text
-            string newCommandText = "SELECT " + idField + " FROM " + tableName;
-            command.CommandText = newCommandText;
-            adap.SelectCommand = command;
-
-            DataSet ids_ds = new DataSet();
-            adap.Fill(ids_ds, "ids");
-
-            DataTable ids_dt = ids_ds.Tables["ids"];
-
-            //check to see if we are dealing with an empty table or not
-            if (ids_dt.Rows.Count == 0)
-            {
-                return 0;
-            }
-
-            //cycle through the table to find a new id that can be used
-            bool notFound = true;
-            for (int i = 0; i < ids_dt.Rows.Count + 1; i++)
-            {
-                for (int j = 0; j < ids_dt.Rows.Count; j++)
-                {
-                    if (ids_dt.Rows[0][j].Equals(i))
-                    {
-                        notFound = false;
-                        break;
-                    }
-                }
-                if (notFound)
-                    return i;
-                else
-                    notFound = true;
-            }
-            return -1;
-        }
-
         private void NewReq_Load(object sender, EventArgs e)
         {
 
