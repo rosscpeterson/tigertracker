@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<registration_data version="1.0">
+  <environment>
+    <hostname>SY04</hostname>
+    <hostId/>
+    <osName>Windows_NT</osName>
+    <osVersion>Unk SP(0) (601.7600)</osVersion>
+    <osArchitecture>AMD64</osArchitecture>
+    <systemModel>Virtual Machine</systemModel>
+    <systemManufacturer>Microsoft Corporation</systemManufacturer>
+    <cpuManufacturer>GenuineIntel</cpuManufacturer>
+    <serialNumber>7754-0312-1828-3020-5563-9069-57</serialNumber>
+  </environment>
+  <registry version="1.0" urn="urn:st:uuid:fb158c73-295f-4ded-a4cb-c9d9bf80138a">
+    <service_tag>
+      <instance_urn>urn:st:uuid:3bbc1cc7-4119-406f-82d2-20723eac937e</instance_urn>
+      <product_name>MySQL Connector Net 6.2.2</product_name>
+      <product_version>6.2.2</product_version>
+      <product_urn>MSQZN-600-ZZZZ</product_urn>
+      <product_parent_urn>N/A</product_parent_urn>
+      <product_parent>N/A</product_parent>
+      <product_defined_inst_id>license=gpl</product_defined_inst_id>
+      <product_vendor>MySQL AB</product_vendor>
+      <platform_arch>Windows</platform_arch>
+      <timestamp>2010-02-15 14:56:26 UTC</timestamp>
+      <container/>
+      <source>mysql-connector-net-6.2.2.zip.msi</source>
+      <installer_uid>-1</installer_uid>
+    </service_tag>
+  </registry>
+</registration_data>
