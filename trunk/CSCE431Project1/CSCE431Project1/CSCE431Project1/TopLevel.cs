@@ -27,7 +27,7 @@ namespace CSCE431Project1
         protected int currentUserID;
         protected int currentProjectID;
         protected int currentUserPermLvl;
-        protected DataTable proj_dt, ver_dt;
+        protected DataTable proj_dt, ver_dt, rel_dt;
 
         public Form1(string conString, string currUser)
         {
@@ -44,6 +44,8 @@ namespace CSCE431Project1
             setUserInfo();  //sets the user perm level and user id
 
             setProjComboBox();  //sets the project combo box and updates the req and bug table
+
+            setReleaseComboBox();   //sets the release combo box
         }
 
         ~Form1()
@@ -97,6 +99,24 @@ namespace CSCE431Project1
             this.toolProjCombo.ComboBox.DisplayMember = "name"; //sets the column to display
         }
 
+        private void setReleaseComboBox()
+        {
+            adap = new MySqlDataAdapter();
+            MySqlCommand command = conSQL.CreateCommand();
+            //DataSet rel_ds = new DataSet();
+            rel_dt = new DataTable();
+
+            //establish the requirements grid
+            command.CommandText = "SELECT version, projectid FROM versions WHERE projectid = " + currentProjectID + ";";
+
+            adap.SelectCommand = command;
+            adap.Fill(rel_dt);
+
+            this.releaseComboBox.DataSource = rel_dt.DefaultView;
+            this.releaseComboBox.DisplayMember = "version";
+
+        }
+
         private void updateReqTable(int pid)
         {
             adap = new MySqlDataAdapter();
@@ -107,10 +127,10 @@ namespace CSCE431Project1
                                     " userprojectlinks.userid = userrequirementlinks.userid AND userprojectlinks.projectid = " + pid.ToString() + ";";
 
             adap.SelectCommand = command;
-            DataSet req_dt = new DataSet();
-            adap.Fill(req_dt, "req_data");
+            DataSet req_ds = new DataSet();
+            adap.Fill(req_ds, "req_data");
 
-            reqTable.DataSource = req_dt;
+            reqTable.DataSource = req_ds;
             reqTable.DataMember = "req_data";
         }
 
@@ -146,6 +166,12 @@ namespace CSCE431Project1
             newReqWindow.Show();
         }
 
+        private void newBugButton_Click(object sender, EventArgs e)
+        {
+            NewBug newBugWindow = new NewBug(connectionString, currentUser, currentUserID, currentProjectID);
+            newBugWindow.Show();
+        }
+
         private void statusComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -174,6 +200,16 @@ namespace CSCE431Project1
             Users usersWindow = new Users(conSQL, currentUserID);
             usersWindow.Show();
         }
+
+        private void addVerButton_Click(object sender, EventArgs e)
+        {
+            this.releaseListBox.Items.Add(rel_dt.Rows[releaseListBox.SelectedIndex][0].ToString());    //Sets up the watchers combo box
+            //remove users from the table so they are no longer shown in the combo box
+            rel_dt.Rows[releaseListBox.SelectedIndex].Delete();
+            rel_dt.AcceptChanges();
+        }
+
+       
 
 
         

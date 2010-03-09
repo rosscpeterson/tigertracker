@@ -36,7 +36,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.statusComboBox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.releaseText = new System.Windows.Forms.TextBox();
             this.timeClosedText = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -73,6 +72,9 @@
             this.addVerButton = new System.Windows.Forms.Button();
             this.toolUsersButton = new System.Windows.Forms.ToolStripButton();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.releaseComboBox = new System.Windows.Forms.ComboBox();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.bugTable)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.TabView.SuspendLayout();
@@ -138,13 +140,6 @@
             this.label4.Size = new System.Drawing.Size(46, 13);
             this.label4.TabIndex = 7;
             this.label4.Text = "Release";
-            // 
-            // releaseText
-            // 
-            this.releaseText.Location = new System.Drawing.Point(72, 106);
-            this.releaseText.Name = "releaseText";
-            this.releaseText.Size = new System.Drawing.Size(148, 20);
-            this.releaseText.TabIndex = 8;
             // 
             // timeClosedText
             // 
@@ -272,6 +267,7 @@
             this.newBugButton.TabIndex = 25;
             this.newBugButton.Text = "New Bug";
             this.newBugButton.UseVisualStyleBackColor = true;
+            this.newBugButton.Click += new System.EventHandler(this.newBugButton_Click);
             // 
             // newReqButton
             // 
@@ -288,7 +284,9 @@
             this.toolStrip1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.projects_toolstrip,
+            this.toolStripSeparator1,
             this.toolUsersButton,
+            this.toolStripSeparator2,
             this.toolProjCombo});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -449,12 +447,13 @@
             this.addVerButton.Font = new System.Drawing.Font("Modern No. 20", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.addVerButton.ForeColor = System.Drawing.Color.Green;
             this.addVerButton.Image = global::CSCE431Project1.Properties.Resources._128px_Nuvola_Green_Plus1;
-            this.addVerButton.Location = new System.Drawing.Point(226, 103);
+            this.addVerButton.Location = new System.Drawing.Point(233, 103);
             this.addVerButton.Name = "addVerButton";
             this.addVerButton.Size = new System.Drawing.Size(27, 27);
             this.addVerButton.TabIndex = 41;
             this.addVerButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.addVerButton.UseVisualStyleBackColor = true;
+            this.addVerButton.Click += new System.EventHandler(this.addVerButton_Click);
             // 
             // toolUsersButton
             // 
@@ -466,11 +465,31 @@
             this.toolUsersButton.Text = "Users";
             this.toolUsersButton.Click += new System.EventHandler(this.toolUsersButton_Click);
             // 
+            // releaseComboBox
+            // 
+            this.releaseComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.releaseComboBox.FormattingEnabled = true;
+            this.releaseComboBox.Location = new System.Drawing.Point(72, 105);
+            this.releaseComboBox.Name = "releaseComboBox";
+            this.releaseComboBox.Size = new System.Drawing.Size(155, 21);
+            this.releaseComboBox.TabIndex = 42;
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(992, 787);
+            this.Controls.Add(this.releaseComboBox);
             this.Controls.Add(this.addVerButton);
             this.Controls.Add(this.releaseListBox);
             this.Controls.Add(this.priorityComboBox);
@@ -499,14 +518,15 @@
             this.Controls.Add(this.label6);
             this.Controls.Add(this.timeOpenText);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.releaseText);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.statusComboBox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.titleText);
             this.Controls.Add(this.label1);
+            this.Location = new System.Drawing.Point(50, 50);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bugTable)).EndInit();
@@ -530,7 +550,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox statusComboBox;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox releaseText;
         private System.Windows.Forms.TextBox timeClosedText;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
@@ -567,6 +586,9 @@
         private System.Windows.Forms.ListBox releaseListBox;
         private System.Windows.Forms.Button addVerButton;
         private System.Windows.Forms.ToolStripButton toolUsersButton;
+        private System.Windows.Forms.ComboBox releaseComboBox;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
 
