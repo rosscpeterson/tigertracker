@@ -124,7 +124,7 @@ namespace CSCE431Project1
             this.comboBoxTitle.SelectedIndex = 2;
             if (m_In.Rows.Count > 0)
             {
-                switch ((Int32)m_In.Rows[0][2])
+                switch (Convert.ToInt32(m_In.Rows[0][2].ToString()))
                 {
                     case 0: this.labelTitle.Text = "Project Manager";   break;
                     case 1: this.labelTitle.Text = "Project Developer"; break;
@@ -285,7 +285,7 @@ namespace CSCE431Project1
             Int32 index = this.comboBoxRemoveUser.SelectedIndex;
             if (index >= 0)
             {
-                switch ((Int32)m_In.Rows[index][2])
+                switch (Convert.ToInt32(m_In.Rows[index][2].ToString()))
                 {
                     case 0: this.labelTitle.Text = "Project Manager";   break;
                     case 1: this.labelTitle.Text = "Project Developer"; break;

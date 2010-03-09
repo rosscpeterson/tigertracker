@@ -302,7 +302,7 @@
             this.projects_toolstrip.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.projects_toolstrip.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.projects_toolstrip.Name = "projects_toolstrip";
-            this.projects_toolstrip.Size = new System.Drawing.Size(50, 22);
+            this.projects_toolstrip.Size = new System.Drawing.Size(53, 22);
             this.projects_toolstrip.Text = "Projects";
             this.projects_toolstrip.Click += new System.EventHandler(this.projects_toolstrip_Click);
             // 
@@ -448,11 +448,11 @@
             // 
             this.addVerButton.Font = new System.Drawing.Font("Modern No. 20", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.addVerButton.ForeColor = System.Drawing.Color.Green;
-            this.addVerButton.Location = new System.Drawing.Point(226, 106);
+            this.addVerButton.Image = global::CSCE431Project1.Properties.Resources._128px_Nuvola_Green_Plus1;
+            this.addVerButton.Location = new System.Drawing.Point(226, 103);
             this.addVerButton.Name = "addVerButton";
-            this.addVerButton.Size = new System.Drawing.Size(25, 20);
+            this.addVerButton.Size = new System.Drawing.Size(27, 27);
             this.addVerButton.TabIndex = 41;
-            this.addVerButton.Text = "+";
             this.addVerButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.addVerButton.UseVisualStyleBackColor = true;
             // 
@@ -462,7 +462,7 @@
             this.toolUsersButton.Image = ((System.Drawing.Image)(resources.GetObject("toolUsersButton.Image")));
             this.toolUsersButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolUsersButton.Name = "toolUsersButton";
-            this.toolUsersButton.Size = new System.Drawing.Size(38, 22);
+            this.toolUsersButton.Size = new System.Drawing.Size(39, 22);
             this.toolUsersButton.Text = "Users";
             this.toolUsersButton.Click += new System.EventHandler(this.toolUsersButton_Click);
             // 
