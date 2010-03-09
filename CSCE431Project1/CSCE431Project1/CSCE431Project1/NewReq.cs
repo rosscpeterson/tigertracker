@@ -38,34 +38,43 @@ namespace CSCE431Project1
             command = conSQL.CreateCommand();
 
             InitializeComponent();
+            try
+            {
+                //establish the releases combo box
+                command.CommandText = "SELECT versions.version FROM versions WHERE projectid = '" + currentProjectID + "';";
 
-            //establish the releases combo box
-            command.CommandText = "SELECT versions.version FROM versions WHERE projectid = '" + currentProjectID + "';";
+                adap.SelectCommand = command;
+                release_dt = new DataTable();   //declared above
+                adap.Fill(release_dt);
 
-            adap.SelectCommand = command;
-            release_dt = new DataTable();   //declared above
-            adap.Fill(release_dt);
+                //populate the users_dt data table
+                command.CommandText = "SELECT users.username, userprojectlinks.userid, userprojectlinks.projectid FROM users, userprojectlinks"
+                                        + " WHERE users.uid = userprojectlinks.userid AND userprojectlinks.projectid = '" + currentProjectID + "';";
+
+                adap.SelectCommand = command;
+                owner_ds = new DataSet();   //declared above
+                adap.Fill(owner_ds, "New Table");
+                owner_dt = owner_ds.Tables[0];
+
+                watcher_ds = new DataSet();
+                adap.Fill(watcher_ds, "New Table");
+                watcher_dt = watcher_ds.Tables[0];
+
+            }
+
+            catch (Exception err)
+            {
+                MessageBox.Show(err.ToString(), "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
 
             this.releaseComboBox.DataSource = release_dt.DefaultView;
             this.releaseComboBox.DisplayMember = "username";
 
-            //populate the users_dt data table
-            command.CommandText = "SELECT users.username, userprojectlinks.userid, userprojectlinks.projectid FROM users, userprojectlinks" 
-                                    + " WHERE users.uid = userprojectlinks.userid AND userprojectlinks.projectid = '" + currentProjectID + "';";
-
-            adap.SelectCommand = command;
-            owner_ds = new DataSet();   //declared above
-            adap.Fill(owner_ds, "New Table");
-            owner_dt = owner_ds.Tables[0];
             this.ownersComboBox.DataSource = owner_dt.DefaultView;
             this.ownersComboBox.DisplayMember = "username";
 
-            watcher_ds = new DataSet();
-            adap.Fill(watcher_ds, "New Table");
-            watcher_dt = watcher_ds.Tables[0];
             this.watchersComboBox.DataSource = watcher_dt.DefaultView;
             this.watchersComboBox.DisplayMember = "username";
-            
         }
 
         private void NewReq_Load(object sender, EventArgs e)
@@ -88,8 +97,8 @@ namespace CSCE431Project1
             MySqlCommand command = conSQL.CreateCommand();
 
             string newTitle_st = newTitleText.Text;
-            string newReqDesc_st = newReqDescText.Text;
-            string newPriority_st = newReqPriorityCombo.Text;
+            string newReqDesc_st = newDescText.Text;
+            string newPriority_st = newPriorityCombo.Text;
             string newTimeOpen_st = DateTime.Now.ToString("dd/MM/yyyy HH:MM:ss"); //or DateTime.Now.ToString("dd/MM/yyyy h:MM tt")
             string newStatus_st = "Open"; //Open, In Progress, Closed
 
@@ -130,8 +139,7 @@ namespace CSCE431Project1
             watcher_dt.Rows[watchersComboBox.SelectedIndex].Delete();
             watcher_dt.AcceptChanges();
         }
-
-        
+      
 
         
     }
