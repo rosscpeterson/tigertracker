@@ -19,6 +19,10 @@ namespace CSCE431Project1
         int currentUserID;
         int currentProjectID;
         MySqlConnection conSQL;
+        MySqlDataAdapter adap;
+        MySqlCommand command;
+        DataTable release_dt, owner_dt, watcher_dt;
+        DataSet owner_ds, watcher_ds;
 
         public NewReq(string connString, string currUser, int currUserID, int currProjID)
         {
@@ -30,21 +34,37 @@ namespace CSCE431Project1
             // Start connection.
             conSQL = new MySqlConnection(connectionString);
             conSQL.Open();
+            adap = new MySqlDataAdapter();
+            command = conSQL.CreateCommand();
 
             InitializeComponent();
 
-            MySqlDataAdapter adap = new MySqlDataAdapter();
-            MySqlCommand command = conSQL.CreateCommand();
-
-            //establish the releases grid view
+            //establish the releases combo box
             command.CommandText = "SELECT versions.version FROM versions WHERE projectid = '" + currentProjectID + "';";
 
             adap.SelectCommand = command;
-            DataSet release_dataset = new DataSet();
-            adap.Fill(release_dataset, "release_data");
+            release_dt = new DataTable();   //declared above
+            adap.Fill(release_dt);
 
-            releaseTable.DataSource = release_dataset;
-            releaseTable.DataMember = "release_data";
+            this.releaseComboBox.DataSource = release_dt.DefaultView;
+            this.releaseComboBox.DisplayMember = "username";
+
+            //populate the users_dt data table
+            command.CommandText = "SELECT users.username, userprojectlinks.userid, userprojectlinks.projectid FROM users, userprojectlinks" 
+                                    + " WHERE users.uid = userprojectlinks.userid AND userprojectlinks.projectid = '" + currentProjectID + "';";
+
+            adap.SelectCommand = command;
+            owner_ds = new DataSet();   //declared above
+            adap.Fill(owner_ds, "New Table");
+            owner_dt = owner_ds.Tables[0];
+            this.ownersComboBox.DataSource = owner_dt.DefaultView;
+            this.ownersComboBox.DisplayMember = "username";
+
+            watcher_ds = new DataSet();
+            adap.Fill(watcher_ds, "New Table");
+            watcher_dt = watcher_ds.Tables[0];
+            this.watchersComboBox.DataSource = watcher_dt.DefaultView;
+            this.watchersComboBox.DisplayMember = "username";
             
         }
 
@@ -83,17 +103,32 @@ namespace CSCE431Project1
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
+            conSQL.Dispose();
+            adap.Dispose();
             this.Close();
         }
 
-        private void ownersCheckedList_SelectedIndexChanged(object sender, EventArgs e)
+        private void releaseComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            string newVersion = release_dt.Rows[this.releaseComboBox.SelectedIndex][0].ToString(); //THIS WILL CHANGE TO STRING? ****
+            releasesListBox.Items.Add(newVersion.ToString() + ", ");
 
         }
 
-        private void releaseTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void ownersAddButton_Click(object sender, EventArgs e)
         {
+            this.ownersListBox.Items.Add(owner_dt.Rows[ownersComboBox.SelectedIndex][0].ToString());    //Sets up the owners combo box
+            //remove users from the table so they are no longer shown in the combo box
+            owner_dt.Rows[ownersComboBox.SelectedIndex].Delete();
+            owner_dt.AcceptChanges();
+        }
 
+        private void watchersAddButton_Click(object sender, EventArgs e)
+        {
+            this.watchersListBox.Items.Add(owner_dt.Rows[watchersComboBox.SelectedIndex][0].ToString());    //Sets up the watchers combo box
+            //remove users from the table so they are no longer shown in the combo box
+            watcher_dt.Rows[watchersComboBox.SelectedIndex].Delete();
+            watcher_dt.AcceptChanges();
         }
 
         

@@ -31,11 +31,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.newTitleText = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.newReleaseText = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.ownersCheckedList = new System.Windows.Forms.CheckedListBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.watchersCheckedList = new System.Windows.Forms.CheckedListBox();
             this.label5 = new System.Windows.Forms.Label();
             this.newReqPriorityCombo = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -45,12 +42,18 @@
             this.label7 = new System.Windows.Forms.Label();
             this.releaseComboBox = new System.Windows.Forms.ComboBox();
             this.releasesListBox = new System.Windows.Forms.ListBox();
+            this.ownersComboBox = new System.Windows.Forms.ComboBox();
+            this.watchersComboBox = new System.Windows.Forms.ComboBox();
+            this.ownersListBox = new System.Windows.Forms.ListBox();
+            this.watchersListBox = new System.Windows.Forms.ListBox();
+            this.watchersAddButton = new System.Windows.Forms.Button();
+            this.ownersAddButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 81);
+            this.label1.Location = new System.Drawing.Point(24, 69);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(27, 13);
             this.label1.TabIndex = 0;
@@ -58,7 +61,7 @@
             // 
             // newTitleText
             // 
-            this.newTitleText.Location = new System.Drawing.Point(100, 78);
+            this.newTitleText.Location = new System.Drawing.Point(100, 66);
             this.newTitleText.Name = "newTitleText";
             this.newTitleText.Size = new System.Drawing.Size(202, 20);
             this.newTitleText.TabIndex = 1;
@@ -66,60 +69,34 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(24, 118);
+            this.label2.Location = new System.Drawing.Point(24, 106);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(57, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "Release(s)";
             // 
-            // newReleaseText
-            // 
-            this.newReleaseText.Location = new System.Drawing.Point(12, 396);
-            this.newReleaseText.Multiline = true;
-            this.newReleaseText.Name = "newReleaseText";
-            this.newReleaseText.Size = new System.Drawing.Size(202, 80);
-            this.newReleaseText.TabIndex = 3;
-            this.newReleaseText.Text = "Press enter after each release, for all releases type ALL";
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(320, 81);
+            this.label3.Location = new System.Drawing.Point(320, 69);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(43, 13);
             this.label3.TabIndex = 4;
             this.label3.Text = "Owners";
             // 
-            // ownersCheckedList
-            // 
-            this.ownersCheckedList.FormattingEnabled = true;
-            this.ownersCheckedList.Location = new System.Drawing.Point(396, 81);
-            this.ownersCheckedList.Name = "ownersCheckedList";
-            this.ownersCheckedList.Size = new System.Drawing.Size(202, 94);
-            this.ownersCheckedList.TabIndex = 5;
-            this.ownersCheckedList.SelectedIndexChanged += new System.EventHandler(this.ownersCheckedList_SelectedIndexChanged);
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(323, 195);
+            this.label4.Location = new System.Drawing.Point(323, 183);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 13);
             this.label4.TabIndex = 6;
             this.label4.Text = "Watchers";
             // 
-            // watchersCheckedList
-            // 
-            this.watchersCheckedList.FormattingEnabled = true;
-            this.watchersCheckedList.Location = new System.Drawing.Point(396, 195);
-            this.watchersCheckedList.Name = "watchersCheckedList";
-            this.watchersCheckedList.Size = new System.Drawing.Size(202, 94);
-            this.watchersCheckedList.TabIndex = 7;
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(24, 271);
+            this.label5.Location = new System.Drawing.Point(24, 259);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(38, 13);
             this.label5.TabIndex = 8;
@@ -135,7 +112,7 @@
             "4",
             "5",
             "6"});
-            this.newReqPriorityCombo.Location = new System.Drawing.Point(100, 268);
+            this.newReqPriorityCombo.Location = new System.Drawing.Point(100, 256);
             this.newReqPriorityCombo.Name = "newReqPriorityCombo";
             this.newReqPriorityCombo.Size = new System.Drawing.Size(121, 21);
             this.newReqPriorityCombo.TabIndex = 9;
@@ -190,24 +167,85 @@
             // releaseComboBox
             // 
             this.releaseComboBox.FormattingEnabled = true;
-            this.releaseComboBox.Location = new System.Drawing.Point(100, 115);
+            this.releaseComboBox.Location = new System.Drawing.Point(100, 103);
             this.releaseComboBox.Name = "releaseComboBox";
             this.releaseComboBox.Size = new System.Drawing.Size(202, 21);
             this.releaseComboBox.TabIndex = 15;
+            this.releaseComboBox.SelectedIndexChanged += new System.EventHandler(this.releaseComboBox_SelectedIndexChanged);
             // 
             // releasesListBox
             // 
             this.releasesListBox.FormattingEnabled = true;
-            this.releasesListBox.Location = new System.Drawing.Point(27, 149);
+            this.releasesListBox.Location = new System.Drawing.Point(27, 137);
             this.releasesListBox.Name = "releasesListBox";
             this.releasesListBox.Size = new System.Drawing.Size(275, 95);
             this.releasesListBox.TabIndex = 16;
+            // 
+            // ownersComboBox
+            // 
+            this.ownersComboBox.FormattingEnabled = true;
+            this.ownersComboBox.Location = new System.Drawing.Point(382, 65);
+            this.ownersComboBox.Name = "ownersComboBox";
+            this.ownersComboBox.Size = new System.Drawing.Size(183, 21);
+            this.ownersComboBox.TabIndex = 17;
+            // 
+            // watchersComboBox
+            // 
+            this.watchersComboBox.FormattingEnabled = true;
+            this.watchersComboBox.Location = new System.Drawing.Point(382, 180);
+            this.watchersComboBox.Name = "watchersComboBox";
+            this.watchersComboBox.Size = new System.Drawing.Size(183, 21);
+            this.watchersComboBox.TabIndex = 18;
+            // 
+            // ownersListBox
+            // 
+            this.ownersListBox.FormattingEnabled = true;
+            this.ownersListBox.Location = new System.Drawing.Point(323, 93);
+            this.ownersListBox.Name = "ownersListBox";
+            this.ownersListBox.Size = new System.Drawing.Size(275, 82);
+            this.ownersListBox.TabIndex = 19;
+            // 
+            // watchersListBox
+            // 
+            this.watchersListBox.FormattingEnabled = true;
+            this.watchersListBox.Location = new System.Drawing.Point(323, 207);
+            this.watchersListBox.Name = "watchersListBox";
+            this.watchersListBox.Size = new System.Drawing.Size(275, 82);
+            this.watchersListBox.TabIndex = 20;
+            // 
+            // watchersAddButton
+            // 
+            this.watchersAddButton.BackgroundImage = global::CSCE431Project1.Properties.Resources._128px_Nuvola_Green_Plus;
+            this.watchersAddButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.watchersAddButton.Image = global::CSCE431Project1.Properties.Resources._128px_Nuvola_Green_Plus1;
+            this.watchersAddButton.Location = new System.Drawing.Point(571, 176);
+            this.watchersAddButton.Name = "watchersAddButton";
+            this.watchersAddButton.Size = new System.Drawing.Size(27, 27);
+            this.watchersAddButton.TabIndex = 21;
+            this.watchersAddButton.UseVisualStyleBackColor = true;
+            this.watchersAddButton.Click += new System.EventHandler(this.watchersAddButton_Click);
+            // 
+            // ownersAddButton
+            // 
+            this.ownersAddButton.Image = global::CSCE431Project1.Properties.Resources._128px_Nuvola_Green_Plus1;
+            this.ownersAddButton.Location = new System.Drawing.Point(571, 62);
+            this.ownersAddButton.Name = "ownersAddButton";
+            this.ownersAddButton.Size = new System.Drawing.Size(27, 27);
+            this.ownersAddButton.TabIndex = 22;
+            this.ownersAddButton.UseVisualStyleBackColor = true;
+            this.ownersAddButton.Click += new System.EventHandler(this.ownersAddButton_Click);
             // 
             // NewReq
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(625, 488);
+            this.Controls.Add(this.ownersAddButton);
+            this.Controls.Add(this.watchersAddButton);
+            this.Controls.Add(this.watchersListBox);
+            this.Controls.Add(this.ownersListBox);
+            this.Controls.Add(this.watchersComboBox);
+            this.Controls.Add(this.ownersComboBox);
             this.Controls.Add(this.releasesListBox);
             this.Controls.Add(this.releaseComboBox);
             this.Controls.Add(this.label7);
@@ -217,11 +255,8 @@
             this.Controls.Add(this.label6);
             this.Controls.Add(this.newReqPriorityCombo);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.watchersCheckedList);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.ownersCheckedList);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.newReleaseText);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.newTitleText);
             this.Controls.Add(this.label1);
@@ -238,11 +273,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox newTitleText;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox newReleaseText;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.CheckedListBox ownersCheckedList;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.CheckedListBox watchersCheckedList;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox newReqPriorityCombo;
         private System.Windows.Forms.Label label6;
@@ -252,5 +284,11 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox releaseComboBox;
         private System.Windows.Forms.ListBox releasesListBox;
+        private System.Windows.Forms.ComboBox ownersComboBox;
+        private System.Windows.Forms.ComboBox watchersComboBox;
+        private System.Windows.Forms.ListBox ownersListBox;
+        private System.Windows.Forms.ListBox watchersListBox;
+        private System.Windows.Forms.Button watchersAddButton;
+        private System.Windows.Forms.Button ownersAddButton;
     }
 }
