@@ -14,28 +14,25 @@ namespace CSCE431Project1
 {
     public partial class NewReq : Form
     {
-        string connectionString;
-        string currentUser;
-        int currentUserID;
-        int currentProjectID;
+        String currentUser;
+        Int32 currentUserID;
+        Int32 currentProjectID;
         MySqlConnection conSQL;
         MySqlDataAdapter adap;
         MySqlCommand command;
         DataTable release_dt, owner_dt, watcher_dt;
         DataSet owner_ds, watcher_ds;
 
-        public NewReq(string connString, string currUser, int currUserID, int currProjID)
+        public NewReq(MySqlConnection _conSQL, String currUser, Int32 currUserID, Int32 currProjID)
         {
-            connectionString = connString;
             currentUser = currUser;
-            int currentUserID = currUserID;
-            int currentProjectID = currProjID;
-
-            // Start connection.
-            conSQL = new MySqlConnection(connectionString);
-            conSQL.Open();
-            adap = new MySqlDataAdapter();
-            command = conSQL.CreateCommand();
+            currentUserID = currUserID;
+            currentProjectID = currProjID;
+    
+            conSQL  = _conSQL;
+            command = new MySqlCommand("", conSQL);
+            adap    = new MySqlDataAdapter();
+            adap.SelectCommand = command;
 
             InitializeComponent();
             try
@@ -76,6 +73,12 @@ namespace CSCE431Project1
             this.watchersComboBox.DataSource = watcher_dt.DefaultView;
             this.watchersComboBox.DisplayMember = "username";
         }
+        ~NewReq()
+        {
+            // Dispose.
+            adap.Dispose();
+            command.Dispose();
+        }
 
         private void NewReq_Load(object sender, EventArgs e)
         {
@@ -93,9 +96,6 @@ namespace CSCE431Project1
             
             //Console.WriteLine(validID);
 
-            MySqlDataAdapter adap = new MySqlDataAdapter();
-            MySqlCommand command = conSQL.CreateCommand();
-
             string newTitle_st = newTitleText.Text;
             string newReqDesc_st = newDescText.Text;
             string newPriority_st = newPriorityCombo.Text;
@@ -112,8 +112,6 @@ namespace CSCE431Project1
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            conSQL.Dispose();
-            adap.Dispose();
             this.Close();
         }
 
@@ -138,9 +136,6 @@ namespace CSCE431Project1
             //remove users from the table so they are no longer shown in the combo box
             watcher_dt.Rows[watchersComboBox.SelectedIndex].Delete();
             watcher_dt.AcceptChanges();
-        }
-      
-
-        
+        } 
     }
 }

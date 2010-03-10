@@ -259,6 +259,7 @@
             this.Controls.Add(this.label1);
             this.Name = "NewBug";
             this.Text = "NewBug";
+            this.Load += new System.EventHandler(this.NewBug_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

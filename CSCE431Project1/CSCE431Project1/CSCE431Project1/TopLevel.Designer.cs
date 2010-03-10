@@ -53,6 +53,7 @@
             this.newBugButton = new System.Windows.Forms.Button();
             this.newReqButton = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonLogOff = new System.Windows.Forms.ToolStripButton();
             this.projects_toolstrip = new System.Windows.Forms.ToolStripButton();
             this.toolUsersButton = new System.Windows.Forms.ToolStripButton();
             this.toolProjCombo = new System.Windows.Forms.ToolStripComboBox();
@@ -72,7 +73,9 @@
             this.releaseListBox = new System.Windows.Forms.ListBox();
             this.addVerButton = new System.Windows.Forms.Button();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.toolStripButtonLogOff = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.bugTable)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.TabView.SuspendLayout();
@@ -281,16 +284,29 @@
             // 
             this.toolStrip1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolProjCombo,
+            this.toolStripSeparator3,
             this.toolStripButtonLogOff,
+            this.toolStripSeparator1,
             this.projects_toolstrip,
-            this.toolUsersButton,
-            this.toolProjCombo});
+            this.toolStripSeparator2,
+            this.toolUsersButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(992, 25);
             this.toolStrip1.TabIndex = 27;
             this.toolStrip1.Text = "toolStrip1";
             this.toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip1_ItemClicked);
+            // 
+            // toolStripButtonLogOff
+            // 
+            this.toolStripButtonLogOff.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonLogOff.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLogOff.Image")));
+            this.toolStripButtonLogOff.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLogOff.Name = "toolStripButtonLogOff";
+            this.toolStripButtonLogOff.Size = new System.Drawing.Size(51, 22);
+            this.toolStripButtonLogOff.Text = "Log Off";
+            this.toolStripButtonLogOff.Click += new System.EventHandler(this.toolStripButtonLogOff_Click);
             // 
             // projects_toolstrip
             // 
@@ -461,15 +477,21 @@
             this.addVerButton.UseVisualStyleBackColor = true;
             this.addVerButton.Click += new System.EventHandler(this.addVerButton_Click);
             // 
-            // toolStripButtonLogOff
+            // toolStripSeparator1
             // 
-            this.toolStripButtonLogOff.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonLogOff.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLogOff.Image")));
-            this.toolStripButtonLogOff.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonLogOff.Name = "toolStripButtonLogOff";
-            this.toolStripButtonLogOff.Size = new System.Drawing.Size(51, 22);
-            this.toolStripButtonLogOff.Text = "Log Off";
-            this.toolStripButtonLogOff.Click += new System.EventHandler(this.toolStripButtonLogOff_Click);
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -572,6 +594,9 @@
         private System.Windows.Forms.Button addVerButton;
         private System.Windows.Forms.ToolStripButton toolUsersButton;
         private System.Windows.Forms.ToolStripButton toolStripButtonLogOff;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
 
