@@ -42,7 +42,7 @@
             this.passwordText.Name = "passwordText";
             this.passwordText.PasswordChar = '*';
             this.passwordText.Size = new System.Drawing.Size(146, 20);
-            this.passwordText.TabIndex = 0;
+            this.passwordText.TabIndex = 1;
             // 
             // PasswordLabel
             // 
@@ -67,7 +67,7 @@
             this.buttonLogIn.Location = new System.Drawing.Point(107, 138);
             this.buttonLogIn.Name = "buttonLogIn";
             this.buttonLogIn.Size = new System.Drawing.Size(75, 23);
-            this.buttonLogIn.TabIndex = 8;
+            this.buttonLogIn.TabIndex = 2;
             this.buttonLogIn.Text = "Log In";
             this.buttonLogIn.UseVisualStyleBackColor = true;
             this.buttonLogIn.Click += new System.EventHandler(this.buttonLogIn_Click);
@@ -77,7 +77,7 @@
             this.user.Location = new System.Drawing.Point(107, 58);
             this.user.Name = "user";
             this.user.Size = new System.Drawing.Size(146, 20);
-            this.user.TabIndex = 9;
+            this.user.TabIndex = 0;
             // 
             // label2
             // 
@@ -88,7 +88,6 @@
             this.label2.Size = new System.Drawing.Size(116, 19);
             this.label2.TabIndex = 10;
             this.label2.Text = "Tiger Tracker";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // LogIn
             // 

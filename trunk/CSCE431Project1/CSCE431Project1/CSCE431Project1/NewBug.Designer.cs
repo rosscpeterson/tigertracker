@@ -52,22 +52,21 @@
             // 
             // ownersAddButton
             // 
-            this.ownersAddButton.Image = global::CSCE431Project1.Properties.Resources._128px_Nuvola_Green_Plus1;
             this.ownersAddButton.Location = new System.Drawing.Point(569, 62);
             this.ownersAddButton.Name = "ownersAddButton";
             this.ownersAddButton.Size = new System.Drawing.Size(27, 27);
             this.ownersAddButton.TabIndex = 42;
+            this.ownersAddButton.Text = "Add";
             this.ownersAddButton.UseVisualStyleBackColor = true;
             // 
             // watchersAddButton
             // 
-            this.watchersAddButton.BackgroundImage = global::CSCE431Project1.Properties.Resources._128px_Nuvola_Green_Plus;
             this.watchersAddButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.watchersAddButton.Image = global::CSCE431Project1.Properties.Resources._128px_Nuvola_Green_Plus1;
             this.watchersAddButton.Location = new System.Drawing.Point(569, 176);
             this.watchersAddButton.Name = "watchersAddButton";
             this.watchersAddButton.Size = new System.Drawing.Size(27, 27);
             this.watchersAddButton.TabIndex = 41;
+            this.watchersAddButton.Text = "Watch";
             this.watchersAddButton.UseVisualStyleBackColor = true;
             // 
             // watchersListBox
