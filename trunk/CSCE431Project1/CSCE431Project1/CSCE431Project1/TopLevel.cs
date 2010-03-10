@@ -16,11 +16,10 @@ namespace CSCE431Project1
     //make a changeText function or something in the window thats reading.
     public partial class Form1 : Form
     {
-        // Log In Information.
-        //Int32 uid, pid, lvl;
         // Connection variable.
         protected MySqlConnection conSQL;
-        protected MySqlDataAdapter adap;
+        protected MySqlCommand cmdSQL;
+        protected MySqlDataAdapter adpSQL;
         // Bug Data Table.
         protected string connectionString;
         protected string currentUser;
@@ -29,62 +28,67 @@ namespace CSCE431Project1
         protected int currentUserPermLvl;
         protected DataTable proj_dt, ver_dt, rel_dt;
 
-        public Form1(string conString, string currUser)
+        public Form1()
         {
-            connectionString = conString;
-            currentUser = currUser;
-
-            // Start connection.
-            //conSQL = new MySqlConnection("server=localhost;User Id=root;password=Itsme1987;database=Chimerror");
-            conSQL = new MySqlConnection(connectionString);
-            conSQL.Open();
             InitializeComponent();
-            //this.bugTable.DataSource = bugTable;
-
-            setUserInfo();  //sets the user perm level and user id
+            // Default value for variables.
+            conSQL = new MySqlConnection();
+            cmdSQL = new MySqlCommand("", conSQL);
+            adpSQL = new MySqlDataAdapter();
+            adpSQL.SelectCommand = cmdSQL;
+            // Log user, get id and level.
+            LogUser();
 
             setProjComboBox();  //sets the project combo box and updates the req and bug table
 
             setReleaseComboBox();   //sets the release combo box
         }
-
+        // Always close the connection.
         ~Form1()
         {
+            adpSQL.Dispose();
+            cmdSQL.Dispose();
             conSQL.Close();
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {}
+
+        private void LogUser()
         {
-            
+            // Hide this window.
+            this.Hide();
+            // Get log in.
+            LogIn logIn = new LogIn(conSQL);
+            // Show as dialog box.
+            logIn.ShowDialog();
+            // Stop if not a valid user.
+            if ((currentUserID = logIn.UserID()) < 0)
+            {
+                System.Environment.Exit(0);
+            }
+            // Get rest of information.
+            this.currentUser = logIn.UserName();
+            this.currentUserPermLvl = logIn.UserLevel();
+            // Log in sucessful.
+            logIn.Close();
+            this.Show();
         }
 
-        private void setUserInfo()
+        private void UpdateUserInfo()
         {
-            adap = new MySqlDataAdapter();
-            MySqlCommand command = conSQL.CreateCommand();
-
-            //set current user and permission lvl
-            DataTable user_dt = new DataTable();
-            command.CommandText = "SELECT users.uid, users.permissionLevel FROM users WHERE username = '" + currentUser + "';";
-            adap.SelectCommand = command;
-            adap.Fill(user_dt);
-
-            currentUserID = (Int32)user_dt.Rows[0][0]; //set user id
-            int currentUserPermLvl = Convert.ToInt32(user_dt.Rows[0][1]);    //set perm level for current user
+            cmdSQL.CommandText = "SELECT username, permissionLevel FROM users WHERE uid = " + currentUserID.ToString() + ";";
         }
 
         private void setProjComboBox()
         {
-            adap = new MySqlDataAdapter();
-            MySqlCommand command = conSQL.CreateCommand();
-
             //Set Curr Projects combo box
             proj_dt = new DataTable();
-            command.CommandText = "SELECT projects.pid, projects.name, userprojectlinks.permissionLevel FROM projects, userprojectlinks " +
+            cmdSQL.CommandText = "SELECT projects.pid, projects.name, userprojectlinks.permissionLevel FROM projects, userprojectlinks " +
                                     "WHERE projects.pid = userprojectlinks.projectid AND userprojectlinks.userid = " + currentUserID.ToString() + ";";
 
-            adap.SelectCommand = command;
-            adap.Fill(proj_dt);
+            adpSQL.SelectCommand = cmdSQL;
+            adpSQL.Fill(proj_dt);
 
             if (proj_dt.Rows.Count != 0)
             {
@@ -101,34 +105,25 @@ namespace CSCE431Project1
 
         private void setReleaseComboBox()
         {
-            adap = new MySqlDataAdapter();
-            MySqlCommand command = conSQL.CreateCommand();
             //DataSet rel_ds = new DataSet();
             rel_dt = new DataTable();
 
             //establish the requirements grid
-            command.CommandText = "SELECT version, projectid FROM versions WHERE projectid = " + currentProjectID + ";";
+            cmdSQL.CommandText = "SELECT version, projectid FROM versions WHERE projectid = " + currentProjectID + ";";
+            adpSQL.Fill(rel_dt);
 
-            adap.SelectCommand = command;
-            adap.Fill(rel_dt);
-
-            this.releaseComboBox.DataSource = rel_dt.DefaultView;
-            this.releaseComboBox.DisplayMember = "version";
-
+            //this.releaseComboBox.DataSource = rel_dt.DefaultView;
+            //this.releaseComboBox.DisplayMember = "version";
         }
 
         private void updateReqTable(int pid)
         {
-            adap = new MySqlDataAdapter();
-            MySqlCommand command = conSQL.CreateCommand();
-
             //establish the requirements grid
-            command.CommandText = "SELECT * FROM requirements, userprojectlinks, userrequirementlinks WHERE userrequirementlinks.userid = " + pid.ToString() + " AND requirements.rid = userrequirementlinks.requirementid AND" +
+            cmdSQL.CommandText = "SELECT * FROM requirements, userprojectlinks, userrequirementlinks WHERE userrequirementlinks.userid = " + pid.ToString() + " AND requirements.rid = userrequirementlinks.requirementid AND" +
                                     " userprojectlinks.userid = userrequirementlinks.userid AND userprojectlinks.projectid = " + pid.ToString() + ";";
 
-            adap.SelectCommand = command;
             DataSet req_ds = new DataSet();
-            adap.Fill(req_ds, "req_data");
+            adpSQL.Fill(req_ds, "req_data");
 
             reqTable.DataSource = req_ds;
             reqTable.DataMember = "req_data";
@@ -136,17 +131,12 @@ namespace CSCE431Project1
 
         private void updateBugTable(int pid)
         {
-            adap = new MySqlDataAdapter();
-            MySqlCommand command = conSQL.CreateCommand();
-
             //establish the bugs grid view
             //MAKE THIS EVERY BUG IN PROJECT***********************
-            command.CommandText = "SELECT * FROM bugs, userprojectlinks, userbuglinks WHERE userbuglinks.userid = " + pid.ToString() + " AND bugs.bid = userbuglinks.bugid AND" +
+            cmdSQL.CommandText = "SELECT * FROM bugs, userprojectlinks, userbuglinks WHERE userbuglinks.userid = " + pid.ToString() + " AND bugs.bid = userbuglinks.bugid AND" +
                                     " userprojectlinks.userid = userbuglinks.userid AND userprojectlinks.projectid = " + pid.ToString() + ";";
-
-            adap.SelectCommand = command;
             DataSet bugs_dataset = new DataSet();
-            adap.Fill(bugs_dataset, "bugs_data");
+            adpSQL.Fill(bugs_dataset, "bugs_data");
 
             bugTable.DataSource = bugs_dataset;
             bugTable.DataMember = "bugs_data";
@@ -191,7 +181,7 @@ namespace CSCE431Project1
 
         private void projects_toolstrip_Click(object sender, EventArgs e)
         {
-            Projects projWindow = new Projects(conSQL, currentUserID);
+            Projects projWindow = new Projects(conSQL, currentUserID, currentUserPermLvl);
             projWindow.Show();
         }
 
@@ -201,6 +191,12 @@ namespace CSCE431Project1
             usersWindow.Show();
         }
 
+        private void toolStripButtonLogOff_Click(object sender, EventArgs e)
+        {
+            conSQL.Close();
+            LogUser();
+        }
+
         private void addVerButton_Click(object sender, EventArgs e)
         {
             this.releaseListBox.Items.Add(rel_dt.Rows[releaseListBox.SelectedIndex][0].ToString());    //Sets up the watchers combo box
@@ -208,15 +204,6 @@ namespace CSCE431Project1
             rel_dt.Rows[releaseListBox.SelectedIndex].Delete();
             rel_dt.AcceptChanges();
         }
-
-       
-
-
-        
-       
-
-       
-
     }
 }
 
