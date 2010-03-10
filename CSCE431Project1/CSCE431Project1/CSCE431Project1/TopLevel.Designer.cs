@@ -54,6 +54,7 @@
             this.newReqButton = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.projects_toolstrip = new System.Windows.Forms.ToolStripButton();
+            this.toolUsersButton = new System.Windows.Forms.ToolStripButton();
             this.toolProjCombo = new System.Windows.Forms.ToolStripComboBox();
             this.idText = new System.Windows.Forms.TextBox();
             this.originatorText = new System.Windows.Forms.TextBox();
@@ -70,11 +71,8 @@
             this.priorityComboBox = new System.Windows.Forms.ComboBox();
             this.releaseListBox = new System.Windows.Forms.ListBox();
             this.addVerButton = new System.Windows.Forms.Button();
-            this.toolUsersButton = new System.Windows.Forms.ToolStripButton();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.releaseComboBox = new System.Windows.Forms.ComboBox();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonLogOff = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.bugTable)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.TabView.SuspendLayout();
@@ -283,10 +281,9 @@
             // 
             this.toolStrip1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonLogOff,
             this.projects_toolstrip,
-            this.toolStripSeparator1,
             this.toolUsersButton,
-            this.toolStripSeparator2,
             this.toolProjCombo});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -303,6 +300,16 @@
             this.projects_toolstrip.Size = new System.Drawing.Size(53, 22);
             this.projects_toolstrip.Text = "Projects";
             this.projects_toolstrip.Click += new System.EventHandler(this.projects_toolstrip_Click);
+            // 
+            // toolUsersButton
+            // 
+            this.toolUsersButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolUsersButton.Image = ((System.Drawing.Image)(resources.GetObject("toolUsersButton.Image")));
+            this.toolUsersButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolUsersButton.Name = "toolUsersButton";
+            this.toolUsersButton.Size = new System.Drawing.Size(39, 22);
+            this.toolUsersButton.Text = "Users";
+            this.toolUsersButton.Click += new System.EventHandler(this.toolUsersButton_Click);
             // 
             // toolProjCombo
             // 
@@ -446,7 +453,6 @@
             // 
             this.addVerButton.Font = new System.Drawing.Font("Modern No. 20", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.addVerButton.ForeColor = System.Drawing.Color.Green;
-            this.addVerButton.Image = global::CSCE431Project1.Properties.Resources._128px_Nuvola_Green_Plus1;
             this.addVerButton.Location = new System.Drawing.Point(233, 103);
             this.addVerButton.Name = "addVerButton";
             this.addVerButton.Size = new System.Drawing.Size(27, 27);
@@ -455,41 +461,20 @@
             this.addVerButton.UseVisualStyleBackColor = true;
             this.addVerButton.Click += new System.EventHandler(this.addVerButton_Click);
             // 
-            // toolUsersButton
+            // toolStripButtonLogOff
             // 
-            this.toolUsersButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolUsersButton.Image = ((System.Drawing.Image)(resources.GetObject("toolUsersButton.Image")));
-            this.toolUsersButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolUsersButton.Name = "toolUsersButton";
-            this.toolUsersButton.Size = new System.Drawing.Size(39, 22);
-            this.toolUsersButton.Text = "Users";
-            this.toolUsersButton.Click += new System.EventHandler(this.toolUsersButton_Click);
-            // 
-            // releaseComboBox
-            // 
-            this.releaseComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.releaseComboBox.FormattingEnabled = true;
-            this.releaseComboBox.Location = new System.Drawing.Point(72, 105);
-            this.releaseComboBox.Name = "releaseComboBox";
-            this.releaseComboBox.Size = new System.Drawing.Size(155, 21);
-            this.releaseComboBox.TabIndex = 42;
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
+            this.toolStripButtonLogOff.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonLogOff.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLogOff.Image")));
+            this.toolStripButtonLogOff.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLogOff.Name = "toolStripButtonLogOff";
+            this.toolStripButtonLogOff.Size = new System.Drawing.Size(51, 22);
+            this.toolStripButtonLogOff.Text = "Log Off";
+            this.toolStripButtonLogOff.Click += new System.EventHandler(this.toolStripButtonLogOff_Click);
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(992, 787);
-            this.Controls.Add(this.releaseComboBox);
+            this.ClientSize = new System.Drawing.Size(992, 732);
             this.Controls.Add(this.addVerButton);
             this.Controls.Add(this.releaseListBox);
             this.Controls.Add(this.priorityComboBox);
@@ -586,9 +571,7 @@
         private System.Windows.Forms.ListBox releaseListBox;
         private System.Windows.Forms.Button addVerButton;
         private System.Windows.Forms.ToolStripButton toolUsersButton;
-        private System.Windows.Forms.ComboBox releaseComboBox;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton toolStripButtonLogOff;
     }
 }
 
