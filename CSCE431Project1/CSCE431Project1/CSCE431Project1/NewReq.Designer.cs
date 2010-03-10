@@ -218,9 +218,6 @@
             // 
             // watchersAddButton
             // 
-            this.watchersAddButton.BackgroundImage = global::CSCE431Project1.Properties.Resources._128px_Nuvola_Green_Plus;
-            this.watchersAddButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.watchersAddButton.Image = global::CSCE431Project1.Properties.Resources._128px_Nuvola_Green_Plus1;
             this.watchersAddButton.Location = new System.Drawing.Point(569, 176);
             this.watchersAddButton.Name = "watchersAddButton";
             this.watchersAddButton.Size = new System.Drawing.Size(27, 27);
@@ -230,7 +227,6 @@
             // 
             // ownersAddButton
             // 
-            this.ownersAddButton.Image = global::CSCE431Project1.Properties.Resources._128px_Nuvola_Green_Plus1;
             this.ownersAddButton.Location = new System.Drawing.Point(569, 62);
             this.ownersAddButton.Name = "ownersAddButton";
             this.ownersAddButton.Size = new System.Drawing.Size(27, 27);
