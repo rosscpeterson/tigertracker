@@ -94,7 +94,7 @@ namespace CSCE431Project1
         // Grey out certain components according to user level.
         private void UpdateUserDisplay()
         {
-            this.toolUsersButton.Visible = (this.currentUserPermLvl == 0);
+            this.toolUsersButton.Visible = this.toolStripSeparator2.Visible = (this.currentUserPermLvl == 0);
             this.labelUserName.ForeColor = (this.currentUserPermLvl == 0) ? Color.Red : Color.Black;
         }
 
@@ -168,13 +168,13 @@ namespace CSCE431Project1
 
         private void newReqButton_Click(object sender, EventArgs e)
         {
-            NewReq newReqWindow = new NewReq(connectionString, currentUser, currentUserID, currentProjectID);
+            NewReq newReqWindow = new NewReq(conSQL, currentUser, currentUserID, currentProjectID);
             newReqWindow.Show();
         }
 
         private void newBugButton_Click(object sender, EventArgs e)
         {
-            NewBug newBugWindow = new NewBug(connectionString, currentUser, currentUserID, currentProjectID);
+            NewBug newBugWindow = new NewBug(conSQL, currentUser, currentUserID, currentProjectID);
             newBugWindow.Show();
         }
 

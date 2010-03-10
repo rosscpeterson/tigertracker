@@ -103,17 +103,6 @@ namespace CSCE431Project1
             this.comboBoxAddUser.DisplayMember = "username";
             // Default to adding in user as just an End User.
             this.comboBoxTitle.SelectedIndex = 2;
-            /*
-            if (m_In.Rows.Count > 0)
-            {
-                switch (Convert.ToInt32(m_In.Rows[0][2].ToString()))
-                {
-                    case 0: this.labelTitle.Text = "Project Manager";   break;
-                    case 1: this.labelTitle.Text = "Project Developer"; break;
-                    case 2: this.labelTitle.Text = "End User";          break;
-                }
-            }
-             */
         }
 
         public static DataTable Difference(DataTable First, DataTable Second)
@@ -213,8 +202,7 @@ namespace CSCE431Project1
             m_cmdSQL.ExecuteNonQuery();
             m_projects.Rows[this.comboBoxProject.SelectedIndex].Delete();
             m_projects.AcceptChanges();
-            // Get new project ID and repopulate.
-            //m_projID = (Int32)m_projects.Rows[this.comboBoxProject.SelectedIndex].ItemArray[0];
+            // Get new project ID (through selected index callback) and repopulate.
             PopulateComponents();
         }
 
