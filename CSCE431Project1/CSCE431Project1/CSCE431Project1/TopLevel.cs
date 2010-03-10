@@ -38,6 +38,7 @@ namespace CSCE431Project1
             adpSQL.SelectCommand = cmdSQL;
             // Log user, get id and level.
             LogUser();
+            UpdateUserDisplay();
 
             setProjComboBox();  //sets the project combo box and updates the req and bug table
 
@@ -74,10 +75,27 @@ namespace CSCE431Project1
             logIn.Close();
             this.Show();
         }
-
+        // Updates user information changed by other forms (note that id does not change).
         private void UpdateUserInfo()
         {
-            cmdSQL.CommandText = "SELECT username, permissionLevel FROM users WHERE uid = " + currentUserID.ToString() + ";";
+            try
+            {
+                cmdSQL.CommandText = "SELECT username, permissionLevel FROM users WHERE uid = " + currentUserID.ToString() + ";";
+                DataTable dtUserInfo = new DataTable();
+                adpSQL.Fill(dtUserInfo);
+                this.currentUser = (String)dtUserInfo.Rows[0][0];
+                this.currentUserPermLvl = Convert.ToInt32(dtUserInfo.Rows[0][1]);
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.ToString(), "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+        // Grey out certain components according to user level.
+        private void UpdateUserDisplay()
+        {
+            this.toolUsersButton.Visible = (this.currentUserPermLvl == 0);
+            this.labelUserName.ForeColor = (this.currentUserPermLvl == 0) ? Color.Red : Color.Black;
         }
 
         private void setProjComboBox()
@@ -86,8 +104,6 @@ namespace CSCE431Project1
             proj_dt = new DataTable();
             cmdSQL.CommandText = "SELECT projects.pid, projects.name, userprojectlinks.permissionLevel FROM projects, userprojectlinks " +
                                     "WHERE projects.pid = userprojectlinks.projectid AND userprojectlinks.userid = " + currentUserID.ToString() + ";";
-
-            adpSQL.SelectCommand = cmdSQL;
             adpSQL.Fill(proj_dt);
 
             if (proj_dt.Rows.Count != 0)
@@ -189,12 +205,15 @@ namespace CSCE431Project1
         {
             Users usersWindow = new Users(conSQL, currentUserID);
             usersWindow.Show();
+            UpdateUserInfo();
+            UpdateUserDisplay();
         }
 
         private void toolStripButtonLogOff_Click(object sender, EventArgs e)
         {
             conSQL.Close();
             LogUser();
+            UpdateUserDisplay();
         }
 
         private void addVerButton_Click(object sender, EventArgs e)
