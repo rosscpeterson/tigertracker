@@ -15,8 +15,8 @@ namespace CSCE431Project1
     {
         // Connection variable.
         MySqlConnection m_conSQL;
-        protected MySqlCommand m_cmdSQL;
-        protected MySqlDataAdapter m_adpSQL;
+        MySqlCommand m_cmdSQL;
+        MySqlDataAdapter m_adpSQL;
         // Current user id, as well as user who called.
         Int32 m_userID, m_callerID;
         // Data table for users, combo box.

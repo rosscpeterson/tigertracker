@@ -44,13 +44,17 @@
             this.textBoxNew = new System.Windows.Forms.TextBox();
             this.labelTitle = new System.Windows.Forms.Label();
             this.comboBoxTitle = new System.Windows.Forms.ComboBox();
+            this.buttonVersions = new System.Windows.Forms.Button();
+            this.labelNewName = new System.Windows.Forms.Label();
+            this.textBoxVersion = new System.Windows.Forms.TextBox();
+            this.labelFirstVersion = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // buttonNewProject
             // 
-            this.buttonNewProject.Location = new System.Drawing.Point(12, 21);
+            this.buttonNewProject.Location = new System.Drawing.Point(12, 12);
             this.buttonNewProject.Name = "buttonNewProject";
-            this.buttonNewProject.Size = new System.Drawing.Size(75, 23);
+            this.buttonNewProject.Size = new System.Drawing.Size(89, 45);
             this.buttonNewProject.TabIndex = 0;
             this.buttonNewProject.Text = "New Project";
             this.buttonNewProject.UseVisualStyleBackColor = true;
@@ -58,9 +62,9 @@
             // 
             // buttonDelete
             // 
-            this.buttonDelete.Location = new System.Drawing.Point(271, 20);
+            this.buttonDelete.Location = new System.Drawing.Point(130, 302);
             this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(75, 23);
+            this.buttonDelete.Size = new System.Drawing.Size(104, 23);
             this.buttonDelete.TabIndex = 2;
             this.buttonDelete.Text = "Delete";
             this.buttonDelete.UseVisualStyleBackColor = true;
@@ -71,7 +75,7 @@
             this.comboBoxProject.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.comboBoxProject.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBoxProject.FormattingEnabled = true;
-            this.comboBoxProject.Location = new System.Drawing.Point(108, 63);
+            this.comboBoxProject.Location = new System.Drawing.Point(108, 77);
             this.comboBoxProject.Name = "comboBoxProject";
             this.comboBoxProject.Size = new System.Drawing.Size(146, 21);
             this.comboBoxProject.TabIndex = 3;
@@ -82,7 +86,7 @@
             this.comboBoxRemoveUser.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.comboBoxRemoveUser.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBoxRemoveUser.FormattingEnabled = true;
-            this.comboBoxRemoveUser.Location = new System.Drawing.Point(12, 127);
+            this.comboBoxRemoveUser.Location = new System.Drawing.Point(12, 132);
             this.comboBoxRemoveUser.Name = "comboBoxRemoveUser";
             this.comboBoxRemoveUser.Size = new System.Drawing.Size(121, 21);
             this.comboBoxRemoveUser.TabIndex = 5;
@@ -93,14 +97,14 @@
             this.comboBoxAddUser.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.comboBoxAddUser.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBoxAddUser.FormattingEnabled = true;
-            this.comboBoxAddUser.Location = new System.Drawing.Point(12, 178);
+            this.comboBoxAddUser.Location = new System.Drawing.Point(12, 194);
             this.comboBoxAddUser.Name = "comboBoxAddUser";
             this.comboBoxAddUser.Size = new System.Drawing.Size(121, 21);
             this.comboBoxAddUser.TabIndex = 9;
             // 
             // buttonRemove
             // 
-            this.buttonRemove.Location = new System.Drawing.Point(271, 125);
+            this.buttonRemove.Location = new System.Drawing.Point(271, 130);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(75, 23);
             this.buttonRemove.TabIndex = 7;
@@ -120,7 +124,7 @@
             // labelOut
             // 
             this.labelOut.AutoSize = true;
-            this.labelOut.Location = new System.Drawing.Point(22, 162);
+            this.labelOut.Location = new System.Drawing.Point(22, 166);
             this.labelOut.Name = "labelOut";
             this.labelOut.Size = new System.Drawing.Size(94, 13);
             this.labelOut.TabIndex = 8;
@@ -128,7 +132,7 @@
             // 
             // buttonAdd
             // 
-            this.buttonAdd.Location = new System.Drawing.Point(271, 176);
+            this.buttonAdd.Location = new System.Drawing.Point(271, 192);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(75, 23);
             this.buttonAdd.TabIndex = 11;
@@ -139,7 +143,7 @@
             // labelProjectName
             // 
             this.labelProjectName.AutoSize = true;
-            this.labelProjectName.Location = new System.Drawing.Point(30, 253);
+            this.labelProjectName.Location = new System.Drawing.Point(30, 263);
             this.labelProjectName.Name = "labelProjectName";
             this.labelProjectName.Size = new System.Drawing.Size(71, 13);
             this.labelProjectName.TabIndex = 13;
@@ -147,16 +151,16 @@
             // 
             // textBoxProjectName
             // 
-            this.textBoxProjectName.Location = new System.Drawing.Point(246, 253);
+            this.textBoxProjectName.Location = new System.Drawing.Point(221, 263);
             this.textBoxProjectName.Name = "textBoxProjectName";
-            this.textBoxProjectName.Size = new System.Drawing.Size(100, 20);
+            this.textBoxProjectName.Size = new System.Drawing.Size(125, 20);
             this.textBoxProjectName.TabIndex = 14;
             // 
             // buttonUpdate
             // 
-            this.buttonUpdate.Location = new System.Drawing.Point(131, 285);
+            this.buttonUpdate.Location = new System.Drawing.Point(246, 302);
             this.buttonUpdate.Name = "buttonUpdate";
-            this.buttonUpdate.Size = new System.Drawing.Size(92, 23);
+            this.buttonUpdate.Size = new System.Drawing.Size(104, 23);
             this.buttonUpdate.TabIndex = 15;
             this.buttonUpdate.Text = "Update";
             this.buttonUpdate.UseVisualStyleBackColor = true;
@@ -165,7 +169,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(128, 222);
+            this.label1.Location = new System.Drawing.Point(131, 235);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(95, 13);
             this.label1.TabIndex = 12;
@@ -173,15 +177,15 @@
             // 
             // textBoxNew
             // 
-            this.textBoxNew.Location = new System.Drawing.Point(108, 24);
+            this.textBoxNew.Location = new System.Drawing.Point(125, 37);
             this.textBoxNew.Name = "textBoxNew";
-            this.textBoxNew.Size = new System.Drawing.Size(146, 20);
+            this.textBoxNew.Size = new System.Drawing.Size(118, 20);
             this.textBoxNew.TabIndex = 1;
             // 
             // labelTitle
             // 
             this.labelTitle.AutoSize = true;
-            this.labelTitle.Location = new System.Drawing.Point(171, 130);
+            this.labelTitle.Location = new System.Drawing.Point(150, 135);
             this.labelTitle.Name = "labelTitle";
             this.labelTitle.Size = new System.Drawing.Size(52, 13);
             this.labelTitle.TabIndex = 6;
@@ -194,16 +198,55 @@
             "Project Manager",
             "Project Developer",
             "End User"});
-            this.comboBoxTitle.Location = new System.Drawing.Point(153, 176);
+            this.comboBoxTitle.Location = new System.Drawing.Point(153, 194);
             this.comboBoxTitle.Name = "comboBoxTitle";
             this.comboBoxTitle.Size = new System.Drawing.Size(101, 21);
             this.comboBoxTitle.TabIndex = 10;
+            // 
+            // buttonVersions
+            // 
+            this.buttonVersions.Location = new System.Drawing.Point(12, 302);
+            this.buttonVersions.Name = "buttonVersions";
+            this.buttonVersions.Size = new System.Drawing.Size(104, 23);
+            this.buttonVersions.TabIndex = 16;
+            this.buttonVersions.Text = "Manage Versions";
+            this.buttonVersions.UseVisualStyleBackColor = true;
+            this.buttonVersions.Click += new System.EventHandler(this.buttonVersions_Click);
+            // 
+            // labelNewName
+            // 
+            this.labelNewName.AutoSize = true;
+            this.labelNewName.Location = new System.Drawing.Point(164, 12);
+            this.labelNewName.Name = "labelNewName";
+            this.labelNewName.Size = new System.Drawing.Size(35, 13);
+            this.labelNewName.TabIndex = 17;
+            this.labelNewName.Text = "Name";
+            // 
+            // textBoxVersion
+            // 
+            this.textBoxVersion.Location = new System.Drawing.Point(268, 37);
+            this.textBoxVersion.Name = "textBoxVersion";
+            this.textBoxVersion.Size = new System.Drawing.Size(78, 20);
+            this.textBoxVersion.TabIndex = 18;
+            // 
+            // labelFirstVersion
+            // 
+            this.labelFirstVersion.AutoSize = true;
+            this.labelFirstVersion.Location = new System.Drawing.Point(273, 12);
+            this.labelFirstVersion.Name = "labelFirstVersion";
+            this.labelFirstVersion.Size = new System.Drawing.Size(64, 13);
+            this.labelFirstVersion.TabIndex = 19;
+            this.labelFirstVersion.Text = "First Version";
             // 
             // Projects
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(358, 320);
+            this.ClientSize = new System.Drawing.Size(358, 337);
+            this.Controls.Add(this.labelFirstVersion);
+            this.Controls.Add(this.textBoxVersion);
+            this.Controls.Add(this.labelNewName);
+            this.Controls.Add(this.buttonVersions);
             this.Controls.Add(this.comboBoxTitle);
             this.Controls.Add(this.labelTitle);
             this.Controls.Add(this.textBoxNew);
@@ -246,5 +289,9 @@
         private System.Windows.Forms.TextBox textBoxNew;
         private System.Windows.Forms.Label labelTitle;
         private System.Windows.Forms.ComboBox comboBoxTitle;
+        private System.Windows.Forms.Button buttonVersions;
+        private System.Windows.Forms.Label labelNewName;
+        private System.Windows.Forms.TextBox textBoxVersion;
+        private System.Windows.Forms.Label labelFirstVersion;
     }
 }
