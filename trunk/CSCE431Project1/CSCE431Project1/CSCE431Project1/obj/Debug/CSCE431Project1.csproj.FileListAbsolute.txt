@@ -46,3 +46,4 @@ C:\Users\Bernardo Cunha\Desktop\Chimerror\CSCE431Project1\CSCE431Project1\CSCE43
 C:\Users\Bernardo Cunha\Desktop\Chimerror\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Form1.resources
 C:\Users\Bernardo Cunha\Desktop\Chimerror\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Users.resources
 C:\Users\Bernardo Cunha\Desktop\Chimerror\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.csproj.GenerateResource.Cache
+C:\Users\Bernardo Cunha\Desktop\Chimerror\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Versions.resources

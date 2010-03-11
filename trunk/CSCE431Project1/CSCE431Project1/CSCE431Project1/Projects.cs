@@ -15,8 +15,8 @@ namespace CSCE431Project1
     {
         // Connection variable.
         MySqlConnection m_conSQL;
-        protected MySqlCommand m_cmdSQL;
-        protected MySqlDataAdapter m_adpSQL;
+        MySqlCommand m_cmdSQL;
+        MySqlDataAdapter m_adpSQL;
         // Current project id, and who called.
         Int32 m_projID, m_callerID, m_callerLvl;
         // Data table for actual and potential project members, and projects.
@@ -217,13 +217,12 @@ namespace CSCE431Project1
 
         private void buttonNewProject_Click(object sender, EventArgs e)
         {
-            if (this.textBoxNew.Text == "")
+            if (this.textBoxNew.Text == "" || this.textBoxVersion.Text == "")
             {
-                MessageBox.Show("Must Specify a Project Name", "Logic Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("Must Specify Both a Project Name and an Initial Version", "Logic Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                //executes if proper information is present
                 m_cmdSQL.CommandText = "INSERT INTO projects VALUES(null, '" + this.textBoxNew.Text + "');";
                 m_cmdSQL.ExecuteNonQuery();
 
@@ -237,6 +236,9 @@ namespace CSCE431Project1
                 m_projects.Rows.Add(newRow);
                 m_projects.AcceptChanges();
 
+                // Insert version.
+                m_cmdSQL.CommandText = "INSERT INTO versions VALUES(null, " + newRow[0].ToString() + ", " + this.textBoxVersion.Text + ", '');";
+                m_cmdSQL.ExecuteNonQuery();
                 // Get new project ID and repopulate.
                 this.comboBoxProject.SelectedIndex = m_projects.Rows.Count - 1;
                 m_projID = (Int32)m_projects.Rows[this.comboBoxProject.SelectedIndex].ItemArray[0];
@@ -256,6 +258,12 @@ namespace CSCE431Project1
                     case 2: this.labelTitle.Text = "End User";          break;
                 }
             }
+        }
+
+        private void buttonVersions_Click(object sender, EventArgs e)
+        {
+            Versions wndVersions = new Versions(m_conSQL, m_projID);
+            wndVersions.ShowDialog();
         }
     }
 }

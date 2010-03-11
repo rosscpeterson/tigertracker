@@ -198,13 +198,13 @@ namespace CSCE431Project1
         private void projects_toolstrip_Click(object sender, EventArgs e)
         {
             Projects projWindow = new Projects(conSQL, currentUserID, currentUserPermLvl);
-            projWindow.Show();
+            projWindow.ShowDialog();
         }
 
         private void toolUsersButton_Click(object sender, EventArgs e)
         {
             Users usersWindow = new Users(conSQL, currentUserID);
-            usersWindow.Show();
+            usersWindow.ShowDialog();
             UpdateUserInfo();
             UpdateUserDisplay();
         }
