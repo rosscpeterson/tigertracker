@@ -223,8 +223,16 @@ namespace CSCE431Project1
             }
             else
             {
-                m_cmdSQL.CommandText = "INSERT INTO projects VALUES(null, '" + this.textBoxNew.Text + "');";
-                m_cmdSQL.ExecuteNonQuery();
+                try
+                {
+                    m_cmdSQL.CommandText = "INSERT INTO projects VALUES(null, '" + this.textBoxNew.Text + "');";
+                    m_cmdSQL.ExecuteNonQuery();
+                }
+                catch (Exception err)
+                {
+                    MessageBox.Show(err.ToString(), "SQL Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
 
                 DataTable newTable = new DataTable();
                 m_adpSQL.SelectCommand.CommandText = "SELECT * FROM projects WHERE pid = LAST_INSERT_ID();";
@@ -237,8 +245,17 @@ namespace CSCE431Project1
                 m_projects.AcceptChanges();
 
                 // Insert version.
-                m_cmdSQL.CommandText = "INSERT INTO versions VALUES(null, " + newRow[0].ToString() + ", " + this.textBoxVersion.Text + ", '');";
-                m_cmdSQL.ExecuteNonQuery();
+                try
+                {
+                    m_cmdSQL.CommandText = "INSERT INTO versions VALUES(null, " + newRow[0].ToString() + ", " + this.textBoxVersion.Text + ", '');";
+                    m_cmdSQL.ExecuteNonQuery();
+                }
+                catch (Exception err)
+                {
+                    MessageBox.Show(err.ToString(), "SQL Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+
                 // Get new project ID and repopulate.
                 this.comboBoxProject.SelectedIndex = m_projects.Rows.Count - 1;
                 m_projID = (Int32)m_projects.Rows[this.comboBoxProject.SelectedIndex].ItemArray[0];
@@ -262,6 +279,8 @@ namespace CSCE431Project1
 
         private void buttonVersions_Click(object sender, EventArgs e)
         {
+            if (m_projID < 0)
+                return;
             Versions wndVersions = new Versions(m_conSQL, m_projID);
             wndVersions.ShowDialog();
         }
