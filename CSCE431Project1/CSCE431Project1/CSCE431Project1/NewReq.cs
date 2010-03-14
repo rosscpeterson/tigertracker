@@ -20,52 +20,42 @@ namespace CSCE431Project1
         MySqlConnection conSQL;
         MySqlDataAdapter adap;
         MySqlCommand command;
-        DataTable release_dt, owner_dt, watcher_dt;
-        DataSet owner_ds, watcher_ds;
+        DataTable version_dt, owner_dt, watcher_dt, requirement_dt;
 
-        public NewReq(MySqlConnection _conSQL, String currUser, Int32 currUserID, Int32 currProjID)
+        public NewReq(MySqlConnection _conSQL, String currUser, Int32 currUserID, Int32 currProjID, DataTable dtVersions, DataTable dtRequirements)
         {
             currentUser = currUser;
             currentUserID = currUserID;
             currentProjectID = currProjID;
-    
-            conSQL  = _conSQL;
+            version_dt = dtVersions;
+            requirement_dt = dtRequirements;
+
+            conSQL = _conSQL;
             command = new MySqlCommand("", conSQL);
-            adap    = new MySqlDataAdapter();
+            adap = new MySqlDataAdapter();
             adap.SelectCommand = command;
 
             InitializeComponent();
             try
             {
-                //establish the releases combo box
-                command.CommandText = "SELECT versions.version FROM versions WHERE projectid = '" + currentProjectID + "';";
-
-                adap.SelectCommand = command;
-                release_dt = new DataTable();   //declared above
-                adap.Fill(release_dt);
-
-                //populate the users_dt data table
+                // Populate with possible people.
                 command.CommandText = "SELECT users.username, userprojectlinks.userid, userprojectlinks.projectid FROM users, userprojectlinks"
-                                        + " WHERE users.uid = userprojectlinks.userid AND userprojectlinks.projectid = '" + currentProjectID + "';";
+                                    + " WHERE users.uid = userprojectlinks.userid AND userprojectlinks.projectid = '" + currentProjectID + "';";
 
                 adap.SelectCommand = command;
-                owner_ds = new DataSet();   //declared above
-                adap.Fill(owner_ds, "New Table");
-                owner_dt = owner_ds.Tables[0];
+                owner_dt = new DataTable();
+                adap.Fill(owner_dt);
 
-                watcher_ds = new DataSet();
-                adap.Fill(watcher_ds, "New Table");
-                watcher_dt = watcher_ds.Tables[0];
-
+                watcher_dt = new DataTable();
+                adap.Fill(watcher_dt);
             }
-
             catch (Exception err)
             {
                 MessageBox.Show(err.ToString(), "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
-            this.releaseComboBox.DataSource = release_dt.DefaultView;
-            this.releaseComboBox.DisplayMember = "username";
+            this.releaseComboBox.DataSource = version_dt.DefaultView;
+            this.releaseComboBox.DisplayMember = "version";
 
             this.ownersComboBox.DataSource = owner_dt.DefaultView;
             this.ownersComboBox.DisplayMember = "username";
@@ -117,7 +107,7 @@ namespace CSCE431Project1
 
         private void releaseComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string newVersion = release_dt.Rows[this.releaseComboBox.SelectedIndex][0].ToString(); //THIS WILL CHANGE TO STRING? ****
+            string newVersion = version_dt.Rows[this.releaseComboBox.SelectedIndex][0].ToString(); //THIS WILL CHANGE TO STRING? ****
             releasesListBox.Items.Add(newVersion.ToString() + ", ");
 
         }

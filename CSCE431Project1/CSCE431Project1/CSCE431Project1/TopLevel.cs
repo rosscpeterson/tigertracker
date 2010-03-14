@@ -20,13 +20,14 @@ namespace CSCE431Project1
         protected MySqlConnection conSQL;
         protected MySqlCommand cmdSQL;
         protected MySqlDataAdapter adpSQL;
-        // Bug Data Table.
+        // User/Project variables.
         protected string connectionString;
         protected string currentUser;
         protected int currentUserID;
         protected int currentProjectID;
         protected int currentUserPermLvl;
-        protected DataTable proj_dt, ver_dt, rel_dt;
+        // Keep data tables.
+        protected DataTable proj_dt, ver_dt, req_dt, bug_dt;
 
         public Form1()
         {
@@ -39,10 +40,8 @@ namespace CSCE431Project1
             // Log user, get id and level.
             LogUser();
             UpdateUserDisplay();
-
-            setProjComboBox();  //sets the project combo box and updates the req and bug table
-
-            setReleaseComboBox();   //sets the release combo box
+            // Sets the project combo box and updates the req and bug table.
+            setProjComboBox();  
         }
         // Always close the connection.
         ~Form1()
@@ -96,68 +95,98 @@ namespace CSCE431Project1
         {
             this.toolUsersButton.Visible = this.toolStripSeparator2.Visible = (this.currentUserPermLvl == 0);
             this.labelUserName.ForeColor = (this.currentUserPermLvl == 0) ? Color.Red : Color.Black;
+            this.labelUserName.Text = this.currentUser;
         }
 
         private void setProjComboBox()
         {
+            currentProjectID = -1;
+            this.toolProjCombo.ComboBox.DataSource = null;
             //Set Curr Projects combo box
             proj_dt = new DataTable();
             cmdSQL.CommandText = "SELECT projects.pid, projects.name, userprojectlinks.permissionLevel FROM projects, userprojectlinks " +
-                                    "WHERE projects.pid = userprojectlinks.projectid AND userprojectlinks.userid = " + currentUserID.ToString() + ";";
+                                 "WHERE projects.pid = userprojectlinks.projectid AND userprojectlinks.userid = " + currentUserID.ToString() + ";";
             adpSQL.Fill(proj_dt);
 
             if (proj_dt.Rows.Count != 0)
             {
                 //if there are valid projects go ahead and update everything
                 currentProjectID = (int)proj_dt.Rows[0][0];
-                updateReqTable(currentProjectID);
-                updateBugTable(currentProjectID);
+                this.toolProjCombo.ComboBox.DataSource = proj_dt.DefaultView;   
+                this.toolProjCombo.ComboBox.DisplayMember = "name";
+                updateReqTable();
+                updateBugTable();
             }
 
-            //bind the combo box to the table
-            this.toolProjCombo.ComboBox.DataSource = proj_dt.DefaultView;   //binds the data table
-            this.toolProjCombo.ComboBox.DisplayMember = "name"; //sets the column to display
+            // Bind the combo box to the table
+            this.UpdateProjectDisplay();
+            this.setVersionsComboBox();   
+        }
+        // Display project related things.
+        private void UpdateProjectDisplay()
+        {
+            if (currentProjectID < 0)
+            {
+                this.labelUserTitle.Text = "[User Title]";
+                return;
+            }
+            switch (Convert.ToInt32(proj_dt.Rows[0][2]))
+            {
+                case 0:
+                    this.labelUserTitle.Text = "Project Manager";
+                    break;
+                case 10:
+                    this.labelUserTitle.Text = "Project Developer";
+                    break;
+                default:
+                    this.labelUserTitle.Text = "End User";
+                    break;
+            }
         }
 
-        private void setReleaseComboBox()
+        private void setVersionsComboBox()
         {
-            //DataSet rel_ds = new DataSet();
-            rel_dt = new DataTable();
+            ver_dt = new DataTable();
 
             //establish the requirements grid
-            cmdSQL.CommandText = "SELECT version, projectid FROM versions WHERE projectid = " + currentProjectID + ";";
-            adpSQL.Fill(rel_dt);
+            cmdSQL.CommandText = "SELECT * FROM versions WHERE projectid = " + currentProjectID + " ORDER BY vid DESC;";
+            adpSQL.Fill(ver_dt);
 
             //this.releaseComboBox.DataSource = rel_dt.DefaultView;
             //this.releaseComboBox.DisplayMember = "version";
         }
 
-        private void updateReqTable(int pid)
+        private void updateReqTable()
         {
+            reqTable.DataSource = null;
+
+            if (currentProjectID < 0)
+                return;
+
             //establish the requirements grid
-            cmdSQL.CommandText = "SELECT * FROM requirements, userprojectlinks, userrequirementlinks WHERE userrequirementlinks.userid = " + pid.ToString() + " AND requirements.rid = userrequirementlinks.requirementid AND" +
-                                    " userprojectlinks.userid = userrequirementlinks.userid AND userprojectlinks.projectid = " + pid.ToString() + ";";
+            cmdSQL.CommandText = "SELECT * FROM requirements, userprojectlinks, userrequirementlinks WHERE userrequirementlinks.userid = " + currentProjectID.ToString() + " AND requirements.rid = userrequirementlinks.requirementid AND" +
+                                 " userprojectlinks.userid = userrequirementlinks.userid AND userprojectlinks.projectid = " + currentProjectID.ToString() + ";";
+            req_dt = new DataTable();
+            adpSQL.Fill(req_dt);
 
-            DataSet req_ds = new DataSet();
-            adpSQL.Fill(req_ds, "req_data");
-
-            reqTable.DataSource = req_ds;
-            reqTable.DataMember = "req_data";
+            reqTable.DataSource = req_dt.DefaultView;
         }
 
-        private void updateBugTable(int pid)
+        private void updateBugTable()
         {
+            bugTable.DataSource = null;
+
+            if (currentProjectID < 0)
+                return;
+
             //establish the bugs grid view
             //MAKE THIS EVERY BUG IN PROJECT***********************
-            cmdSQL.CommandText = "SELECT * FROM bugs, userprojectlinks, userbuglinks WHERE userbuglinks.userid = " + pid.ToString() + " AND bugs.bid = userbuglinks.bugid AND" +
-                                    " userprojectlinks.userid = userbuglinks.userid AND userprojectlinks.projectid = " + pid.ToString() + ";";
-            DataSet bugs_dataset = new DataSet();
-            adpSQL.Fill(bugs_dataset, "bugs_data");
+            cmdSQL.CommandText = "SELECT * FROM bugs, userprojectlinks, userbuglinks WHERE userbuglinks.userid = " + currentProjectID.ToString() + " AND bugs.bid = userbuglinks.bugid AND" +
+                                    " userprojectlinks.userid = userbuglinks.userid AND userprojectlinks.projectid = " + currentProjectID.ToString() + ";";
+            bug_dt = new DataTable();
+            adpSQL.Fill(bug_dt);
 
-            bugTable.DataSource = bugs_dataset;
-            bugTable.DataMember = "bugs_data";
-
-            updateReqTable(currentProjectID);
+            bugTable.DataSource = bug_dt;
         }
 
         private void reqTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -168,13 +197,13 @@ namespace CSCE431Project1
 
         private void newReqButton_Click(object sender, EventArgs e)
         {
-            NewReq newReqWindow = new NewReq(conSQL, currentUser, currentUserID, currentProjectID);
+            NewReq newReqWindow = new NewReq(conSQL, currentUser, currentUserID, currentProjectID, ver_dt, req_dt);
             newReqWindow.Show();
         }
 
         private void newBugButton_Click(object sender, EventArgs e)
         {
-            NewBug newBugWindow = new NewBug(conSQL, currentUser, currentUserID, currentProjectID);
+            NewBug newBugWindow = new NewBug(conSQL, currentUser, currentUserID, currentProjectID, ver_dt);
             newBugWindow.Show();
         }
 
@@ -191,14 +220,15 @@ namespace CSCE431Project1
         private void toolProjCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentProjectID = (Int32)proj_dt.Rows[this.toolProjCombo.ComboBox.SelectedIndex][0];   //gives the id selected
-            updateReqTable(currentProjectID);
-            updateBugTable(currentProjectID);
+            updateReqTable();
+            updateBugTable();
         }
 
         private void projects_toolstrip_Click(object sender, EventArgs e)
         {
             Projects projWindow = new Projects(conSQL, currentUserID, currentUserPermLvl);
             projWindow.ShowDialog();
+            setProjComboBox();
         }
 
         private void toolUsersButton_Click(object sender, EventArgs e)
@@ -214,14 +244,15 @@ namespace CSCE431Project1
             conSQL.Close();
             LogUser();
             UpdateUserDisplay();
+            setProjComboBox();
         }
 
         private void addVerButton_Click(object sender, EventArgs e)
         {
-            this.releaseListBox.Items.Add(rel_dt.Rows[releaseListBox.SelectedIndex][0].ToString());    //Sets up the watchers combo box
+            this.releaseListBox.Items.Add(ver_dt.Rows[releaseListBox.SelectedIndex][0].ToString());    //Sets up the watchers combo box
             //remove users from the table so they are no longer shown in the combo box
-            rel_dt.Rows[releaseListBox.SelectedIndex].Delete();
-            rel_dt.AcceptChanges();
+            ver_dt.Rows[releaseListBox.SelectedIndex].Delete();
+            ver_dt.AcceptChanges();
         }
     }
 }
