@@ -107,7 +107,7 @@ namespace CSCE431Project1
                 command.ExecuteNonQuery();
                 // Get last inserted requirement.
                 DataTable newTable = new DataTable();
-                adap.SelectCommand.CommandText = "SELECT * FROM requirements WHERE uid = LAST_INSERT_ID();";
+                adap.SelectCommand.CommandText = "SELECT * FROM requirements WHERE rid = LAST_INSERT_ID();";
                 adap.Fill(newTable);
                 // Update our data table of requirements.
                 DataRow newRow = requirement_dt.NewRow();

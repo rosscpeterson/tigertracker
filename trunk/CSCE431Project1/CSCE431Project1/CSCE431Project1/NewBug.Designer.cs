@@ -58,6 +58,7 @@
             this.ownersAddButton.TabIndex = 42;
             this.ownersAddButton.Text = "Add";
             this.ownersAddButton.UseVisualStyleBackColor = true;
+            this.ownersAddButton.Click += new System.EventHandler(this.ownersAddButton_Click_1);
             // 
             // watchersAddButton
             // 
@@ -68,6 +69,7 @@
             this.watchersAddButton.TabIndex = 41;
             this.watchersAddButton.Text = "Watch";
             this.watchersAddButton.UseVisualStyleBackColor = true;
+            this.watchersAddButton.Click += new System.EventHandler(this.watchersAddButton_Click_1);
             // 
             // watchersListBox
             // 
@@ -110,6 +112,7 @@
             this.releasesListBox.Name = "releasesListBox";
             this.releasesListBox.Size = new System.Drawing.Size(275, 95);
             this.releasesListBox.TabIndex = 36;
+            this.releasesListBox.SelectedIndexChanged += new System.EventHandler(this.releasesListBox_SelectedIndexChanged);
             // 
             // releaseComboBox
             // 
@@ -259,7 +262,6 @@
             this.Controls.Add(this.label1);
             this.Name = "NewBug";
             this.Text = "NewBug";
-            this.Load += new System.EventHandler(this.NewBug_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

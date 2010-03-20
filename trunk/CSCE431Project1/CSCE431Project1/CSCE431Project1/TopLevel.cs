@@ -164,7 +164,9 @@ namespace CSCE431Project1
                 return;
 
             //establish the requirements grid
-            cmdSQL.CommandText = "SELECT * FROM requirements, userprojectlinks, userrequirementlinks WHERE userrequirementlinks.userid = " + currentProjectID.ToString() + " AND requirements.rid = userrequirementlinks.requirementid AND" +
+            cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
+                                 " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" + 
+                                 " FROM requirements, userprojectlinks, userrequirementlinks WHERE userrequirementlinks.userid = " + currentProjectID.ToString() + " AND requirements.rid = userrequirementlinks.requirementid AND" +
                                  " userprojectlinks.userid = userrequirementlinks.userid AND userprojectlinks.projectid = " + currentProjectID.ToString() + ";";
             req_dt = new DataTable();
             adpSQL.Fill(req_dt);
@@ -180,9 +182,14 @@ namespace CSCE431Project1
                 return;
 
             //establish the bugs grid view
-            //MAKE THIS EVERY BUG IN PROJECT***********************
-            cmdSQL.CommandText = "SELECT * FROM bugs, userprojectlinks, userbuglinks WHERE userbuglinks.userid = " + currentProjectID.ToString() + " AND bugs.bid = userbuglinks.bugid AND" +
-                                    " userprojectlinks.userid = userbuglinks.userid AND userprojectlinks.projectid = " + currentProjectID.ToString() + ";";
+            // Get every bug current user is linked to.
+            /*cmdSQL.CommandText = "SELECT * FROM bugs, userprojectlinks, userbuglinks WHERE userbuglinks.userid = " + currentProjectID.ToString() + " AND bugs.bid = userbuglinks.bugid AND" +
+                                    " userprojectlinks.userid = userbuglinks.userid AND userprojectlinks.projectid = " + currentProjectID.ToString() + ";";*/
+            // Get every bug in project.
+            cmdSQL.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
+                                 " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority, bugs.versionid" +
+                                 " FROM bugs, versions WHERE bugs.versionid = versions.vid AND versions.projectid = " + currentProjectID.ToString() +
+                                 " ORDER BY bid, versionid DESC;";
             bug_dt = new DataTable();
             adpSQL.Fill(bug_dt);
 
@@ -203,7 +210,7 @@ namespace CSCE431Project1
 
         private void newBugButton_Click(object sender, EventArgs e)
         {
-            NewBug newBugWindow = new NewBug(conSQL, currentUser, currentUserID, currentProjectID, ver_dt);
+            NewBug newBugWindow = new NewBug(conSQL, currentUser, currentUserID, currentProjectID, ver_dt, bug_dt);
             newBugWindow.Show();
         }
 
