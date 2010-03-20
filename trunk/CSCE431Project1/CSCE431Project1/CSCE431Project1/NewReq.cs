@@ -20,34 +20,42 @@ namespace CSCE431Project1
         MySqlConnection conSQL;
         MySqlDataAdapter adap;
         MySqlCommand command;
-        DataTable version_dt, owner_dt, watcher_dt, requirement_dt;
+        DataTable version_dt, owner_dt, ownerPool_dt, 
+                  watcher_dt, watcherPool_dt, requirement_dt;
 
         public NewReq(MySqlConnection _conSQL, String currUser, Int32 currUserID, Int32 currProjID, DataTable dtVersions, DataTable dtRequirements)
         {
+            // Save relevant parameters.
             currentUser = currUser;
             currentUserID = currUserID;
             currentProjectID = currProjID;
             version_dt = dtVersions;
             requirement_dt = dtRequirements;
-
+            // Save connection parameters.
             conSQL = _conSQL;
             command = new MySqlCommand("", conSQL);
             adap = new MySqlDataAdapter();
             adap.SelectCommand = command;
-
+            // Initialize window componenents.
             InitializeComponent();
             try
             {
-                // Populate with possible people.
+                // Populate with possible people (people that belong to project).
                 command.CommandText = "SELECT users.username, userprojectlinks.userid, userprojectlinks.projectid FROM users, userprojectlinks"
                                     + " WHERE users.uid = userprojectlinks.userid AND userprojectlinks.projectid = '" + currentProjectID + "';";
-
+                // Potential owners.
                 adap.SelectCommand = command;
                 owner_dt = new DataTable();
+                ownerPool_dt = new DataTable();
                 adap.Fill(owner_dt);
-
+                owner_dt.Rows.Clear();
+                adap.Fill(ownerPool_dt);
+                // Potential watchers.
                 watcher_dt = new DataTable();
+                watcherPool_dt = new DataTable();
                 adap.Fill(watcher_dt);
+                watcher_dt.Rows.Clear();
+                adap.Fill(watcherPool_dt);
             }
             catch (Exception err)
             {
@@ -57,11 +65,17 @@ namespace CSCE431Project1
             this.releaseComboBox.DataSource = version_dt.DefaultView;
             this.releaseComboBox.DisplayMember = "version";
 
-            this.ownersComboBox.DataSource = owner_dt.DefaultView;
+            this.ownersComboBox.DataSource = ownerPool_dt.DefaultView;
             this.ownersComboBox.DisplayMember = "username";
 
-            this.watchersComboBox.DataSource = watcher_dt.DefaultView;
+            this.watchersComboBox.DataSource = watcherPool_dt.DefaultView;
             this.watchersComboBox.DisplayMember = "username";
+
+            this.ownersListBox.DataSource = owner_dt.DefaultView;
+            this.ownersListBox.DisplayMember = "username";
+
+            this.watchersListBox.DataSource = watcher_dt.DefaultView;
+            this.watchersListBox.DisplayMember = "username";
         }
         ~NewReq()
         {
@@ -77,27 +91,50 @@ namespace CSCE431Project1
 
         private void addReqButton_Click(object sender, EventArgs e)
         {
-            //set up preliminary data NOT NEEDED
-            //int validID = getNewID("requirements", "rid");  //retrives a valid id to use
+            try
+            {
+                string newTitle_st = newTitleText.Text;
+                string newReqDesc_st = newDescText.Text;
+                string newPriority_st = newPriorityCombo.Text;
+                string newTimeOpen_st = DateTime.Now.ToString("dd/MM/yyyy HH:MM:ss"); //or DateTime.Now.ToString("dd/MM/yyyy h:MM tt")
+                string newStatus_st = "Open"; //Open, In Progress, Closed
 
-            //update the userrequrementlinks table NEEDS DOING**********************************************
+                // Set command to add requirement
+                command.CommandText = "INSERT INTO requirements VALUES(null, '" + newTitle_st + "', '" + newReqDesc_st + "', '" + newPriority_st + "', '" +
+                                      newTimeOpen_st + "', null, '" + newStatus_st + "', null);";
 
+                // Execute the command
+                command.ExecuteNonQuery();
+                // Get last inserted requirement.
+                DataTable newTable = new DataTable();
+                adap.SelectCommand.CommandText = "SELECT * FROM requirements WHERE uid = LAST_INSERT_ID();";
+                adap.Fill(newTable);
+                // Update our data table of requirements.
+                DataRow newRow = requirement_dt.NewRow();
+                /*for (int i = 0; i < newRow.ItemArray.GetLength(0); ++i)
+                    newRow[i] = newTable.Rows[0][i];*/
+                newRow.ItemArray = newTable.Rows[0].ItemArray;
+                requirement_dt.Rows.Add(newRow);
+                requirement_dt.AcceptChanges();
+                
+                // Next add links.
+                String InsertLinks = "";
+                Int32 reqID = (Int32)newRow[0];
+                for (int i = 0; i < watcher_dt.Rows.Count; ++i)
+                    InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + watcher_dt.Rows[i][1].ToString() + " " + reqID.ToString() + ", 'watcher');";
+                for (int i = 0; i < owner_dt.Rows.Count; ++i)
+                    InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + owner_dt.Rows[i][1].ToString() + " " + reqID.ToString() + ", 'owner');";
+                command.CommandText = InsertLinks;
+                // Execute the command
+                command.ExecuteNonQuery();
 
-            
-            //Console.WriteLine(validID);
-
-            string newTitle_st = newTitleText.Text;
-            string newReqDesc_st = newDescText.Text;
-            string newPriority_st = newPriorityCombo.Text;
-            string newTimeOpen_st = DateTime.Now.ToString("dd/MM/yyyy HH:MM:ss"); //or DateTime.Now.ToString("dd/MM/yyyy h:MM tt")
-            string newStatus_st = "Open"; //Open, In Progress, Closed
-
-            //set command to add requirement
-            //command.CommandText = "INSERT INTO requirements VALUES(null, '" + newTitle_st + "', '" + newReqDesc_st + "', '" + newPriority_st + "', '" +
-                //newTimeOpen_st + "', null, '" + newStatus_st + "', null);"; 
-
-            //execute the command
-           // command.ExecuteNonQuery();
+                // Now create version links.
+                // ? I'm confused.
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.ToString(), "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
@@ -114,18 +151,27 @@ namespace CSCE431Project1
 
         private void ownersAddButton_Click(object sender, EventArgs e)
         {
-            this.ownersListBox.Items.Add(owner_dt.Rows[ownersComboBox.SelectedIndex][0].ToString());    //Sets up the owners combo box
-            //remove users from the table so they are no longer shown in the combo box
-            owner_dt.Rows[ownersComboBox.SelectedIndex].Delete();
+            DataRow newRow = owner_dt.NewRow();
+            newRow.ItemArray = ownerPool_dt.Rows[ownersComboBox.SelectedIndex].ItemArray;
+            owner_dt.Rows.Add(newRow);
+            ownerPool_dt.Rows[ownersComboBox.SelectedIndex].Delete();
             owner_dt.AcceptChanges();
+            ownerPool_dt.AcceptChanges();
         }
 
         private void watchersAddButton_Click(object sender, EventArgs e)
         {
-            this.watchersListBox.Items.Add(owner_dt.Rows[watchersComboBox.SelectedIndex][0].ToString());    //Sets up the watchers combo box
-            //remove users from the table so they are no longer shown in the combo box
-            watcher_dt.Rows[watchersComboBox.SelectedIndex].Delete();
+            DataRow newRow = watcher_dt.NewRow();
+            newRow.ItemArray = watcherPool_dt.Rows[ownersComboBox.SelectedIndex].ItemArray;
+            watcher_dt.Rows.Add(newRow); 
+            watcherPool_dt.Rows[ownersComboBox.SelectedIndex].Delete();
             watcher_dt.AcceptChanges();
+            watcherPool_dt.AcceptChanges();
+        }
+
+        private void ownersListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         } 
     }
 }
