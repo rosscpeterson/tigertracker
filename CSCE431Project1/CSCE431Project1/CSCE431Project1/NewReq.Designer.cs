@@ -207,6 +207,7 @@
             this.ownersListBox.Name = "ownersListBox";
             this.ownersListBox.Size = new System.Drawing.Size(275, 82);
             this.ownersListBox.TabIndex = 19;
+            this.ownersListBox.SelectedIndexChanged += new System.EventHandler(this.ownersListBox_SelectedIndexChanged);
             // 
             // watchersListBox
             // 
