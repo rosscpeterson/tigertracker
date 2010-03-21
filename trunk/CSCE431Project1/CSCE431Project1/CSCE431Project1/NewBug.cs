@@ -133,6 +133,8 @@ namespace CSCE431Project1
 
         private void ownersAddButton_Click_1(object sender, EventArgs e)
         {
+            if (ownersComboBox.SelectedIndex < 0)
+                return;
             DataRow newRow = owner_dt.NewRow();
             newRow.ItemArray = ownerPool_dt.Rows[ownersComboBox.SelectedIndex].ItemArray;
             owner_dt.Rows.Add(newRow);
@@ -143,10 +145,12 @@ namespace CSCE431Project1
 
         private void watchersAddButton_Click_1(object sender, EventArgs e)
         {
+            if (watchersComboBox.SelectedIndex < 0)
+                return;
             DataRow newRow = watcher_dt.NewRow();
-            newRow.ItemArray = watcherPool_dt.Rows[ownersComboBox.SelectedIndex].ItemArray;
+            newRow.ItemArray = watcherPool_dt.Rows[watchersComboBox.SelectedIndex].ItemArray;
             watcher_dt.Rows.Add(newRow);
-            watcherPool_dt.Rows[ownersComboBox.SelectedIndex].Delete();
+            watcherPool_dt.Rows[watchersComboBox.SelectedIndex].Delete();
             watcher_dt.AcceptChanges();
             watcherPool_dt.AcceptChanges();
         }
@@ -156,6 +160,34 @@ namespace CSCE431Project1
             string newVersion = version_dt.Rows[this.releaseComboBox.SelectedIndex][0].ToString(); //THIS WILL CHANGE TO STRING? ****
             releasesListBox.Items.Add(newVersion.ToString() + ", ");
         }
-       
+
+        private void ownersListBox_DoubleClick(object sender, EventArgs e)
+        {
+            if (ownersListBox.SelectedIndex < 0)
+                return;
+            DataRow newRow = ownerPool_dt.NewRow();
+            newRow.ItemArray = owner_dt.Rows[ownersListBox.SelectedIndex].ItemArray;
+            ownerPool_dt.Rows.Add(newRow);
+            owner_dt.Rows[ownersListBox.SelectedIndex].Delete();
+            ownerPool_dt.AcceptChanges();
+            owner_dt.AcceptChanges();
+        }
+
+        private void watchersListBox_DoubleClick(object sender, EventArgs e)
+        {
+            if (watchersListBox.SelectedIndex < 0)
+                return;
+            DataRow newRow = watcherPool_dt.NewRow();
+            newRow.ItemArray = watcher_dt.Rows[watchersListBox.SelectedIndex].ItemArray;
+            watcherPool_dt.Rows.Add(newRow);
+            watcher_dt.Rows[watchersListBox.SelectedIndex].Delete();
+            watcherPool_dt.AcceptChanges();
+            watcher_dt.AcceptChanges();
+        }
+
+        private void NewBug_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

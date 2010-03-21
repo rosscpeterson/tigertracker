@@ -78,6 +78,7 @@
             this.watchersListBox.Name = "watchersListBox";
             this.watchersListBox.Size = new System.Drawing.Size(275, 82);
             this.watchersListBox.TabIndex = 40;
+            this.watchersListBox.DoubleClick += new System.EventHandler(this.watchersListBox_DoubleClick);
             // 
             // ownersListBox
             // 
@@ -86,6 +87,7 @@
             this.ownersListBox.Name = "ownersListBox";
             this.ownersListBox.Size = new System.Drawing.Size(275, 82);
             this.ownersListBox.TabIndex = 39;
+            this.ownersListBox.DoubleClick += new System.EventHandler(this.ownersListBox_DoubleClick);
             // 
             // watchersComboBox
             // 
@@ -262,6 +264,7 @@
             this.Controls.Add(this.label1);
             this.Name = "NewBug";
             this.Text = "NewBug";
+            this.Load += new System.EventHandler(this.NewBug_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
