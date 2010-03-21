@@ -151,6 +151,8 @@ namespace CSCE431Project1
 
         private void ownersAddButton_Click(object sender, EventArgs e)
         {
+            if (ownersComboBox.SelectedIndex < 0)
+                return;
             DataRow newRow = owner_dt.NewRow();
             newRow.ItemArray = ownerPool_dt.Rows[ownersComboBox.SelectedIndex].ItemArray;
             owner_dt.Rows.Add(newRow);
@@ -161,10 +163,12 @@ namespace CSCE431Project1
 
         private void watchersAddButton_Click(object sender, EventArgs e)
         {
+            if (watchersComboBox.SelectedIndex < 0)
+                return;
             DataRow newRow = watcher_dt.NewRow();
-            newRow.ItemArray = watcherPool_dt.Rows[ownersComboBox.SelectedIndex].ItemArray;
-            watcher_dt.Rows.Add(newRow); 
-            watcherPool_dt.Rows[ownersComboBox.SelectedIndex].Delete();
+            newRow.ItemArray = watcherPool_dt.Rows[watchersComboBox.SelectedIndex].ItemArray;
+            watcher_dt.Rows.Add(newRow);
+            watcherPool_dt.Rows[watchersComboBox.SelectedIndex].Delete();
             watcher_dt.AcceptChanges();
             watcherPool_dt.AcceptChanges();
         }
