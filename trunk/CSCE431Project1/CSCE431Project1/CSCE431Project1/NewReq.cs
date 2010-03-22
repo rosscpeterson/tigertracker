@@ -173,9 +173,7 @@ namespace CSCE431Project1
             watcherPool_dt.AcceptChanges();
         }
 
-        private void ownersListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        
 
-        } 
     }
 }

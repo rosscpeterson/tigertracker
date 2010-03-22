@@ -87,6 +87,7 @@
             this.ownersListBox.Name = "ownersListBox";
             this.ownersListBox.Size = new System.Drawing.Size(275, 82);
             this.ownersListBox.TabIndex = 39;
+            this.ownersListBox.SelectedIndexChanged += new System.EventHandler(this.ownersListBox_SelectedIndexChanged);
             this.ownersListBox.DoubleClick += new System.EventHandler(this.ownersListBox_DoubleClick);
             // 
             // watchersComboBox
@@ -143,6 +144,7 @@
             this.cancelButton.TabIndex = 33;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // addBugButton
             // 
