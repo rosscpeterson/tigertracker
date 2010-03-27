@@ -1,6 +1,6 @@
 ﻿namespace CSCE431Project1
 {
-    partial class Form1
+    partial class TopLevel
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TopLevel));
             this.label1 = new System.Windows.Forms.Label();
             this.titleText = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();

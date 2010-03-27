@@ -21,7 +21,7 @@ namespace CSCE431Project1
         MySqlDataAdapter adap;
         MySqlCommand command;
         DataTable version_dt, owner_dt, ownerPool_dt, 
-                  watcher_dt, watcherPool_dt, requirement_dt;
+                  watcher_dt, versionPool_dt, watcherPool_dt, requirement_dt;
 
         public NewReq(MySqlConnection _conSQL, String currUser, Int32 currUserID, Int32 currProjID, DataTable dtVersions, DataTable dtRequirements)
         {
@@ -29,7 +29,8 @@ namespace CSCE431Project1
             currentUser = currUser;
             currentUserID = currUserID;
             currentProjectID = currProjID;
-            version_dt = dtVersions;
+            versionPool_dt = dtVersions;
+            version_dt = versionPool_dt.Clone();
             requirement_dt = dtRequirements;
             // Save connection parameters.
             conSQL = _conSQL;
@@ -45,11 +46,12 @@ namespace CSCE431Project1
                                     + " WHERE users.uid = userprojectlinks.userid AND userprojectlinks.projectid = '" + currentProjectID + "';";
                 // Potential owners.
                 adap.SelectCommand = command;
-                owner_dt = new DataTable();
+                //owner_dt = new DataTable();
                 ownerPool_dt = new DataTable();
-                adap.Fill(owner_dt);
-                owner_dt.Rows.Clear();
+                //adap.Fill(owner_dt);
+                //owner_dt.Rows.Clear();
                 adap.Fill(ownerPool_dt);
+                owner_dt = ownerPool_dt.Clone();
                 // Potential watchers.
                 watcher_dt = new DataTable();
                 watcherPool_dt = new DataTable();
@@ -62,7 +64,7 @@ namespace CSCE431Project1
                 MessageBox.Show(err.ToString(), "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
-            this.releaseComboBox.DataSource = version_dt.DefaultView;
+            this.releaseComboBox.DataSource = versionPool_dt.DefaultView;
             this.releaseComboBox.DisplayMember = "version";
 
             this.ownersComboBox.DataSource = ownerPool_dt.DefaultView;
@@ -124,12 +126,14 @@ namespace CSCE431Project1
                     InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + watcher_dt.Rows[i][1].ToString() + " " + reqID.ToString() + ", 'watcher');";
                 for (int i = 0; i < owner_dt.Rows.Count; ++i)
                     InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + owner_dt.Rows[i][1].ToString() + " " + reqID.ToString() + ", 'owner');";
+                
+                // Now create version links.
+                foreach (DataRow dr in this.version_dt.Rows)
+                    InsertLinks += "INSERT INTO requirementversionlinks VALUES(null, " + dr[0].ToString() + ", null, " + reqID.ToString() + ", null);";
+
                 command.CommandText = InsertLinks;
                 // Execute the command
                 command.ExecuteNonQuery();
-
-                // Now create version links.
-                // ? I'm confused.
             }
             catch (Exception err)
             {
