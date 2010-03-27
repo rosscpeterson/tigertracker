@@ -33,8 +33,9 @@ namespace CSCE431Project1
             m_userName = "";
             InitializeComponent();
             // When the enter is pressed login
-            this.passwordText.KeyDown += new KeyEventHandler(this.Form2_Load_Keypress);
-            this.user.KeyDown         += new KeyEventHandler(this.Form2_Load_Keypress);
+            //this.passwordText.KeyDown += new KeyEventHandler(this.Form2_Load_Keypress);
+            //this.user.KeyDown         += new KeyEventHandler(this.Form2_Load_Keypress);
+            this.AcceptButton = this.buttonLogIn;
             this.user.Focus();
         }
 

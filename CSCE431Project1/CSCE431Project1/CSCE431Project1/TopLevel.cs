@@ -14,7 +14,7 @@ namespace CSCE431Project1
 {
     //To pass data from window to window pass the form as a parameter to the construtor and then
     //make a changeText function or something in the window thats reading.
-    public partial class Form1 : Form
+    public partial class TopLevel : Form
     {
         // Connection variable.
         protected MySqlConnection conSQL;
@@ -29,7 +29,7 @@ namespace CSCE431Project1
         // Keep data tables.
         protected DataTable proj_dt, ver_dt, req_dt, bug_dt;
 
-        public Form1()
+        public TopLevel()
         {
             InitializeComponent();
             // Default value for variables.
@@ -44,7 +44,7 @@ namespace CSCE431Project1
             setProjComboBox();  
         }
         // Always close the connection.
-        ~Form1()
+        ~TopLevel()
         {
             adpSQL.Dispose();
             cmdSQL.Dispose();
