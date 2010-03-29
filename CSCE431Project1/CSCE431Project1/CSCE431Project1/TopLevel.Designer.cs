@@ -248,7 +248,7 @@
             this.bugTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.bugTable.Location = new System.Drawing.Point(3, 3);
             this.bugTable.Name = "bugTable";
-            this.bugTable.Size = new System.Drawing.Size(954, 259);
+            this.bugTable.Size = new System.Drawing.Size(954, 220);
             this.bugTable.TabIndex = 23;
             // 
             // updateButton
@@ -315,7 +315,7 @@
             this.toolStripButtonLogOff.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLogOff.Image")));
             this.toolStripButtonLogOff.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLogOff.Name = "toolStripButtonLogOff";
-            this.toolStripButtonLogOff.Size = new System.Drawing.Size(51, 22);
+            this.toolStripButtonLogOff.Size = new System.Drawing.Size(47, 22);
             this.toolStripButtonLogOff.Text = "Log Off";
             this.toolStripButtonLogOff.Click += new System.EventHandler(this.toolStripButtonLogOff_Click);
             // 
@@ -329,7 +329,7 @@
             this.projects_toolstrip.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.projects_toolstrip.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.projects_toolstrip.Name = "projects_toolstrip";
-            this.projects_toolstrip.Size = new System.Drawing.Size(53, 22);
+            this.projects_toolstrip.Size = new System.Drawing.Size(50, 22);
             this.projects_toolstrip.Text = "Projects";
             this.projects_toolstrip.Click += new System.EventHandler(this.projects_toolstrip_Click);
             // 
@@ -344,7 +344,7 @@
             this.toolUsersButton.Image = ((System.Drawing.Image)(resources.GetObject("toolUsersButton.Image")));
             this.toolUsersButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolUsersButton.Name = "toolUsersButton";
-            this.toolUsersButton.Size = new System.Drawing.Size(39, 22);
+            this.toolUsersButton.Size = new System.Drawing.Size(38, 22);
             this.toolUsersButton.Text = "Users";
             this.toolUsersButton.Click += new System.EventHandler(this.toolUsersButton_Click);
             // 
@@ -394,10 +394,10 @@
             // 
             this.TabView.Controls.Add(this.tabPage2);
             this.TabView.Controls.Add(this.tabPage1);
-            this.TabView.Location = new System.Drawing.Point(12, 484);
+            this.TabView.Location = new System.Drawing.Point(12, 477);
             this.TabView.Name = "TabView";
             this.TabView.SelectedIndex = 0;
-            this.TabView.Size = new System.Drawing.Size(968, 291);
+            this.TabView.Size = new System.Drawing.Size(968, 249);
             this.TabView.TabIndex = 33;
             // 
             // tabPage2
@@ -406,7 +406,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(960, 265);
+            this.tabPage2.Size = new System.Drawing.Size(960, 223);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Requirements";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -414,9 +414,9 @@
             // reqTable
             // 
             this.reqTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.reqTable.Location = new System.Drawing.Point(3, 3);
+            this.reqTable.Location = new System.Drawing.Point(0, 0);
             this.reqTable.Name = "reqTable";
-            this.reqTable.Size = new System.Drawing.Size(954, 259);
+            this.reqTable.Size = new System.Drawing.Size(960, 221);
             this.reqTable.TabIndex = 0;
             this.reqTable.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.reqTable_CellContentClick);
             // 
@@ -426,7 +426,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(960, 265);
+            this.tabPage1.Size = new System.Drawing.Size(960, 223);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Bugs";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -492,7 +492,7 @@
             this.addVerButton.UseVisualStyleBackColor = true;
             this.addVerButton.Click += new System.EventHandler(this.addVerButton_Click);
             // 
-            // Form1
+            // TopLevel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -532,9 +532,9 @@
             this.Controls.Add(this.titleText);
             this.Controls.Add(this.label1);
             this.Location = new System.Drawing.Point(50, 50);
-            this.Name = "Form1";
+            this.Name = "TopLevel";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Form1";
+            this.Text = "Tiger Tracker";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bugTable)).EndInit();
             this.toolStrip1.ResumeLayout(false);

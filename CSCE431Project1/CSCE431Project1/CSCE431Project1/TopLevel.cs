@@ -187,9 +187,9 @@ namespace CSCE431Project1
                                     " userprojectlinks.userid = userbuglinks.userid AND userprojectlinks.projectid = " + currentProjectID.ToString() + ";";*/
             // Get every bug in project.
             cmdSQL.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
-                                 " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority, bugs.versionid" +
-                                 " FROM bugs, versions WHERE bugs.versionid = versions.vid AND versions.projectid = " + currentProjectID.ToString() +
-                                 " ORDER BY bid, versionid DESC;";
+                                 " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority" +
+                                 " FROM bugs, versions WHERE versions.projectid = " + currentProjectID.ToString() +
+                                 " ORDER BY bid DESC;";
             bug_dt = new DataTable();
             adpSQL.Fill(bug_dt);
 
@@ -198,9 +198,21 @@ namespace CSCE431Project1
 
         private void reqTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            int clickedRow = e.RowIndex;
-            Console.WriteLine("clicked this row");
+            //int clickedRow = e.RowIndex;
+            //Console.WriteLine("clicked this row");
+            //int rowIndex = reqTable.HitTest(e.X, e.Y).RowIndex;
+            //Console.WriteLine("Clicked this row" + rowIndex);
+            MessageBox.Show(string.Format("Row #{0}, Column #{0} Clicked", e.RowIndex, e.ColumnIndex));
+
         }
+
+        //private void reqTable_CellContentClick(object sender, MouseEventArgs e)
+        //{
+        //    //int clickedRow = e.RowIndex;
+        //    //Console.WriteLine("clicked this row");
+        //    int rowIndex = reqTable.HitTest(e.X, e.Y).RowIndex;
+        //    Console.WriteLine("Clicked this row" + rowIndex);
+        //}
 
         private void newReqButton_Click(object sender, EventArgs e)
         {

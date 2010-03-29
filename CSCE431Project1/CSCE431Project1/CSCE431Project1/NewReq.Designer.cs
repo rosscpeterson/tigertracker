@@ -41,13 +41,14 @@
             this.cancelButton = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.releaseComboBox = new System.Windows.Forms.ComboBox();
-            this.releasesListBox = new System.Windows.Forms.ListBox();
+            this.releaseListBox = new System.Windows.Forms.ListBox();
             this.ownersComboBox = new System.Windows.Forms.ComboBox();
             this.watchersComboBox = new System.Windows.Forms.ComboBox();
             this.ownersListBox = new System.Windows.Forms.ListBox();
             this.watchersListBox = new System.Windows.Forms.ListBox();
             this.watchersAddButton = new System.Windows.Forms.Button();
             this.ownersAddButton = new System.Windows.Forms.Button();
+            this.releaseAddButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -170,17 +171,17 @@
             this.releaseComboBox.FormattingEnabled = true;
             this.releaseComboBox.Location = new System.Drawing.Point(98, 103);
             this.releaseComboBox.Name = "releaseComboBox";
-            this.releaseComboBox.Size = new System.Drawing.Size(202, 21);
+            this.releaseComboBox.Size = new System.Drawing.Size(170, 21);
             this.releaseComboBox.TabIndex = 15;
             this.releaseComboBox.SelectedIndexChanged += new System.EventHandler(this.releaseComboBox_SelectedIndexChanged);
             // 
-            // releasesListBox
+            // releaseListBox
             // 
-            this.releasesListBox.FormattingEnabled = true;
-            this.releasesListBox.Location = new System.Drawing.Point(25, 137);
-            this.releasesListBox.Name = "releasesListBox";
-            this.releasesListBox.Size = new System.Drawing.Size(275, 95);
-            this.releasesListBox.TabIndex = 16;
+            this.releaseListBox.FormattingEnabled = true;
+            this.releaseListBox.Location = new System.Drawing.Point(25, 137);
+            this.releaseListBox.Name = "releaseListBox";
+            this.releaseListBox.Size = new System.Drawing.Size(275, 95);
+            this.releaseListBox.TabIndex = 16;
             // 
             // ownersComboBox
             // 
@@ -234,18 +235,28 @@
             this.ownersAddButton.UseVisualStyleBackColor = true;
             this.ownersAddButton.Click += new System.EventHandler(this.ownersAddButton_Click);
             // 
+            // releaseAddButton
+            // 
+            this.releaseAddButton.Location = new System.Drawing.Point(273, 99);
+            this.releaseAddButton.Name = "releaseAddButton";
+            this.releaseAddButton.Size = new System.Drawing.Size(27, 27);
+            this.releaseAddButton.TabIndex = 23;
+            this.releaseAddButton.UseVisualStyleBackColor = true;
+            this.releaseAddButton.Click += new System.EventHandler(this.releaseAddButton_Click);
+            // 
             // NewReq
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(625, 488);
+            this.Controls.Add(this.releaseAddButton);
             this.Controls.Add(this.ownersAddButton);
             this.Controls.Add(this.watchersAddButton);
             this.Controls.Add(this.watchersListBox);
             this.Controls.Add(this.ownersListBox);
             this.Controls.Add(this.watchersComboBox);
             this.Controls.Add(this.ownersComboBox);
-            this.Controls.Add(this.releasesListBox);
+            this.Controls.Add(this.releaseListBox);
             this.Controls.Add(this.releaseComboBox);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.cancelButton);
@@ -282,12 +293,13 @@
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox releaseComboBox;
-        private System.Windows.Forms.ListBox releasesListBox;
+        private System.Windows.Forms.ListBox releaseListBox;
         private System.Windows.Forms.ComboBox ownersComboBox;
         private System.Windows.Forms.ComboBox watchersComboBox;
         private System.Windows.Forms.ListBox ownersListBox;
         private System.Windows.Forms.ListBox watchersListBox;
         private System.Windows.Forms.Button watchersAddButton;
         private System.Windows.Forms.Button ownersAddButton;
+        private System.Windows.Forms.Button releaseAddButton;
     }
 }

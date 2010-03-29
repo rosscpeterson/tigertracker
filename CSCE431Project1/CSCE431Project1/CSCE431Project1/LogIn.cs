@@ -102,7 +102,7 @@ namespace CSCE431Project1
             if (databaseName != null && databasePassword != null && databaseUser != null)
             {
                 m_conSQL.ConnectionString = "server=" + databaseHost + ";database=" + databaseName
-                                          + ";user id=" + databaseUser + ";password=" + databasePassword + ";";
+                                          + ";user id=" + databaseUser + ";password=" + databasePassword + "; Allow Zero Datetime=True;";
                 try
                 {
                     // Try opening.
