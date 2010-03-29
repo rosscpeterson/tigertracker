@@ -73,6 +73,9 @@ namespace CSCE431Project1
             this.watchersComboBox.DataSource = watcherPool_dt.DefaultView;
             this.watchersComboBox.DisplayMember = "username";
 
+            this.releaseListBox.DataSource = version_dt.DefaultView;
+            this.releaseListBox.DisplayMember = "version";
+
             this.ownersListBox.DataSource = owner_dt.DefaultView;
             this.ownersListBox.DisplayMember = "username";
 
@@ -103,13 +106,15 @@ namespace CSCE431Project1
 
                 // Set command to add requirement
                 command.CommandText = "INSERT INTO requirements VALUES(null, '" + newTitle_st + "', '" + newReqDesc_st + "', '" + newPriority_st + "', '" +
-                                      newTimeOpen_st + "', null, '" + newStatus_st + "', null);";
+                    /*newTimeOpen_st*/DateTime.Now+ "', null, '" + newStatus_st + "', null);";
 
                 // Execute the command
                 command.ExecuteNonQuery();
                 // Get last inserted requirement.
                 DataTable newTable = new DataTable();
-                adap.SelectCommand.CommandText = "SELECT * FROM requirements WHERE rid = LAST_INSERT_ID();";
+                adap.SelectCommand.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
+                                 " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes " +
+                                 "FROM requirements WHERE rid = LAST_INSERT_ID();";
                 adap.Fill(newTable);
                 // Update our data table of requirements.
                 DataRow newRow = requirement_dt.NewRow();
@@ -121,15 +126,15 @@ namespace CSCE431Project1
                 
                 // Next add links.
                 String InsertLinks = "";
-                Int32 reqID = (Int32)newRow[0];
+                Int32 reqID = Convert.ToInt32(newRow[0]);
                 for (int i = 0; i < watcher_dt.Rows.Count; ++i)
-                    InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + watcher_dt.Rows[i][1].ToString() + " " + reqID.ToString() + ", 'watcher');";
+                    InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + watcher_dt.Rows[i][1].ToString() + ", " + reqID.ToString() + ", 'watcher');";
                 for (int i = 0; i < owner_dt.Rows.Count; ++i)
-                    InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + owner_dt.Rows[i][1].ToString() + " " + reqID.ToString() + ", 'owner');";
+                    InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + owner_dt.Rows[i][1].ToString() + ", " + reqID.ToString() + ", 'owner');";
                 
                 // Now create version links.
                 foreach (DataRow dr in this.version_dt.Rows)
-                    InsertLinks += "INSERT INTO requirementversionlinks VALUES(null, " + dr[0].ToString() + ", null, " + reqID.ToString() + ", null);";
+                    InsertLinks += "INSERT INTO requirementversionlinks VALUES(null, " + dr[0].ToString() + ", 'Not Satisfied', " + reqID.ToString() + ", null);";
 
                 command.CommandText = InsertLinks;
                 // Execute the command
@@ -148,8 +153,8 @@ namespace CSCE431Project1
 
         private void releaseComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string newVersion = version_dt.Rows[this.releaseComboBox.SelectedIndex][0].ToString(); //THIS WILL CHANGE TO STRING? ****
-            releasesListBox.Items.Add(newVersion.ToString() + ", ");
+            //string newVersion = versionPool_dt.Rows[this.releaseComboBox.SelectedIndex][0].ToString(); //THIS WILL CHANGE TO STRING? ****
+            //releasesListBox.Items.Add(newVersion.ToString() + ", ");
 
         }
 
@@ -175,6 +180,18 @@ namespace CSCE431Project1
             watcherPool_dt.Rows[watchersComboBox.SelectedIndex].Delete();
             watcher_dt.AcceptChanges();
             watcherPool_dt.AcceptChanges();
+        }
+
+        private void releaseAddButton_Click(object sender, EventArgs e)
+        {
+            if (releaseComboBox.SelectedIndex < 0)
+                return;
+            DataRow newRow = version_dt.NewRow();
+            newRow.ItemArray = versionPool_dt.Rows[releaseComboBox.SelectedIndex].ItemArray;
+            version_dt.Rows.Add(newRow);
+            versionPool_dt.Rows[releaseComboBox.SelectedIndex].Delete();
+            version_dt.AcceptChanges();
+            versionPool_dt.AcceptChanges();
         }
 
         
