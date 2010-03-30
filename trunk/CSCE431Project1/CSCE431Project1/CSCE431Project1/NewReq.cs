@@ -44,20 +44,15 @@ namespace CSCE431Project1
                 // Populate with possible people (people that belong to project).
                 command.CommandText = "SELECT users.username, userprojectlinks.userid, userprojectlinks.projectid FROM users, userprojectlinks"
                                     + " WHERE users.uid = userprojectlinks.userid AND userprojectlinks.projectid = '" + currentProjectID + "';";
-                // Potential owners.
                 adap.SelectCommand = command;
-                //owner_dt = new DataTable();
+                // Potential owners.
                 ownerPool_dt = new DataTable();
-                //adap.Fill(owner_dt);
-                //owner_dt.Rows.Clear();
                 adap.Fill(ownerPool_dt);
                 owner_dt = ownerPool_dt.Clone();
                 // Potential watchers.
-                watcher_dt = new DataTable();
                 watcherPool_dt = new DataTable();
-                adap.Fill(watcher_dt);
-                watcher_dt.Rows.Clear();
                 adap.Fill(watcherPool_dt);
+                watcher_dt = watcherPool_dt.Clone();
             }
             catch (Exception err)
             {
@@ -149,13 +144,6 @@ namespace CSCE431Project1
         private void cancelButton_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void releaseComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //string newVersion = versionPool_dt.Rows[this.releaseComboBox.SelectedIndex][0].ToString(); //THIS WILL CHANGE TO STRING? ****
-            //releasesListBox.Items.Add(newVersion.ToString() + ", ");
-
         }
 
         private void ownersAddButton_Click(object sender, EventArgs e)

@@ -115,7 +115,6 @@
             this.releasesListBox.Name = "releasesListBox";
             this.releasesListBox.Size = new System.Drawing.Size(275, 95);
             this.releasesListBox.TabIndex = 36;
-            this.releasesListBox.SelectedIndexChanged += new System.EventHandler(this.releasesListBox_SelectedIndexChanged);
             // 
             // releaseComboBox
             // 
