@@ -20,7 +20,7 @@ namespace CSCE431Project1
         MySqlConnection conSQL;
         MySqlDataAdapter adap;
         MySqlCommand command;
-        DataTable version_dt, owner_dt, ownerPool_dt,
+        DataTable version_dt, versionPool_dt, owner_dt, ownerPool_dt,
                   watcher_dt, watcherPool_dt, bugs_dt;
 
         public NewBug(MySqlConnection _conSQL, String currUser, Int32 currUserID, Int32 currProjID, DataTable dtVersions, DataTable dtBugs)
@@ -29,7 +29,8 @@ namespace CSCE431Project1
             currentUser = currUser;
             currentUserID = currUserID;
             currentProjectID = currProjID;
-            version_dt = dtVersions;
+            versionPool_dt = dtVersions;
+            version_dt = versionPool_dt.Clone();
             bugs_dt = dtBugs;
             // Save connection parameters.
             conSQL = _conSQL;
@@ -44,26 +45,22 @@ namespace CSCE431Project1
                 command.CommandText = "SELECT users.username, userprojectlinks.userid, userprojectlinks.projectid FROM users, userprojectlinks"
                                     + " WHERE users.uid = userprojectlinks.userid AND userprojectlinks.projectid = '" + currentProjectID + "';";
 
-                // Potential owners.
                 adap.SelectCommand = command;
-                owner_dt = new DataTable();
+                // Potential owners.
                 ownerPool_dt = new DataTable();
-                adap.Fill(owner_dt);
-                owner_dt.Rows.Clear();
                 adap.Fill(ownerPool_dt);
+                owner_dt = ownerPool_dt.Clone();
                 // Potential watchers.
-                watcher_dt = new DataTable();
                 watcherPool_dt = new DataTable();
-                adap.Fill(watcher_dt);
-                watcher_dt.Rows.Clear();
                 adap.Fill(watcherPool_dt);
+                watcher_dt = watcherPool_dt.Clone();
             }
             catch (Exception err)
             {
                 MessageBox.Show(err.ToString(), "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
-            this.releaseComboBox.DataSource = version_dt.DefaultView;
+            this.releaseComboBox.DataSource = versionPool_dt.DefaultView;
             this.releaseComboBox.DisplayMember = "version";
 
             this.ownersComboBox.DataSource = ownerPool_dt.DefaultView;
@@ -71,6 +68,9 @@ namespace CSCE431Project1
 
             this.watchersComboBox.DataSource = watcherPool_dt.DefaultView;
             this.watchersComboBox.DisplayMember = "username";
+
+            this.releasesListBox.DataSource = version_dt.DefaultView;
+            this.releasesListBox.DisplayMember = "version";
 
             this.ownersListBox.DataSource = owner_dt.DefaultView;
             this.ownersListBox.DisplayMember = "username";
@@ -153,12 +153,6 @@ namespace CSCE431Project1
             watcherPool_dt.Rows[watchersComboBox.SelectedIndex].Delete();
             watcher_dt.AcceptChanges();
             watcherPool_dt.AcceptChanges();
-        }
-
-        private void releasesListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string newVersion = version_dt.Rows[this.releaseComboBox.SelectedIndex][0].ToString(); //THIS WILL CHANGE TO STRING? ****
-            releasesListBox.Items.Add(newVersion.ToString() + ", ");
         }
 
         private void ownersListBox_DoubleClick(object sender, EventArgs e)

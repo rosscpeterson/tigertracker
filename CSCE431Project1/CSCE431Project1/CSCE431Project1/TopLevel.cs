@@ -164,10 +164,14 @@ namespace CSCE431Project1
                 return;
 
             //establish the requirements grid
-            cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
+            /*cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
                                  " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" + 
                                  " FROM requirements, userprojectlinks, userrequirementlinks WHERE userrequirementlinks.userid = " + currentProjectID.ToString() + " AND requirements.rid = userrequirementlinks.requirementid AND" +
-                                 " userprojectlinks.userid = userrequirementlinks.userid AND userprojectlinks.projectid = " + currentProjectID.ToString() + ";";
+                                 " userprojectlinks.userid = userrequirementlinks.userid AND userprojectlinks.projectid = " + currentProjectID.ToString() + ";";*/
+            cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
+                                 " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" +
+                                 " FROM requirements, versions WHERE versions.projectid = " + currentProjectID.ToString() +
+                                 " ORDER BY rid DESC;";
             req_dt = new DataTable();
             adpSQL.Fill(req_dt);
 
@@ -217,13 +221,13 @@ namespace CSCE431Project1
         private void newReqButton_Click(object sender, EventArgs e)
         {
             NewReq newReqWindow = new NewReq(conSQL, currentUser, currentUserID, currentProjectID, ver_dt, req_dt);
-            newReqWindow.Show();
+            newReqWindow.ShowDialog();
         }
 
         private void newBugButton_Click(object sender, EventArgs e)
         {
             NewBug newBugWindow = new NewBug(conSQL, currentUser, currentUserID, currentProjectID, ver_dt, bug_dt);
-            newBugWindow.Show();
+            newBugWindow.ShowDialog();
         }
 
         private void statusComboBox_SelectedIndexChanged(object sender, EventArgs e)
