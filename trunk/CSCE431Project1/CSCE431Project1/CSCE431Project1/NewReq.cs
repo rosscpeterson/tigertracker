@@ -100,8 +100,8 @@ namespace CSCE431Project1
                 string newStatus_st = "Open"; //Open, In Progress, Closed
 
                 // Set command to add requirement
-                command.CommandText = "INSERT INTO requirements VALUES(null, '" + newTitle_st + "', '" + newReqDesc_st + "', '" + newPriority_st + "', '" +
-                    /*newTimeOpen_st*/DateTime.Now+ "', null, '" + newStatus_st + "', null);";
+                command.CommandText = "INSERT INTO requirements VALUES(null, '" + newTitle_st + "', '" + newReqDesc_st + "', '" + newPriority_st + "', " +
+                    /*newTimeOpen_stDateTime.Now+*/ "NOW(), null, '" + newStatus_st + "', null);";
 
                 // Execute the command
                 command.ExecuteNonQuery();
@@ -113,8 +113,7 @@ namespace CSCE431Project1
                 adap.Fill(newTable);
                 // Update our data table of requirements.
                 DataRow newRow = requirement_dt.NewRow();
-                /*for (int i = 0; i < newRow.ItemArray.GetLength(0); ++i)
-                    newRow[i] = newTable.Rows[0][i];*/
+                
                 newRow.ItemArray = newTable.Rows[0].ItemArray;
                 requirement_dt.Rows.Add(newRow);
                 requirement_dt.AcceptChanges();
@@ -134,6 +133,9 @@ namespace CSCE431Project1
                 command.CommandText = InsertLinks;
                 // Execute the command
                 command.ExecuteNonQuery();
+
+                //close the window
+                this.Close();
             }
             catch (Exception err)
             {
@@ -180,6 +182,11 @@ namespace CSCE431Project1
             versionPool_dt.Rows[releaseComboBox.SelectedIndex].Delete();
             version_dt.AcceptChanges();
             versionPool_dt.AcceptChanges();
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
         }
 
         

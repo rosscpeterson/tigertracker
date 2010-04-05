@@ -164,6 +164,7 @@
             this.label7.Size = new System.Drawing.Size(246, 31);
             this.label7.TabIndex = 14;
             this.label7.Text = "New Requirement";
+            this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
             // releaseComboBox
             // 

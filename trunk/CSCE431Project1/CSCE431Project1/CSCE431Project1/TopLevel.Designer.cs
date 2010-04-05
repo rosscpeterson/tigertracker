@@ -124,9 +124,9 @@
             this.statusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.statusComboBox.FormattingEnabled = true;
             this.statusComboBox.Items.AddRange(new object[] {
-            "Waiting",
+            "Open",
             "In Progress",
-            "Complete"});
+            "Closed"});
             this.statusComboBox.Location = new System.Drawing.Point(361, 44);
             this.statusComboBox.Name = "statusComboBox";
             this.statusComboBox.Size = new System.Drawing.Size(188, 21);
@@ -259,6 +259,7 @@
             this.updateButton.TabIndex = 24;
             this.updateButton.Text = "Update";
             this.updateButton.UseVisualStyleBackColor = true;
+            this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
             // 
             // newBugButton
             // 
@@ -418,7 +419,7 @@
             this.reqTable.Name = "reqTable";
             this.reqTable.Size = new System.Drawing.Size(960, 221);
             this.reqTable.TabIndex = 0;
-            this.reqTable.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.reqTable_CellContentClick);
+            this.reqTable.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.reqTable_CellClick);
             // 
             // tabPage1
             // 
