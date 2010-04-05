@@ -28,7 +28,6 @@ namespace CSCE431Project1
         protected int currentUserPermLvl;
         // Keep data tables.
         protected DataTable proj_dt, ver_dt, req_dt, bug_dt;
-        protected DataView req_vw;
 
         public TopLevel()
         {
@@ -169,11 +168,25 @@ namespace CSCE431Project1
                                  " ORDER BY rid DESC;";
             req_dt = new DataTable();
             adpSQL.Fill(req_dt);
+            // Change names.
+            req_dt.Columns["rid"].ColumnName                    = "Req ID";
+            req_dt.Columns["requirementTitle"].ColumnName       = "Title";
+            req_dt.Columns["requirementDescription"].ColumnName = "Description";
+            req_dt.Columns["priority"].ColumnName               = "Priority";
+            req_dt.Columns["timeCreated"].ColumnName            = "Time Created";
+            req_dt.Columns["timeSatisfied"].ColumnName          = "Time Satisfied";
+            req_dt.Columns["status"].ColumnName                 = "Status";
+            req_dt.Columns["notes"].ColumnName                  = "Notes";
 
-            // Create data view.
-            req_vw = new DataView(req_dt);
-            
             reqTable.DataSource = req_dt.DefaultView;
+            // Blank out ones we don't want.
+            reqTable.Columns["Description"].Visible = false;
+            reqTable.Columns["Notes"].Visible       = false;
+            // Make others better.
+            // reqTable.AutoSizeColumnMode(index) for single column.
+            reqTable.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            // reqTable.AutoResizeColumn(index) for single column.
+            reqTable.AutoResizeColumns();
         }
 
         private void updateBugTable()
