@@ -101,7 +101,7 @@ namespace CSCE431Project1
 
                 // Set command to add requirement
                 command.CommandText = "INSERT INTO requirements VALUES(null, '" + newTitle_st + "', '" + newReqDesc_st + "', '" + newPriority_st + "', " +
-                    /*newTimeOpen_stDateTime.Now+*/ "NOW(), null, '" + newStatus_st + "', null);";
+                     "NOW(), null, '" + newStatus_st + "', null);";
 
                 // Execute the command
                 command.ExecuteNonQuery();
@@ -125,6 +125,8 @@ namespace CSCE431Project1
                     InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + watcher_dt.Rows[i][1].ToString() + ", " + reqID.ToString() + ", 'watcher');";
                 for (int i = 0; i < owner_dt.Rows.Count; ++i)
                     InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + owner_dt.Rows[i][1].ToString() + ", " + reqID.ToString() + ", 'owner');";
+                    //insert the origionator
+                InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + Convert.ToString(currentUserID) + ", " + reqID.ToString() + ", 'origionator');";
                 
                 // Now create version links.
                 foreach (DataRow dr in this.version_dt.Rows)
