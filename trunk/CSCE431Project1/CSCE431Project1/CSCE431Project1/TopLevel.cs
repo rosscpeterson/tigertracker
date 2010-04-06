@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -28,6 +29,7 @@ namespace CSCE431Project1
         protected int currentUserPermLvl;
         // Keep data tables.
         protected DataTable proj_dt, ver_dt, req_dt, bug_dt;
+        protected DataTable user_dt, userreq_dt;
 
         public TopLevel()
         {
@@ -41,7 +43,8 @@ namespace CSCE431Project1
             LogUser();
             UpdateUserDisplay();
             // Sets the project combo box and updates the req and bug table.
-            setProjComboBox();  
+            setProjComboBox();
+
         }
         // Always close the connection.
         ~TopLevel()
@@ -79,11 +82,11 @@ namespace CSCE431Project1
         {
             try
             {
-                cmdSQL.CommandText = "SELECT username, permissionLevel FROM users WHERE uid = " + currentUserID.ToString() + ";";
-                DataTable dtUserInfo = new DataTable();
-                adpSQL.Fill(dtUserInfo);
-                this.currentUser = (String)dtUserInfo.Rows[0][0];
-                this.currentUserPermLvl = Convert.ToInt32(dtUserInfo.Rows[0][1]);
+                cmdSQL.CommandText = "SELECT * FROM users WHERE uid = " + currentUserID.ToString() + ";";
+                DataTable myuser_dt = new DataTable();
+                adpSQL.Fill(myuser_dt);
+                this.currentUser = myuser_dt.Rows[0][1].ToString();
+                this.currentUserPermLvl = Convert.ToInt32(myuser_dt.Rows[0][3]);
             }
             catch (Exception err)
             {
@@ -187,6 +190,16 @@ namespace CSCE431Project1
             reqTable.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             // reqTable.AutoResizeColumn(index) for single column.
             reqTable.AutoResizeColumns();
+
+            //update userrequirementlinks table
+            cmdSQL.CommandText = "SELECT userrequirementlinks.* FROM userrequirementlinks, versions WHERE versions.projectid = " + currentProjectID.ToString() + ";";
+            userreq_dt = new DataTable();
+            adpSQL.Fill(userreq_dt);
+
+            //updates user_dt
+            cmdSQL.CommandText = "SELECT * FROM users;";
+            user_dt = new DataTable();
+            adpSQL.Fill(user_dt);
         }
 
         private void updateBugTable()
@@ -213,6 +226,8 @@ namespace CSCE431Project1
 
         private void reqTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            //ERROR: WHEN NO CONTENT IS IN CELL WE GET OUT OF BOUNDS ERROR ***
+
             Console.WriteLine("Row #{0}, Column #{0} Clicked  " + e.RowIndex + "  " + e.ColumnIndex);
 
             int row = e.RowIndex;
@@ -238,13 +253,89 @@ namespace CSCE431Project1
                     statusComboBox.SelectedIndex = 2;
                     break;
             }
+            
+            //owner and watcher array's
+            ArrayList ownerIDs = new ArrayList();
+            ArrayList watcherIDs = new ArrayList();
+            DataTable currOwners_dt = user_dt.Clone();
+            DataTable currWatchers_dt = user_dt.Clone();
 
-            //get the origionator
+            //get the origionator, userreq_dt updated in update req table function
+            String expression = "requirementid = " + req_dt.Rows[row][0].ToString();
+            DataRow[] userreqlinks_dr;
+            userreqlinks_dr = userreq_dt.Select(expression);
 
+            int ownerID = -1;
+
+            //here we are also going to construct the arrays of user id's for the owners and watchers list box
+            for (int i = 0; i < userreqlinks_dr.Length; i++)
+            {
+                DataRow newRow;
+                switch (userreqlinks_dr[i][3].ToString())
+                {
+                    case ("origionator"):
+                        ownerID = Convert.ToInt32(userreqlinks_dr[i][1]);
+                        break;
+                    case ("owner"):
+                        ownerIDs.Add(Convert.ToInt32(userreqlinks_dr[i][1]));
+                        //currOwners_dt.ImportRow(userreqlinks_dr[i]);
+                        break;
+                    case ("watcher"):
+                        watcherIDs.Add(Convert.ToInt32(userreqlinks_dr[i][1]));
+                        //currWatchers_dt.ImportRow(userreqlinks_dr[i]);
+                        break;
+                    default:
+                        MessageBox.Show("No user associated with selected requirement", "SQL DB Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        break;
+                }
+            }
+
+            //we have owner id go get owners name from user_dt
+            expression = "uid = " + ownerID.ToString();
+            DataRow[] user_dr;
+            user_dr = user_dt.Select(expression);
+
+            if (user_dr.Length > 0)
+            {
+                originatorText.Text = user_dr[0][1].ToString();
+            }
+            else
+            {
+                MessageBox.Show("No Origionator Found", "SQL DB Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+
+            //populate the owners and watchers list boxes
+            //owners list box
+            for (int i = 0; i < ownerIDs.Count; i++)
+            {
+                expression = "uid = " + ownerIDs[i].ToString();
+                DataRow[] owners_dr;
+                owners_dr = user_dt.Select(expression);
+
+                currOwners_dt.ImportRow(owners_dr[0]);
+            }
+
+            this.ownerListBox.DataSource = currOwners_dt.DefaultView;
+            this.ownerListBox.DisplayMember = "username";
+
+            //Watchers List Box
+            for (int i = 0; i < watcherIDs.Count; i++)
+            {
+                expression = "uid = " + watcherIDs[i].ToString();
+                DataRow[] watchers_dr;
+                watchers_dr = user_dt.Select(expression);
+
+                currWatchers_dt.ImportRow(watchers_dr[0]);
+            }
+
+            this.watchersListBox.DataSource = currWatchers_dt.DefaultView;
+            this.watchersListBox.DisplayMember = "username";
         }
 
         private void newReqButton_Click(object sender, EventArgs e)
         {
+            //BERNARDO: WHY DID WE NEED TO PASS THE USER REQ LINKS AROUND?? ARE WE KEEPING THE LOCAL COPIES UPDATED AS WELL? they should all update when
+            //we leave the new req screen ******
             NewReq newReqWindow = new NewReq(conSQL, currentUser, currentUserID, currentProjectID, ver_dt, req_dt);
             newReqWindow.ShowDialog();
         }
@@ -267,6 +358,8 @@ namespace CSCE431Project1
 
         private void toolProjCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //Got an error here when I logged out and tried to log in with different user****
+            //got error here from adding ross to a project as a developer.  When I closed user boxes it gave problem ****
             currentProjectID = (Int32)proj_dt.Rows[this.toolProjCombo.ComboBox.SelectedIndex][0];   //gives the id selected
             updateReqTable();
             updateBugTable();

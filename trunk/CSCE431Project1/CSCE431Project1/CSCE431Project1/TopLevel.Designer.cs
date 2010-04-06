@@ -45,9 +45,7 @@
             this.descriptionText = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.watcherText = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.ownerText = new System.Windows.Forms.TextBox();
             this.bugTable = new System.Windows.Forms.DataGridView();
             this.updateButton = new System.Windows.Forms.Button();
             this.newBugButton = new System.Windows.Forms.Button();
@@ -76,6 +74,8 @@
             this.releaseListBox = new System.Windows.Forms.ListBox();
             this.addVerButton = new System.Windows.Forms.Button();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.ownerListBox = new System.Windows.Forms.ListBox();
+            this.watchersListBox = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.bugTable)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.TabView.SuspendLayout();
@@ -218,14 +218,6 @@
             this.label10.TabIndex = 22;
             this.label10.Text = "Watcher(s)";
             // 
-            // watcherText
-            // 
-            this.watcherText.Location = new System.Drawing.Point(89, 389);
-            this.watcherText.Multiline = true;
-            this.watcherText.Name = "watcherText";
-            this.watcherText.Size = new System.Drawing.Size(188, 40);
-            this.watcherText.TabIndex = 21;
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -234,14 +226,6 @@
             this.label11.Size = new System.Drawing.Size(49, 13);
             this.label11.TabIndex = 20;
             this.label11.Text = "Owner(s)";
-            // 
-            // ownerText
-            // 
-            this.ownerText.Location = new System.Drawing.Point(89, 331);
-            this.ownerText.Multiline = true;
-            this.ownerText.Name = "ownerText";
-            this.ownerText.Size = new System.Drawing.Size(188, 40);
-            this.ownerText.TabIndex = 19;
             // 
             // bugTable
             // 
@@ -493,11 +477,29 @@
             this.addVerButton.UseVisualStyleBackColor = true;
             this.addVerButton.Click += new System.EventHandler(this.addVerButton_Click);
             // 
+            // ownerListBox
+            // 
+            this.ownerListBox.FormattingEnabled = true;
+            this.ownerListBox.Location = new System.Drawing.Point(81, 331);
+            this.ownerListBox.Name = "ownerListBox";
+            this.ownerListBox.Size = new System.Drawing.Size(208, 43);
+            this.ownerListBox.TabIndex = 42;
+            // 
+            // watchersListBox
+            // 
+            this.watchersListBox.FormattingEnabled = true;
+            this.watchersListBox.Location = new System.Drawing.Point(82, 394);
+            this.watchersListBox.Name = "watchersListBox";
+            this.watchersListBox.Size = new System.Drawing.Size(207, 43);
+            this.watchersListBox.TabIndex = 43;
+            // 
             // TopLevel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(992, 732);
+            this.Controls.Add(this.watchersListBox);
+            this.Controls.Add(this.ownerListBox);
             this.Controls.Add(this.addVerButton);
             this.Controls.Add(this.releaseListBox);
             this.Controls.Add(this.priorityComboBox);
@@ -515,9 +517,7 @@
             this.Controls.Add(this.newBugButton);
             this.Controls.Add(this.updateButton);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.watcherText);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.ownerText);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.descriptionText);
             this.Controls.Add(this.label8);
@@ -567,9 +567,7 @@
         private System.Windows.Forms.TextBox descriptionText;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox watcherText;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox ownerText;
         private System.Windows.Forms.DataGridView bugTable;
         private System.Windows.Forms.Button updateButton;
         private System.Windows.Forms.Button newBugButton;
@@ -598,6 +596,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ListBox ownerListBox;
+        private System.Windows.Forms.ListBox watchersListBox;
     }
 }
 
