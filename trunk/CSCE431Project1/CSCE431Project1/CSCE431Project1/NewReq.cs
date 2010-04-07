@@ -21,9 +21,10 @@ namespace CSCE431Project1
         MySqlDataAdapter adap;
         MySqlCommand command;
         DataTable version_dt, owner_dt, ownerPool_dt, 
-                  watcher_dt, versionPool_dt, watcherPool_dt, requirement_dt;
+                  watcher_dt, versionPool_dt, watcherPool_dt,
+                  requirement_dt;//, userreqlinks_dt;
 
-        public NewReq(MySqlConnection _conSQL, String currUser, Int32 currUserID, Int32 currProjID, DataTable dtVersions, DataTable dtRequirements)
+        public NewReq(MySqlConnection _conSQL, String currUser, Int32 currUserID, Int32 currProjID, DataTable dtVersions, DataTable dtRequirements/*, DataTable dtUserReqLinks*/)
         {
             // Save relevant parameters.
             currentUser = currUser;
@@ -32,6 +33,7 @@ namespace CSCE431Project1
             versionPool_dt = dtVersions;
             version_dt = versionPool_dt.Clone();
             requirement_dt = dtRequirements;
+            //userreqlinks_dt = dtUserReqLinks;
             // Save connection parameters.
             conSQL = _conSQL;
             command = new MySqlCommand("", conSQL);
@@ -125,8 +127,8 @@ namespace CSCE431Project1
                     InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + watcher_dt.Rows[i][1].ToString() + ", " + reqID.ToString() + ", 'watcher');";
                 for (int i = 0; i < owner_dt.Rows.Count; ++i)
                     InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + owner_dt.Rows[i][1].ToString() + ", " + reqID.ToString() + ", 'owner');";
-                    //insert the origionator
-                InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + Convert.ToString(currentUserID) + ", " + reqID.ToString() + ", 'origionator');";
+                    //insert the originator
+                InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + Convert.ToString(currentUserID) + ", " + reqID.ToString() + ", 'originator');";
                 
                 // Now create version links.
                 foreach (DataRow dr in this.version_dt.Rows)
@@ -135,7 +137,11 @@ namespace CSCE431Project1
                 command.CommandText = InsertLinks;
                 // Execute the command
                 command.ExecuteNonQuery();
-
+                /*
+                // Update table.
+                userreqlinks_dt.Clear();
+                adap.SelectCommand.CommandText = "SELECT * FROM userrequirementlinks;";
+                adap.Fill(userreqlinks_dt);*/
                 //close the window
                 this.Close();
             }

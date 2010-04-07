@@ -234,6 +234,7 @@
             this.bugTable.Name = "bugTable";
             this.bugTable.Size = new System.Drawing.Size(954, 220);
             this.bugTable.TabIndex = 23;
+            this.bugTable.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.bugTable_CellClick);
             // 
             // updateButton
             // 

@@ -20,18 +20,21 @@ namespace CSCE431Project1
         MySqlConnection conSQL;
         MySqlDataAdapter adap;
         MySqlCommand command;
-        DataTable version_dt, versionPool_dt, owner_dt, ownerPool_dt,
-                  watcher_dt, watcherPool_dt, bugs_dt;
+        DataTable versionPool_dt, owner_dt, ownerPool_dt,
+                  watcher_dt, watcherPool_dt, bugs_dt, reqs_dt, 
+                  reqsPool_dt, reqsVersion_dt, reqsVersionLink_dt;
 
-        public NewBug(MySqlConnection _conSQL, String currUser, Int32 currUserID, Int32 currProjID, DataTable dtVersions, DataTable dtBugs)
+        public NewBug(MySqlConnection _conSQL, String currUser, Int32 currUserID, Int32 currProjID, DataTable dtVersions, DataTable dtBugs, DataTable dtRequirements)
         {
             // Save relevant parameters.
             currentUser = currUser;
             currentUserID = currUserID;
             currentProjectID = currProjID;
             versionPool_dt = dtVersions;
-            version_dt = versionPool_dt.Clone();
             bugs_dt = dtBugs;
+            reqsPool_dt = dtRequirements;
+            reqsVersion_dt = reqsPool_dt.Clone();
+            reqs_dt = reqsPool_dt.Clone();
             // Save connection parameters.
             conSQL = _conSQL;
             command = new MySqlCommand("", conSQL);
@@ -54,11 +57,18 @@ namespace CSCE431Project1
                 watcherPool_dt = new DataTable();
                 adap.Fill(watcherPool_dt);
                 watcher_dt = watcherPool_dt.Clone();
+
+                reqsVersionLink_dt = new DataTable();
+                command.CommandText = "SELECT requirementversionlinks.* FROM requirementversionlinks, versions WHERE versionid = vid AND projectid = '" + currentProjectID + "';";
+                adap.Fill(reqsVersionLink_dt);
             }
             catch (Exception err)
             {
                 MessageBox.Show(err.ToString(), "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
+
+            this.comboBoxReqs.DataSource = reqsVersion_dt.DefaultView;
+            this.comboBoxReqs.DisplayMember = "Title";
 
             this.releaseComboBox.DataSource = versionPool_dt.DefaultView;
             this.releaseComboBox.DisplayMember = "version";
@@ -69,8 +79,8 @@ namespace CSCE431Project1
             this.watchersComboBox.DataSource = watcherPool_dt.DefaultView;
             this.watchersComboBox.DisplayMember = "username";
 
-            this.releasesListBox.DataSource = version_dt.DefaultView;
-            this.releasesListBox.DisplayMember = "version";
+            this.requirementsListBox.DataSource = reqs_dt.DefaultView;
+            this.requirementsListBox.DisplayMember = "Title";
 
             this.ownersListBox.DataSource = owner_dt.DefaultView;
             this.ownersListBox.DisplayMember = "username";
@@ -87,43 +97,68 @@ namespace CSCE431Project1
 
         private void addBugButton_Click(object sender, EventArgs e)
         {
-            string newTitle_st = newTitleText.Text;
-            string newReqDesc_st = newDescText.Text;
-            string newPriority_st = newPriorityCombo.Text;
-            string newTimeOpen_st = DateTime.Now.ToString("dd/MM/yyyy HH:MM:ss"); //or DateTime.Now.ToString("dd/MM/yyyy h:MM tt")
-            string newStatus_st = "Open"; //Open, In Progress, Closed
-            // For each version in combo box, do an insertion?  For now, default to top.
-            // Set command to add requirement
-            command.CommandText = "INSERT INTO bugs VALUES(null, '" + newTitle_st + "', '" + newReqDesc_st + "', '" + newPriority_st + "', '" +
-                                      newTimeOpen_st + "', null, '" + newStatus_st + "', null, " + version_dt.Rows[0][2].ToString() + ");"; 
+            try
+            {
+                string newTitle_st = newTitleText.Text;
+                string newReqDesc_st = newDescText.Text;
+                string newPriority_st = newPriorityCombo.Text;
+                string newTimeOpen_st = DateTime.Now.ToString("dd/MM/yyyy HH:MM:ss"); //or DateTime.Now.ToString("dd/MM/yyyy h:MM tt")
+                //string newTimeClosed_st = "00/00/0000 00:00:00"
+                string newStatus_st = "Open"; //Open, In Progress, Closed
 
-            // Execute the command
-            command.ExecuteNonQuery();
-            // Get last inserted bug.
-            DataTable newTable = new DataTable();
-            adap.SelectCommand.CommandText = "SELECT * FROM bugs WHERE bid = LAST_INSERT_ID();";
-            adap.Fill(newTable);
-            // Update our data table of requirements.
-            DataRow newRow = bugs_dt.NewRow();
-            /*for (int i = 0; i < newRow.ItemArray.GetLength(0); ++i)
-                newRow[i] = newTable.Rows[0][i];*/
-            newRow.ItemArray = newTable.Rows[0].ItemArray;
-            bugs_dt.Rows.Add(newRow);
-            bugs_dt.AcceptChanges();
+                // Set command to add bug
+                command.CommandText = "INSERT INTO bugs VALUES(null, '" + newTitle_st + "', '" + newReqDesc_st + "', '" + newStatus_st +
+                     "', NOW(), '00/00/0000 00:00:00', 'notes', '" + newPriority_st + "');";
 
-            // Next add links.
-            String InsertLinks = "";
-            Int32 bugID = (Int32)newRow[0];
-            for (int i = 0; i < watcher_dt.Rows.Count; ++i)
-                InsertLinks += "INSERT INTO userbuglinks VALUES(null, " + watcher_dt.Rows[i][1].ToString() + " " + bugID.ToString() + ", 'watcher');";
-            for (int i = 0; i < owner_dt.Rows.Count; ++i)
-                InsertLinks += "INSERT INTO userbuglinks VALUES(null, " + owner_dt.Rows[i][1].ToString() + " " + bugID.ToString() + ", 'owner');";
-            command.CommandText = InsertLinks;
-            // Execute the command
-            command.ExecuteNonQuery();
+                // Execute the command
+                command.ExecuteNonQuery();
+                // Get last inserted requirement.
+                DataTable newTable = new DataTable();
+                adap.SelectCommand.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
+                                                 " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority " +
+                                                 "FROM bugs WHERE bid = LAST_INSERT_ID();";
+                adap.Fill(newTable);
+                // Update our data table of bugs.
+                DataRow newRow = bugs_dt.NewRow();
 
-            // Now create version links.
-            // ? I'm confused.
+                newRow.ItemArray = newTable.Rows[0].ItemArray;
+                bugs_dt.Rows.Add(newRow);
+                bugs_dt.AcceptChanges();
+
+                // Next add links.
+                String InsertLinks = "";
+                Int32 bugID = Convert.ToInt32(newRow[0]);
+                for (int i = 0; i < watcher_dt.Rows.Count; ++i)
+                    InsertLinks += "INSERT INTO userbuglinks VALUES(null, " + watcher_dt.Rows[i][1].ToString() + ", " + bugID.ToString() + ", 'watcher');";
+                for (int i = 0; i < owner_dt.Rows.Count; ++i)
+                    InsertLinks += "INSERT INTO userbuglinks VALUES(null, " + owner_dt.Rows[i][1].ToString() + ", " + bugID.ToString() + ", 'owner');";
+                //insert the originator
+                InsertLinks += "INSERT INTO userbuglinks VALUES(null, " + Convert.ToString(currentUserID) + ", " + bugID.ToString() + ", 'originator');";
+
+                String SelectLinks = "requirementid IN (";
+                // Now create requirement links and save id to get version from requirementversionlinks.
+                foreach (DataRow dr in this.reqs_dt.Rows)
+                {
+                    InsertLinks += "INSERT INTO bugreqlinks VALUES(null, " + bugID.ToString() + ", " + dr["ReqID"] + ");";
+                    SelectLinks += String.Format("'{0}',", dr["ReqID"].ToString());
+                }
+                SelectLinks += ")";
+                DataRow[] drc = reqsVersionLink_dt.Select(SelectLinks);
+                // Now get versions.
+                foreach (DataRow dr in drc)
+                {
+                    InsertLinks += "INSERT INTO bugversionlinks VALUES(null, " + bugID.ToString() + ", " + dr["versionid"] + ");";
+                }
+                command.CommandText = InsertLinks;
+                // Execute the command
+                command.ExecuteNonQuery();
+
+                this.Close();
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.ToString(), "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
@@ -189,5 +224,37 @@ namespace CSCE431Project1
 
         }
 
+        private void releaseComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Int32 vid = Convert.ToInt32(versionPool_dt.Rows[releaseComboBox.SelectedIndex]["vid"]);
+            DataRow[] drc = reqsVersionLink_dt.Select("versionid = '" + vid.ToString() + "'");
+            String reqsVersionTxt = "ReqID IN (";
+            foreach (DataRow dr in drc)
+                reqsVersionTxt += String.Format("'{0}',", dr["requirementid"].ToString());
+            reqsVersionTxt += ")";
+            reqsVersion_dt.Clear();
+            drc = reqsPool_dt.Select(reqsVersionTxt);
+            foreach (DataRow dr in drc)
+            {
+                DataRow newRow = reqsVersion_dt.NewRow();
+                newRow.ItemArray = dr.ItemArray;
+                reqsVersion_dt.Rows.Add(newRow);
+            }
+            reqsVersion_dt.AcceptChanges();
+        }
+
+        private void buttonReqs_Click(object sender, EventArgs e)
+        {
+            if (this.comboBoxReqs.SelectedIndex < 0)
+                return;
+            DataRow newRow = reqs_dt.NewRow();
+            newRow.ItemArray = reqsVersion_dt.Rows[comboBoxReqs.SelectedIndex].ItemArray;
+            // If it exists, skip it.
+            if (reqs_dt.Rows.Find(newRow["ReqID"]) != null)
+                return;
+            reqs_dt.Rows.Add(newRow);
+            reqs_dt.AcceptChanges();
+            watcherPool_dt.AcceptChanges();
+        }
     }
 }
