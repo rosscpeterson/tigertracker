@@ -29,7 +29,7 @@ namespace CSCE431Project1
         protected int currentUserPermLvl;
         // Keep data tables.
         protected DataTable proj_dt, ver_dt, req_dt, bug_dt;
-        protected DataTable user_dt, userreq_dt;
+        //protected DataTable user_dt, userreq_dt;
 
         public TopLevel()
         {
@@ -44,7 +44,6 @@ namespace CSCE431Project1
             UpdateUserDisplay();
             // Sets the project combo box and updates the req and bug table.
             setProjComboBox();
-
         }
         // Always close the connection.
         ~TopLevel()
@@ -110,12 +109,12 @@ namespace CSCE431Project1
             cmdSQL.CommandText = "SELECT projects.pid, projects.name, userprojectlinks.permissionLevel FROM projects, userprojectlinks " +
                                  "WHERE projects.pid = userprojectlinks.projectid AND userprojectlinks.userid = " + currentUserID.ToString() + ";";
             adpSQL.Fill(proj_dt);
-
+            
             if (proj_dt.Rows.Count != 0)
             {
                 //if there are valid projects go ahead and update everything
                 currentProjectID = (int)proj_dt.Rows[0][0];
-                this.toolProjCombo.ComboBox.DataSource = proj_dt.DefaultView;   
+                this.toolProjCombo.ComboBox.DataSource = proj_dt.DefaultView;
                 this.toolProjCombo.ComboBox.DisplayMember = "name";
                 updateReqTable();
                 updateBugTable();
@@ -172,7 +171,8 @@ namespace CSCE431Project1
             req_dt = new DataTable();
             adpSQL.Fill(req_dt);
             // Change names.
-            req_dt.Columns["rid"].ColumnName                    = "Req ID";
+            req_dt.PrimaryKey = new DataColumn[]{req_dt.Columns["rid"]};
+            req_dt.Columns["rid"].ColumnName                    = "ReqID";
             req_dt.Columns["requirementTitle"].ColumnName       = "Title";
             req_dt.Columns["requirementDescription"].ColumnName = "Description";
             req_dt.Columns["priority"].ColumnName               = "Priority";
@@ -180,6 +180,7 @@ namespace CSCE431Project1
             req_dt.Columns["timeSatisfied"].ColumnName          = "Time Satisfied";
             req_dt.Columns["status"].ColumnName                 = "Status";
             req_dt.Columns["notes"].ColumnName                  = "Notes";
+            req_dt.DefaultView.Sort = String.Format("Status DESC, Priority DESC, ReqID DESC");
 
             reqTable.DataSource = req_dt.DefaultView;
             // Blank out ones we don't want.
@@ -190,16 +191,17 @@ namespace CSCE431Project1
             reqTable.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             // reqTable.AutoResizeColumn(index) for single column.
             reqTable.AutoResizeColumns();
+            /*
+           //update userrequirementlinks table
+           cmdSQL.CommandText = "SELECT userrequirementlinks.* FROM userrequirementlinks, versions WHERE versions.projectid = " + currentProjectID.ToString() + ";";
+           userreq_dt = new DataTable();
+           adpSQL.Fill(userreq_dt);
 
-            //update userrequirementlinks table
-            cmdSQL.CommandText = "SELECT userrequirementlinks.* FROM userrequirementlinks, versions WHERE versions.projectid = " + currentProjectID.ToString() + ";";
-            userreq_dt = new DataTable();
-            adpSQL.Fill(userreq_dt);
-
-            //updates user_dt
-            cmdSQL.CommandText = "SELECT * FROM users;";
-            user_dt = new DataTable();
-            adpSQL.Fill(user_dt);
+           
+           //updates user_dt
+           cmdSQL.CommandText = "SELECT * FROM users;";
+           user_dt = new DataTable();
+           adpSQL.Fill(user_dt);*/
         }
 
         private void updateBugTable()
@@ -220,25 +222,42 @@ namespace CSCE431Project1
                                  " ORDER BY bid DESC;";
             bug_dt = new DataTable();
             adpSQL.Fill(bug_dt);
+            // Change names.
+            bug_dt.PrimaryKey = new DataColumn[] { bug_dt.Columns["bid"] };
+            bug_dt.Columns["bid"].ColumnName            = "BugID";
+            bug_dt.Columns["bugTitle"].ColumnName       = "Title";
+            bug_dt.Columns["bugDescription"].ColumnName = "Description";
+            bug_dt.Columns["priority"].ColumnName       = "Priority";
+            bug_dt.Columns["timeOpen"].ColumnName       = "Time Open";
+            bug_dt.Columns["timeClosed"].ColumnName     = "Time Closed";
+            bug_dt.Columns["status"].ColumnName         = "Status";
+            bug_dt.Columns["notes"].ColumnName          = "Notes";
+            bug_dt.DefaultView.Sort = String.Format("{0} DESC", bug_dt.Columns["BugID"].ColumnName);
 
-            bugTable.DataSource = bug_dt;
+            bugTable.DataSource = bug_dt.DefaultView;
+            // Blank out ones we don't want.
+            bugTable.Columns["Description"].Visible = false;
+            bugTable.Columns["Notes"].Visible       = false;
+            // Make others better.
+            // reqTable.AutoSizeColumnMode(index) for single column.
+            bugTable.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            // reqTable.AutoResizeColumn(index) for single column.
+            bugTable.AutoResizeColumns();
         }
 
         private void reqTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            //ERROR: WHEN NO CONTENT IS IN CELL WE GET OUT OF BOUNDS ERROR ***
-
-            Console.WriteLine("Row #{0}, Column #{0} Clicked  " + e.RowIndex + "  " + e.ColumnIndex);
-
-            int row = e.RowIndex;
+            Int32 row = e.RowIndex;
+            if (row < 0)
+                return;
 
             //set values found in the requirements table
-            idText.Text = req_dt.Rows[row][0].ToString(); //get id
-            titleText.Text = req_dt.Rows[row][1].ToString();  //get title
-            descriptionText.Text = req_dt.Rows[row][2].ToString(); //get Description
-            priorityComboBox.SelectedIndex = Convert.ToInt32(req_dt.Rows[row][3]) - 1;  //changes the priority combo box
-            timeOpenText.Text = req_dt.Rows[row][4].ToString(); //get time created
-            timeClosedText.Text = req_dt.Rows[row][5].ToString(); //get time satisfied
+            idText.Text                     = req_dt.Rows[row][0].ToString(); //get id
+            titleText.Text                  = req_dt.Rows[row][1].ToString();  //get title
+            descriptionText.Text            = req_dt.Rows[row][2].ToString(); //get Description
+            priorityComboBox.SelectedIndex  = Convert.ToInt32(req_dt.Rows[row][3]) - 1;  //changes the priority combo box
+            timeOpenText.Text               = req_dt.Rows[row][4].ToString(); //get time created
+            timeClosedText.Text             = req_dt.Rows[row][5].ToString(); //get time satisfied
             
             //get status
             switch (req_dt.Rows[row][6].ToString())
@@ -253,7 +272,36 @@ namespace CSCE431Project1
                     statusComboBox.SelectedIndex = 2;
                     break;
             }
+
+            DataSet dsUsrReq = new DataSet();
+            adpSQL.SelectCommand = cmdSQL;
+            cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userrequirementlinks " +
+                                 "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() + 
+                                 " AND users.uid = userrequirementlinks.userid " + 
+                                 "AND role = 'originator';";
+            adpSQL.Fill(dsUsrReq, "Originator");
+            cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userrequirementlinks " +
+                                 "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() +
+                                 " AND users.uid = userrequirementlinks.userid " + 
+                                 "AND (role = 'owner' OR role = 'originator');";
+            adpSQL.Fill(dsUsrReq, "Owners");
+            cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userrequirementlinks " +
+                                 "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() +
+                                 " AND users.uid = userrequirementlinks.userid " + 
+                                 "AND role = 'watcher';";
+            adpSQL.Fill(dsUsrReq, "Watchers");
             
+            if (dsUsrReq.Tables["Originator"].Rows.Count > 0)
+                originatorText.Text = dsUsrReq.Tables["Originator"].Rows[0]["username"].ToString();
+            else
+                MessageBox.Show("No Originator Found", "SQL DB Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+            this.ownerListBox.DataSource = dsUsrReq.Tables["Owners"].DefaultView;
+            this.ownerListBox.DisplayMember = "username";
+
+            this.watchersListBox.DataSource = dsUsrReq.Tables["Watchers"].DefaultView;
+            this.watchersListBox.DisplayMember = "username";
+            /*
             //owner and watcher array's
             ArrayList ownerIDs = new ArrayList();
             ArrayList watcherIDs = new ArrayList();
@@ -273,7 +321,7 @@ namespace CSCE431Project1
                 DataRow newRow;
                 switch (userreqlinks_dr[i][3].ToString())
                 {
-                    case ("origionator"):
+                    case ("originator"):
                         ownerID = Convert.ToInt32(userreqlinks_dr[i][1]);
                         break;
                     case ("owner"):
@@ -329,20 +377,76 @@ namespace CSCE431Project1
             }
 
             this.watchersListBox.DataSource = currWatchers_dt.DefaultView;
-            this.watchersListBox.DisplayMember = "username";
+            this.watchersListBox.DisplayMember = "username";*/
+        }
+
+        private void bugTable_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            Int32 row = e.RowIndex;
+            if (row < 0)
+                return;
+
+            //set values found in the requirements table
+            idText.Text                     = bug_dt.Rows[row]["BugID"].ToString(); //get id
+            titleText.Text                  = bug_dt.Rows[row]["Title"].ToString();  //get title
+            descriptionText.Text            = bug_dt.Rows[row]["Description"].ToString(); //get Description
+            priorityComboBox.SelectedIndex  = Convert.ToInt32(bug_dt.Rows[row]["Priority"]) - 1;  //changes the priority combo box
+            timeOpenText.Text               = bug_dt.Rows[row]["Time Open"].ToString(); //get time created
+            timeClosedText.Text             = bug_dt.Rows[row]["Time Closed"].ToString(); //get time satisfied
+
+            //get status
+            switch (req_dt.Rows[row]["Status"].ToString())
+            {
+                case ("Open"):
+                    statusComboBox.SelectedIndex = 0;
+                    break;
+                case ("In Progress"):
+                    statusComboBox.SelectedIndex = 1;
+                    break;
+                case ("Closed"):
+                    statusComboBox.SelectedIndex = 2;
+                    break;
+            }
+
+            DataSet dsUsrBug = new DataSet();
+            adpSQL.SelectCommand = cmdSQL;
+            cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userbuglinks " +
+                                 "WHERE userbuglinks.bugid = " + bug_dt.Rows[row]["BugID"].ToString() +
+                                 " AND users.uid = userbuglinks.userid " +
+                                 "AND role = 'originator';";
+            adpSQL.Fill(dsUsrBug, "Originator");
+            cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userbuglinks " +
+                                 "WHERE userbuglinks.bugid = " + bug_dt.Rows[row]["BugID"].ToString() +
+                                 " AND users.uid = userbuglinks.userid " +
+                                 "AND (role = 'owner' OR role = 'originator');";
+            adpSQL.Fill(dsUsrBug, "Owners");
+            cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userbuglinks " +
+                                 "WHERE userbuglinks.bugid = " + bug_dt.Rows[row]["BugID"].ToString() +
+                                 " AND users.uid = userbuglinks.userid " +
+                                 "AND role = 'watcher';";
+            adpSQL.Fill(dsUsrBug, "Watchers");
+
+            if (dsUsrBug.Tables["Originator"].Rows.Count > 0)
+                originatorText.Text = dsUsrBug.Tables["Originator"].Rows[0]["username"].ToString();
+            else
+                MessageBox.Show("No Origionator Found", "SQL DB Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+            this.ownerListBox.DataSource    = dsUsrBug.Tables["Owners"].DefaultView;
+            this.ownerListBox.DisplayMember = "username";
+
+            this.watchersListBox.DataSource     = dsUsrBug.Tables["Watchers"].DefaultView;
+            this.watchersListBox.DisplayMember  = "username";
         }
 
         private void newReqButton_Click(object sender, EventArgs e)
         {
-            //BERNARDO: WHY DID WE NEED TO PASS THE USER REQ LINKS AROUND?? ARE WE KEEPING THE LOCAL COPIES UPDATED AS WELL? they should all update when
-            //we leave the new req screen ******
-            NewReq newReqWindow = new NewReq(conSQL, currentUser, currentUserID, currentProjectID, ver_dt, req_dt);
+            NewReq newReqWindow = new NewReq(conSQL, currentUser, currentUserID, currentProjectID, ver_dt, req_dt/*, userreq_dt*/);
             newReqWindow.ShowDialog();
         }
 
         private void newBugButton_Click(object sender, EventArgs e)
         {
-            NewBug newBugWindow = new NewBug(conSQL, currentUser, currentUserID, currentProjectID, ver_dt, bug_dt);
+            NewBug newBugWindow = new NewBug(conSQL, currentUser, currentUserID, currentProjectID, ver_dt, bug_dt, req_dt);
             newBugWindow.ShowDialog();
         }
 
