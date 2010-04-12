@@ -76,6 +76,10 @@
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.ownerListBox = new System.Windows.Forms.ListBox();
             this.watchersListBox = new System.Windows.Forms.ListBox();
+            this.ownerComboBox = new System.Windows.Forms.ComboBox();
+            this.ownerAddButton = new System.Windows.Forms.Button();
+            this.watcherComboBox = new System.Windows.Forms.ComboBox();
+            this.watchersAddButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.bugTable)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.TabView.SuspendLayout();
@@ -113,7 +117,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(310, 48);
+            this.label3.Location = new System.Drawing.Point(548, 48);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(37, 13);
             this.label3.TabIndex = 5;
@@ -127,7 +131,7 @@
             "Open",
             "In Progress",
             "Closed"});
-            this.statusComboBox.Location = new System.Drawing.Point(361, 44);
+            this.statusComboBox.Location = new System.Drawing.Point(599, 44);
             this.statusComboBox.Name = "statusComboBox";
             this.statusComboBox.Size = new System.Drawing.Size(188, 21);
             this.statusComboBox.TabIndex = 6;
@@ -144,15 +148,15 @@
             // 
             // timeClosedText
             // 
-            this.timeClosedText.Location = new System.Drawing.Point(89, 293);
+            this.timeClosedText.Location = new System.Drawing.Point(361, 79);
             this.timeClosedText.Name = "timeClosedText";
-            this.timeClosedText.Size = new System.Drawing.Size(188, 20);
+            this.timeClosedText.Size = new System.Drawing.Size(146, 20);
             this.timeClosedText.TabIndex = 14;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 296);
+            this.label5.Location = new System.Drawing.Point(285, 82);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(65, 13);
             this.label5.TabIndex = 13;
@@ -161,7 +165,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(13, 258);
+            this.label6.Location = new System.Drawing.Point(285, 44);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(59, 13);
             this.label6.TabIndex = 12;
@@ -169,9 +173,9 @@
             // 
             // timeOpenText
             // 
-            this.timeOpenText.Location = new System.Drawing.Point(89, 255);
+            this.timeOpenText.Location = new System.Drawing.Point(361, 44);
             this.timeOpenText.Name = "timeOpenText";
-            this.timeOpenText.Size = new System.Drawing.Size(188, 20);
+            this.timeOpenText.Size = new System.Drawing.Size(146, 20);
             this.timeOpenText.TabIndex = 11;
             // 
             // label7
@@ -186,7 +190,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(301, 83);
+            this.label8.Location = new System.Drawing.Point(539, 83);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(38, 13);
             this.label8.TabIndex = 15;
@@ -194,10 +198,10 @@
             // 
             // descriptionText
             // 
-            this.descriptionText.Location = new System.Drawing.Point(361, 112);
+            this.descriptionText.Location = new System.Drawing.Point(361, 115);
             this.descriptionText.Multiline = true;
             this.descriptionText.Name = "descriptionText";
-            this.descriptionText.Size = new System.Drawing.Size(574, 120);
+            this.descriptionText.Size = new System.Drawing.Size(574, 117);
             this.descriptionText.TabIndex = 17;
             // 
             // label9
@@ -212,7 +216,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(16, 392);
+            this.label10.Location = new System.Drawing.Point(13, 339);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(59, 13);
             this.label10.TabIndex = 22;
@@ -221,7 +225,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(16, 331);
+            this.label11.Location = new System.Drawing.Point(12, 255);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(49, 13);
             this.label11.TabIndex = 20;
@@ -359,7 +363,7 @@
             // labelUserName
             // 
             this.labelUserName.AutoSize = true;
-            this.labelUserName.Location = new System.Drawing.Point(720, 45);
+            this.labelUserName.Location = new System.Drawing.Point(796, 44);
             this.labelUserName.Name = "labelUserName";
             this.labelUserName.Size = new System.Drawing.Size(60, 13);
             this.labelUserName.TabIndex = 31;
@@ -369,7 +373,7 @@
             // labelUserTitle
             // 
             this.labelUserTitle.AutoSize = true;
-            this.labelUserTitle.Location = new System.Drawing.Point(728, 77);
+            this.labelUserTitle.Location = new System.Drawing.Point(796, 77);
             this.labelUserTitle.Name = "labelUserTitle";
             this.labelUserTitle.Size = new System.Drawing.Size(52, 13);
             this.labelUserTitle.TabIndex = 32;
@@ -453,7 +457,7 @@
             "4",
             "5",
             "6"});
-            this.priorityComboBox.Location = new System.Drawing.Point(361, 77);
+            this.priorityComboBox.Location = new System.Drawing.Point(599, 77);
             this.priorityComboBox.Name = "priorityComboBox";
             this.priorityComboBox.Size = new System.Drawing.Size(188, 21);
             this.priorityComboBox.TabIndex = 37;
@@ -481,7 +485,7 @@
             // ownerListBox
             // 
             this.ownerListBox.FormattingEnabled = true;
-            this.ownerListBox.Location = new System.Drawing.Point(81, 331);
+            this.ownerListBox.Location = new System.Drawing.Point(89, 279);
             this.ownerListBox.Name = "ownerListBox";
             this.ownerListBox.Size = new System.Drawing.Size(208, 43);
             this.ownerListBox.TabIndex = 42;
@@ -489,16 +493,56 @@
             // watchersListBox
             // 
             this.watchersListBox.FormattingEnabled = true;
-            this.watchersListBox.Location = new System.Drawing.Point(82, 394);
+            this.watchersListBox.Location = new System.Drawing.Point(89, 369);
             this.watchersListBox.Name = "watchersListBox";
             this.watchersListBox.Size = new System.Drawing.Size(207, 43);
             this.watchersListBox.TabIndex = 43;
+            // 
+            // ownerComboBox
+            // 
+            this.ownerComboBox.FormattingEnabled = true;
+            this.ownerComboBox.Location = new System.Drawing.Point(89, 252);
+            this.ownerComboBox.Name = "ownerComboBox";
+            this.ownerComboBox.Size = new System.Drawing.Size(171, 21);
+            this.ownerComboBox.TabIndex = 44;
+            // 
+            // ownerAddButton
+            // 
+            this.ownerAddButton.Location = new System.Drawing.Point(266, 248);
+            this.ownerAddButton.Name = "ownerAddButton";
+            this.ownerAddButton.Size = new System.Drawing.Size(27, 27);
+            this.ownerAddButton.TabIndex = 46;
+            this.ownerAddButton.Text = "Add";
+            this.ownerAddButton.UseVisualStyleBackColor = true;
+            this.ownerAddButton.Click += new System.EventHandler(this.ownerAddButton_Click);
+            // 
+            // watcherComboBox
+            // 
+            this.watcherComboBox.FormattingEnabled = true;
+            this.watcherComboBox.Location = new System.Drawing.Point(89, 336);
+            this.watcherComboBox.Name = "watcherComboBox";
+            this.watcherComboBox.Size = new System.Drawing.Size(171, 21);
+            this.watcherComboBox.TabIndex = 47;
+            // 
+            // watchersAddButton
+            // 
+            this.watchersAddButton.Location = new System.Drawing.Point(266, 332);
+            this.watchersAddButton.Name = "watchersAddButton";
+            this.watchersAddButton.Size = new System.Drawing.Size(27, 27);
+            this.watchersAddButton.TabIndex = 48;
+            this.watchersAddButton.Text = "Add";
+            this.watchersAddButton.UseVisualStyleBackColor = true;
+            this.watchersAddButton.Click += new System.EventHandler(this.watchersAddButton_Click);
             // 
             // TopLevel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(992, 732);
+            this.Controls.Add(this.watchersAddButton);
+            this.Controls.Add(this.watcherComboBox);
+            this.Controls.Add(this.ownerAddButton);
+            this.Controls.Add(this.ownerComboBox);
             this.Controls.Add(this.watchersListBox);
             this.Controls.Add(this.ownerListBox);
             this.Controls.Add(this.addVerButton);
@@ -599,6 +643,10 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ListBox ownerListBox;
         private System.Windows.Forms.ListBox watchersListBox;
+        private System.Windows.Forms.ComboBox ownerComboBox;
+        private System.Windows.Forms.Button ownerAddButton;
+        private System.Windows.Forms.ComboBox watcherComboBox;
+        private System.Windows.Forms.Button watchersAddButton;
     }
 }
 

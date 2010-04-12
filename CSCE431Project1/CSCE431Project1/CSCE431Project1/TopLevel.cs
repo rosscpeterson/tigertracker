@@ -29,6 +29,7 @@ namespace CSCE431Project1
         protected int currentUserPermLvl;
         // Keep data tables.
         protected DataTable proj_dt, ver_dt, req_dt, bug_dt;
+        protected DataSet projUsrs_ds;
         //protected DataTable user_dt, userreq_dt;
 
         public TopLevel()
@@ -118,6 +119,22 @@ namespace CSCE431Project1
                 this.toolProjCombo.ComboBox.DisplayMember = "name";
                 updateReqTable();
                 updateBugTable();
+
+                // Get users in this project with projUsrs_ds.
+                projUsrs_ds = new DataSet();
+                cmdSQL.CommandText = "SELECT users.* FROM users, userprojectlinks WHERE " + currentProjectID.ToString() + " = userprojectlinks.projectid" +
+                                     " AND userprojectlinks.userid = " + currentUserID.ToString() + ";";
+                adpSQL.SelectCommand = cmdSQL;
+                adpSQL.Fill(projUsrs_ds, "All");
+                cmdSQL.CommandText = "SELECT userprojectlinks.* FROM userprojectlinks WHERE " + currentProjectID.ToString() + " = userprojectlinks.projectid;";
+                adpSQL.SelectCommand = cmdSQL;
+                adpSQL.Fill(projUsrs_ds, "Links");
+
+                ownerComboBox.DataSource = projUsrs_ds.Tables["All"].DefaultView;
+                ownerComboBox.DisplayMember = "username";
+
+                watcherComboBox.DataSource = projUsrs_ds.Tables["All"].DefaultView;
+                watcherComboBox.DisplayMember = "username";
             }
 
             // Bind the combo box to the table
@@ -168,6 +185,7 @@ namespace CSCE431Project1
                                  " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" +
                                  " FROM requirements, versions WHERE versions.projectid = " + currentProjectID.ToString() +
                                  " ORDER BY rid DESC;";
+
             req_dt = new DataTable();
             adpSQL.Fill(req_dt);
             // Change names.
@@ -191,6 +209,7 @@ namespace CSCE431Project1
             reqTable.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             // reqTable.AutoResizeColumn(index) for single column.
             reqTable.AutoResizeColumns();
+            //reqTable.SelectedRows = reqTable.Rows[0];
             /*
            //update userrequirementlinks table
            cmdSQL.CommandText = "SELECT userrequirementlinks.* FROM userrequirementlinks, versions WHERE versions.projectid = " + currentProjectID.ToString() + ";";
@@ -251,6 +270,8 @@ namespace CSCE431Project1
             if (row < 0)
                 return;
 
+            this.label4.Text = "Release";
+
             //set values found in the requirements table
             idText.Text                     = req_dt.Rows[row][0].ToString(); //get id
             titleText.Text                  = req_dt.Rows[row][1].ToString();  //get title
@@ -272,35 +293,93 @@ namespace CSCE431Project1
                     statusComboBox.SelectedIndex = 2;
                     break;
             }
-
-            DataSet dsUsrReq = new DataSet();
+            /*
+            DataTable links = projUsrs_ds.Tables["Links"];
+            // Add originators.
+            DataTable dt = projUsrs_ds.Tables["All"];
+            DataRow[] drc = projUsrs_ds.Select("uid, username WHERE " projUsrs_ds.Tables["Links"] + req_dt.Rows[row][0].ToString() +
+                                                " AND All.uid = Links.userid " + "AND All.role = 'originator';");
+            dt = projUsrs_ds.Tables["All"].Clone();
+            dt.TableName = "Originator";
+            foreach (DataRow dr in drc)
+            {
+                DataRow newRow = dt.NewRow();
+                newRow.ItemArray = dr.ItemArray;
+                dt.Rows.Add(newRow);
+            }
+            dt.AcceptChanges();
+            projUsrs_ds.Tables.Add(dt);
+            // Add owners.
+            dt = projUsrs_ds.Tables["All"];
+            drc = dt.Select("users.uid, users.username FROM users, userrequirementlinks " +
+                                      "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() +
+                                      " AND users.uid = userrequirementlinks.userid " + "AND (role = 'owner' OR role = 'originator');");
+            dt = projUsrs_ds.Tables["All"].Clone();
+            dt.TableName = "Owners";
+            foreach (DataRow dr in drc)
+            {
+                DataRow newRow = dt.NewRow();
+                newRow.ItemArray = dr.ItemArray;
+                dt.Rows.Add(newRow);
+            }
+            dt.AcceptChanges();
+            projUsrs_ds.Tables.Add(dt);
+            // Add watchers.
+            dt = projUsrs_ds.Tables["All"];
+            drc = dt.Select("users.uid, users.username FROM users, userrequirementlinks " +
+                                      "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() +
+                                      " AND users.uid = userrequirementlinks.userid " + "AND role = 'watcher';");
+            dt = projUsrs_ds.Tables["All"].Clone();
+            dt.TableName = "Watchers";
+            foreach (DataRow dr in drc)
+            {
+                DataRow newRow = dt.NewRow();
+                newRow.ItemArray = dr.ItemArray;
+                dt.Rows.Add(newRow);
+            }
+            dt.AcceptChanges();
+            projUsrs_ds.Tables.Add(dt);*/
             adpSQL.SelectCommand = cmdSQL;
             cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userrequirementlinks " +
                                  "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() + 
                                  " AND users.uid = userrequirementlinks.userid " + 
                                  "AND role = 'originator';";
-            adpSQL.Fill(dsUsrReq, "Originator");
+            if (projUsrs_ds.Tables.Contains("Originator"))
+                projUsrs_ds.Tables["Originator"].Clear();
+            adpSQL.Fill(projUsrs_ds, "Originator");
+
+            projUsrs_ds.Tables["Originator"].PrimaryKey = new DataColumn[] { projUsrs_ds.Tables["Originator"].Columns["uid"] };
             cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userrequirementlinks " +
                                  "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() +
                                  " AND users.uid = userrequirementlinks.userid " + 
                                  "AND (role = 'owner' OR role = 'originator');";
-            adpSQL.Fill(dsUsrReq, "Owners");
+            if (projUsrs_ds.Tables.Contains("Owners"))
+                projUsrs_ds.Tables["Owners"].Clear();
+            adpSQL.Fill(projUsrs_ds, "Owners");
+
+            projUsrs_ds.Tables["Owners"].PrimaryKey = new DataColumn[] { projUsrs_ds.Tables["Owners"].Columns["uid"] };
             cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userrequirementlinks " +
                                  "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() +
                                  " AND users.uid = userrequirementlinks.userid " + 
                                  "AND role = 'watcher';";
-            adpSQL.Fill(dsUsrReq, "Watchers");
-            
-            if (dsUsrReq.Tables["Originator"].Rows.Count > 0)
-                originatorText.Text = dsUsrReq.Tables["Originator"].Rows[0]["username"].ToString();
+            if (projUsrs_ds.Tables.Contains("Watchers"))
+                projUsrs_ds.Tables["Watchers"].Clear();
+            adpSQL.Fill(projUsrs_ds, "Watchers");
+
+            projUsrs_ds.Tables["Watchers"].PrimaryKey = new DataColumn[] { projUsrs_ds.Tables["Watchers"].Columns["uid"] };
+
+            if (projUsrs_ds.Tables["Originator"].Rows.Count > 0)
+                originatorText.Text = projUsrs_ds.Tables["Originator"].Rows[0]["username"].ToString();
             else
                 MessageBox.Show("No Originator Found", "SQL DB Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-            this.ownerListBox.DataSource = dsUsrReq.Tables["Owners"].DefaultView;
+            this.ownerListBox.DataSource = projUsrs_ds.Tables["Owners"].DefaultView;
             this.ownerListBox.DisplayMember = "username";
+            this.ownerListBox.Refresh();
 
-            this.watchersListBox.DataSource = dsUsrReq.Tables["Watchers"].DefaultView;
+            this.watchersListBox.DataSource = projUsrs_ds.Tables["Watchers"].DefaultView;
             this.watchersListBox.DisplayMember = "username";
+            this.watchersListBox.Refresh();
             /*
             //owner and watcher array's
             ArrayList ownerIDs = new ArrayList();
@@ -386,6 +465,8 @@ namespace CSCE431Project1
             if (row < 0)
                 return;
 
+            this.label4.Text = "Requirements";
+
             //set values found in the requirements table
             idText.Text                     = bug_dt.Rows[row]["BugID"].ToString(); //get id
             titleText.Text                  = bug_dt.Rows[row]["Title"].ToString();  //get title
@@ -408,33 +489,41 @@ namespace CSCE431Project1
                     break;
             }
 
-            DataSet dsUsrBug = new DataSet();
+            projUsrs_ds = new DataSet();
             adpSQL.SelectCommand = cmdSQL;
             cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userbuglinks " +
                                  "WHERE userbuglinks.bugid = " + bug_dt.Rows[row]["BugID"].ToString() +
                                  " AND users.uid = userbuglinks.userid " +
                                  "AND role = 'originator';";
-            adpSQL.Fill(dsUsrBug, "Originator");
+            if (projUsrs_ds.Tables.Contains("Originator"))
+                projUsrs_ds.Tables["Originator"].Clear();
+            adpSQL.Fill(projUsrs_ds, "Originator");
+
             cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userbuglinks " +
                                  "WHERE userbuglinks.bugid = " + bug_dt.Rows[row]["BugID"].ToString() +
                                  " AND users.uid = userbuglinks.userid " +
                                  "AND (role = 'owner' OR role = 'originator');";
-            adpSQL.Fill(dsUsrBug, "Owners");
+            if (projUsrs_ds.Tables.Contains("Owners"))
+                projUsrs_ds.Tables["Owners"].Clear();
+            adpSQL.Fill(projUsrs_ds, "Owners");
+
             cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userbuglinks " +
                                  "WHERE userbuglinks.bugid = " + bug_dt.Rows[row]["BugID"].ToString() +
                                  " AND users.uid = userbuglinks.userid " +
                                  "AND role = 'watcher';";
-            adpSQL.Fill(dsUsrBug, "Watchers");
+            if (projUsrs_ds.Tables.Contains("Watchers"))
+                projUsrs_ds.Tables["Watchers"].Clear();
+            adpSQL.Fill(projUsrs_ds, "Watchers");
 
-            if (dsUsrBug.Tables["Originator"].Rows.Count > 0)
-                originatorText.Text = dsUsrBug.Tables["Originator"].Rows[0]["username"].ToString();
+            if (projUsrs_ds.Tables["Originator"].Rows.Count > 0)
+                originatorText.Text = projUsrs_ds.Tables["Originator"].Rows[0]["username"].ToString();
             else
                 MessageBox.Show("No Origionator Found", "SQL DB Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-            this.ownerListBox.DataSource    = dsUsrBug.Tables["Owners"].DefaultView;
+            this.ownerListBox.DataSource = projUsrs_ds.Tables["Owners"].DefaultView;
             this.ownerListBox.DisplayMember = "username";
 
-            this.watchersListBox.DataSource     = dsUsrBug.Tables["Watchers"].DefaultView;
+            this.watchersListBox.DataSource = projUsrs_ds.Tables["Watchers"].DefaultView;
             this.watchersListBox.DisplayMember  = "username";
         }
 
@@ -505,6 +594,49 @@ namespace CSCE431Project1
             //sample query from users line 169
             //m_cmdSQL.CommandText = "UPDATE users SET username = '" + name + "', password = '" + pass + "', permissionLevel = '" +
               //                         newLevel + "', active = " + activity + ", email = '" + email + "' WHERE uid = " + m_userID;
+        }
+
+        private void ownerAddButton_Click(object sender, EventArgs e)
+        {
+            //trap to see if user is in pool
+            if (this.ownerComboBox.SelectedIndex < 0)
+                return;
+            if (projUsrs_ds.Tables["Owners"] == null)
+            {
+                //***
+            }
+            DataRow newRow = projUsrs_ds.Tables["Owners"].NewRow();
+            newRow["uid"] = projUsrs_ds.Tables["All"].Rows[ownerComboBox.SelectedIndex]["uid"];
+            newRow["username"] = projUsrs_ds.Tables["All"].Rows[ownerComboBox.SelectedIndex]["username"];
+            // If it exists, skip it.
+            if (projUsrs_ds.Tables["Owners"].Rows.Find(newRow["uid"]) != null)
+                return;
+            projUsrs_ds.Tables["Owners"].Rows.Add(newRow);
+            projUsrs_ds.Tables["Owners"].AcceptChanges();
+
+            //make add the user to owners in Database
+
+            //are we on a req or a bug?
+            if(TabView.SelectedIndex == 0) {
+                Console.Out.WriteLine("Requirements selected!!!");
+            }
+            //cmdSQL.CommandText = "INSERT INTO 
+            //cmdSQL.ExecuteNonQuery();
+        }
+
+        private void watchersAddButton_Click(object sender, EventArgs e)
+        {
+            //trap to see if user is in pool
+            if (this.ownerComboBox.SelectedIndex < 0)
+                return;
+            DataRow newRow = projUsrs_ds.Tables["Watchers"].NewRow();
+            newRow["uid"] = projUsrs_ds.Tables["All"].Rows[watcherComboBox.SelectedIndex]["uid"];
+            newRow["username"] = projUsrs_ds.Tables["All"].Rows[watcherComboBox.SelectedIndex]["username"];
+            // If it exists, skip it.
+            if (projUsrs_ds.Tables["Watchers"].Rows.Find(newRow["uid"]) != null)
+                return;
+            projUsrs_ds.Tables["Watchers"].Rows.Add(newRow);
+            projUsrs_ds.Tables["Watchers"].AcceptChanges();
         }
     }
 }
