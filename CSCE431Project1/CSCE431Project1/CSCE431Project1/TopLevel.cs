@@ -136,6 +136,8 @@ namespace CSCE431Project1
 
                 watcherComboBox.DataSource = projUsrs_ds.Tables["All"].DefaultView;
                 watcherComboBox.DisplayMember = "username";
+
+                reqTable_CellClick(reqTable, new DataGridViewCellEventArgs(0, 0));
             }
 
             // Bind the combo box to the table
@@ -210,7 +212,6 @@ namespace CSCE431Project1
             reqTable.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             // reqTable.AutoResizeColumn(index) for single column.
             reqTable.AutoResizeColumns();
-            //reqTable.SelectedRows = reqTable.Rows[0];
             /*
            //update userrequirementlinks table
            cmdSQL.CommandText = "SELECT userrequirementlinks.* FROM userrequirementlinks, versions WHERE versions.projectid = " + currentProjectID.ToString() + ";";
@@ -271,6 +272,11 @@ namespace CSCE431Project1
             //currReqOrBugID = *****
             if (row < 0)
                 return;
+            // Duplicate record thing... not needed now, I don't think.
+            cmdSQL.CommandText = "DELETE T1 FROM userrequirementlinks AS T1, userrequirementlinks AS T2 WHERE" +
+                                 " T1.userid = T2.userid AND T1.requirementid = T2.requirementid AND T1.urlid > T2.urlid AND" +
+                                 " ( T1.role = T2.role OR (T1.role IN ('owner','originator') AND T2.role IN ('owner','originator')) );";
+            cmdSQL.ExecuteNonQuery();
 
             this.label4.Text = "Release";
 
@@ -342,7 +348,7 @@ namespace CSCE431Project1
             dt.AcceptChanges();
             projUsrs_ds.Tables.Add(dt);*/
             adpSQL.SelectCommand = cmdSQL;
-            cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userrequirementlinks " +
+            cmdSQL.CommandText = "SELECT users.uid, users.username, userrequirementlinks.role FROM users, userrequirementlinks " +
                                  "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() + 
                                  " AND users.uid = userrequirementlinks.userid " + 
                                  "AND role = 'originator';";
@@ -351,7 +357,8 @@ namespace CSCE431Project1
             adpSQL.Fill(projUsrs_ds, "Originator");
 
             projUsrs_ds.Tables["Originator"].PrimaryKey = new DataColumn[] { projUsrs_ds.Tables["Originator"].Columns["uid"] };
-            cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userrequirementlinks " +
+
+            cmdSQL.CommandText = "SELECT users.uid, users.username, userrequirementlinks.role FROM users, userrequirementlinks " +
                                  "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() +
                                  " AND users.uid = userrequirementlinks.userid " + 
                                  "AND (role = 'owner' OR role = 'originator');";
@@ -360,7 +367,8 @@ namespace CSCE431Project1
             adpSQL.Fill(projUsrs_ds, "Owners");
 
             projUsrs_ds.Tables["Owners"].PrimaryKey = new DataColumn[] { projUsrs_ds.Tables["Owners"].Columns["uid"] };
-            cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userrequirementlinks " +
+
+            cmdSQL.CommandText = "SELECT users.uid, users.username, userrequirementlinks.role FROM users, userrequirementlinks " +
                                  "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() +
                                  " AND users.uid = userrequirementlinks.userid " + 
                                  "AND role = 'watcher';";
@@ -463,6 +471,7 @@ namespace CSCE431Project1
 
         private void bugTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+           
             Int32 row = e.RowIndex;
             if (row < 0)
                 return;
@@ -610,6 +619,7 @@ namespace CSCE431Project1
             DataRow newRow = projUsrs_ds.Tables["Owners"].NewRow();
             newRow["uid"] = projUsrs_ds.Tables["All"].Rows[ownerComboBox.SelectedIndex]["uid"];
             newRow["username"] = projUsrs_ds.Tables["All"].Rows[ownerComboBox.SelectedIndex]["username"];
+            newRow["role"] = "owner";
             // If it exists, skip it.
             if (projUsrs_ds.Tables["Owners"].Rows.Find(newRow["uid"]) != null)
                 return;
@@ -622,12 +632,12 @@ namespace CSCE431Project1
             if (TabView.SelectedIndex == 0)
             {
                 //requirements are selected
-                cmdSQL.CommandText = "INSERT INTO userrequirementlinks VALUES (null, " + currentUserID + ", " + idText.Text + ", 'owner')";
+                cmdSQL.CommandText = "INSERT INTO userrequirementlinks VALUES(null, " + newRow["uid"] + ", " + idText.Text + ", 'owner')";
             }
             else
             {
                 //bugs are selected
-                cmdSQL.CommandText = "INSERT INTO userbuglinks VALUES (null, " + currentUserID + ", " + idText.Text + ", 'owner')";
+                cmdSQL.CommandText = "INSERT INTO userbuglinks VALUES(null, " + newRow["uid"] + ", " + idText.Text + ", 'owner')";
             }
             cmdSQL.ExecuteNonQuery();
         }
