@@ -30,6 +30,7 @@ namespace CSCE431Project1
         // Keep data tables.
         protected DataTable proj_dt, ver_dt, req_dt, bug_dt;
         protected DataSet projUsrs_ds;
+        protected int currReqOrBugID;   //this is the id of the req or bug selected in the data grid view, used for adding owners or watchers
         //protected DataTable user_dt, userreq_dt;
 
         public TopLevel()
@@ -267,6 +268,7 @@ namespace CSCE431Project1
         private void reqTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Int32 row = e.RowIndex;
+            //currReqOrBugID = *****
             if (row < 0)
                 return;
 
@@ -617,11 +619,17 @@ namespace CSCE431Project1
             //make add the user to owners in Database
 
             //are we on a req or a bug?
-            if(TabView.SelectedIndex == 0) {
-                Console.Out.WriteLine("Requirements selected!!!");
+            if (TabView.SelectedIndex == 0)
+            {
+                //requirements are selected
+                cmdSQL.CommandText = "INSERT INTO userrequirementlinks VALUES (null, " + currentUserID + ", " + idText.Text + ", 'owner')";
             }
-            //cmdSQL.CommandText = "INSERT INTO 
-            //cmdSQL.ExecuteNonQuery();
+            else
+            {
+                //bugs are selected
+                cmdSQL.CommandText = "INSERT INTO userbuglinks VALUES (null, " + currentUserID + ", " + idText.Text + ", 'owner')";
+            }
+            cmdSQL.ExecuteNonQuery();
         }
 
         private void watchersAddButton_Click(object sender, EventArgs e)
