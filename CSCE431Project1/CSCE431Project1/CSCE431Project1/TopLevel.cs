@@ -632,12 +632,12 @@ namespace CSCE431Project1
             if (TabView.SelectedIndex == 0)
             {
                 //requirements are selected
-                cmdSQL.CommandText = "INSERT INTO userrequirementlinks VALUES(null, " + newRow["uid"] + ", " + idText.Text + ", 'owner')";
+                cmdSQL.CommandText = "INSERT INTO userrequirementlinks VALUES (null, " + newRow["uid"] + ", " + idText.Text + ", 'owner')";
             }
             else
             {
                 //bugs are selected
-                cmdSQL.CommandText = "INSERT INTO userbuglinks VALUES(null, " + newRow["uid"] + ", " + idText.Text + ", 'owner')";
+                cmdSQL.CommandText = "INSERT INTO userbuglinks VALUES (null, " + newRow["uid"] + ", " + idText.Text + ", 'owner')";
             }
             cmdSQL.ExecuteNonQuery();
         }
@@ -655,6 +655,19 @@ namespace CSCE431Project1
                 return;
             projUsrs_ds.Tables["Watchers"].Rows.Add(newRow);
             projUsrs_ds.Tables["Watchers"].AcceptChanges();
+
+            //are we on a req or a bug?
+            if (TabView.SelectedIndex == 0)
+            {
+                //requirements are selected
+                cmdSQL.CommandText = "INSERT INTO userrequirementlinks VALUES (null, " + newRow["uid"] + ", " + idText.Text + ", 'watcher')";
+            }
+            else
+            {
+                //bugs are selected
+                cmdSQL.CommandText = "INSERT INTO userbuglinks VALUES (null, " + newRow["uid"] + ", " + idText.Text + ", 'watcher')";
+            }
+            cmdSQL.ExecuteNonQuery();
         }
     }
 }
