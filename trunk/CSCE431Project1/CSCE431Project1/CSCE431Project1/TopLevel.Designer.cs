@@ -80,6 +80,7 @@
             this.ownerAddButton = new System.Windows.Forms.Button();
             this.watcherComboBox = new System.Windows.Forms.ComboBox();
             this.watchersAddButton = new System.Windows.Forms.Button();
+            this.comboBoxRR = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.bugTable)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.TabView.SuspendLayout();
@@ -305,7 +306,7 @@
             this.toolStripButtonLogOff.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLogOff.Image")));
             this.toolStripButtonLogOff.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLogOff.Name = "toolStripButtonLogOff";
-            this.toolStripButtonLogOff.Size = new System.Drawing.Size(47, 22);
+            this.toolStripButtonLogOff.Size = new System.Drawing.Size(51, 22);
             this.toolStripButtonLogOff.Text = "Log Off";
             this.toolStripButtonLogOff.Click += new System.EventHandler(this.toolStripButtonLogOff_Click);
             // 
@@ -319,7 +320,7 @@
             this.projects_toolstrip.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.projects_toolstrip.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.projects_toolstrip.Name = "projects_toolstrip";
-            this.projects_toolstrip.Size = new System.Drawing.Size(50, 22);
+            this.projects_toolstrip.Size = new System.Drawing.Size(53, 22);
             this.projects_toolstrip.Text = "Projects";
             this.projects_toolstrip.Click += new System.EventHandler(this.projects_toolstrip_Click);
             // 
@@ -334,7 +335,7 @@
             this.toolUsersButton.Image = ((System.Drawing.Image)(resources.GetObject("toolUsersButton.Image")));
             this.toolUsersButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolUsersButton.Name = "toolUsersButton";
-            this.toolUsersButton.Size = new System.Drawing.Size(38, 22);
+            this.toolUsersButton.Size = new System.Drawing.Size(39, 22);
             this.toolUsersButton.Text = "Users";
             this.toolUsersButton.Click += new System.EventHandler(this.toolUsersButton_Click);
             // 
@@ -534,11 +535,20 @@
             this.watchersAddButton.UseVisualStyleBackColor = true;
             this.watchersAddButton.Click += new System.EventHandler(this.watchersAddButton_Click);
             // 
+            // comboBoxRR
+            // 
+            this.comboBoxRR.FormattingEnabled = true;
+            this.comboBoxRR.Location = new System.Drawing.Point(72, 105);
+            this.comboBoxRR.Name = "comboBoxRR";
+            this.comboBoxRR.Size = new System.Drawing.Size(155, 21);
+            this.comboBoxRR.TabIndex = 49;
+            // 
             // TopLevel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(992, 732);
+            this.Controls.Add(this.comboBoxRR);
             this.Controls.Add(this.watchersAddButton);
             this.Controls.Add(this.watcherComboBox);
             this.Controls.Add(this.ownerAddButton);
@@ -647,6 +657,7 @@
         private System.Windows.Forms.Button ownerAddButton;
         private System.Windows.Forms.ComboBox watcherComboBox;
         private System.Windows.Forms.Button watchersAddButton;
+        private System.Windows.Forms.ComboBox comboBoxRR;
     }
 }
 

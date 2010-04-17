@@ -120,6 +120,9 @@ namespace CSCE431Project1
                 this.toolProjCombo.ComboBox.DisplayMember = "name";
                 updateReqTable();
                 updateBugTable();
+                // Bind the combo box to the table
+                this.UpdateProjectDisplay();
+                this.setVersionsComboBox();
 
                 // Get users in this project with projUsrs_ds.
                 projUsrs_ds = new DataSet();
@@ -137,12 +140,9 @@ namespace CSCE431Project1
                 watcherComboBox.DataSource = projUsrs_ds.Tables["All"].DefaultView;
                 watcherComboBox.DisplayMember = "username";
 
+                TabView.SelectedIndex = 0;
                 reqTable_CellClick(reqTable, new DataGridViewCellEventArgs(0, 0));
             }
-
-            // Bind the combo box to the table
-            this.UpdateProjectDisplay();
-            this.setVersionsComboBox();   
         }
         // Display project related things.
         private void UpdateProjectDisplay()
@@ -173,6 +173,25 @@ namespace CSCE431Project1
             //establish the requirements grid
             cmdSQL.CommandText = "SELECT * FROM versions WHERE projectid = " + currentProjectID + " ORDER BY vid DESC;";
             adpSQL.Fill(ver_dt);
+            ver_dt.PrimaryKey = new DataColumn[] { ver_dt.Columns["vid"] };
+
+            DataTable verReqLnk = new DataTable();
+            cmdSQL.CommandText = "SELECT requirementversionlinks.* FROM requirementversionlinks, versions WHERE versions.projectid = " + currentProjectID + " AND versions.vid = versionid;";
+            adpSQL.Fill(verReqLnk);
+
+            // Update requirement name with linking version.
+            foreach (DataRow dr1 in this.req_dt.Rows)
+            {
+                DataRow[] drc = verReqLnk.Select("requirementid = " + dr1["ReqID"]);
+
+                foreach (DataRow dr2 in drc)
+                {
+                    DataRow dr3 = ver_dt.Rows.Find(dr2["versionid"]);
+                    if (dr3 == null)
+                        continue;
+                    dr1["Title"] = String.Format("{0} - {1}", dr1["Title"].ToString(), dr3["version"]);
+                }
+            }
         }
 
         private void updateReqTable()
@@ -187,7 +206,7 @@ namespace CSCE431Project1
             cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
                                  " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" +
                                  " FROM requirements, versions WHERE versions.projectid = " + currentProjectID.ToString() +
-                                 " ORDER BY rid DESC;";
+                                 " ORDER BY status DESC, priority DESC, rid DESC;";
 
             req_dt = new DataTable();
             adpSQL.Fill(req_dt);
@@ -390,6 +409,11 @@ namespace CSCE431Project1
             this.watchersListBox.DataSource = projUsrs_ds.Tables["Watchers"].DefaultView;
             this.watchersListBox.DisplayMember = "username";
             this.watchersListBox.Refresh();
+
+            this.comboBoxRR.DataSource = ver_dt.DefaultView;
+            this.comboBoxRR.DisplayMember = "version";
+            this.comboBoxRR.Refresh();
+
             /*
             //owner and watcher array's
             ArrayList ownerIDs = new ArrayList();
@@ -476,7 +500,7 @@ namespace CSCE431Project1
             if (row < 0)
                 return;
 
-            this.label4.Text = "Requirements";
+            this.label4.Text = "Reqs";
 
             //set values found in the requirements table
             idText.Text                     = bug_dt.Rows[row]["BugID"].ToString(); //get id
@@ -487,7 +511,7 @@ namespace CSCE431Project1
             timeClosedText.Text             = bug_dt.Rows[row]["Time Closed"].ToString(); //get time satisfied
 
             //get status
-            switch (req_dt.Rows[row]["Status"].ToString())
+            switch (bug_dt.Rows[row]["Status"].ToString())
             {
                 case ("Open"):
                     statusComboBox.SelectedIndex = 0;
@@ -510,6 +534,8 @@ namespace CSCE431Project1
                 projUsrs_ds.Tables["Originator"].Clear();
             adpSQL.Fill(projUsrs_ds, "Originator");
 
+            projUsrs_ds.Tables["Originator"].PrimaryKey = new DataColumn[] { projUsrs_ds.Tables["Originator"].Columns["uid"] };
+
             cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userbuglinks " +
                                  "WHERE userbuglinks.bugid = " + bug_dt.Rows[row]["BugID"].ToString() +
                                  " AND users.uid = userbuglinks.userid " +
@@ -518,6 +544,8 @@ namespace CSCE431Project1
                 projUsrs_ds.Tables["Owners"].Clear();
             adpSQL.Fill(projUsrs_ds, "Owners");
 
+            projUsrs_ds.Tables["Owners"].PrimaryKey = new DataColumn[] { projUsrs_ds.Tables["Owners"].Columns["uid"] };
+
             cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userbuglinks " +
                                  "WHERE userbuglinks.bugid = " + bug_dt.Rows[row]["BugID"].ToString() +
                                  " AND users.uid = userbuglinks.userid " +
@@ -525,6 +553,8 @@ namespace CSCE431Project1
             if (projUsrs_ds.Tables.Contains("Watchers"))
                 projUsrs_ds.Tables["Watchers"].Clear();
             adpSQL.Fill(projUsrs_ds, "Watchers");
+
+            projUsrs_ds.Tables["Watchers"].PrimaryKey = new DataColumn[] { projUsrs_ds.Tables["Watchers"].Columns["uid"] };
 
             if (projUsrs_ds.Tables["Originator"].Rows.Count > 0)
                 originatorText.Text = projUsrs_ds.Tables["Originator"].Rows[0]["username"].ToString();
@@ -536,6 +566,10 @@ namespace CSCE431Project1
 
             this.watchersListBox.DataSource = projUsrs_ds.Tables["Watchers"].DefaultView;
             this.watchersListBox.DisplayMember  = "username";
+
+            this.comboBoxRR.DataSource = req_dt.DefaultView;
+            this.comboBoxRR.DisplayMember = "Title";
+            this.comboBoxRR.Refresh();
         }
 
         private void newReqButton_Click(object sender, EventArgs e)
@@ -594,10 +628,21 @@ namespace CSCE431Project1
 
         private void addVerButton_Click(object sender, EventArgs e)
         {
-            this.releaseListBox.Items.Add(ver_dt.Rows[releaseListBox.SelectedIndex][0].ToString());    //Sets up the watchers combo box
-            //remove users from the table so they are no longer shown in the combo box
-            ver_dt.Rows[releaseListBox.SelectedIndex].Delete();
-            ver_dt.AcceptChanges();
+            //are we on a req or a bug?
+            if (TabView.SelectedIndex == 1)
+            {
+                this.releaseListBox.Items.Add(req_dt.Rows[this.comboBoxRR.SelectedIndex][0]);
+                req_dt.Rows[this.comboBoxRR.SelectedIndex].Delete();
+                req_dt.AcceptChanges();
+            }
+            else
+            {
+                this.releaseListBox.Items.Add(ver_dt.Rows[this.comboBoxRR.SelectedIndex][0]);
+                ver_dt.Rows[this.comboBoxRR.SelectedIndex].Delete();
+                ver_dt.AcceptChanges();
+            }
+
+            this.comboBoxRR.Refresh();
         }
 
         private void updateButton_Click(object sender, EventArgs e)
