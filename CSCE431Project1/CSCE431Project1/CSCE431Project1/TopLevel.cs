@@ -661,6 +661,54 @@ namespace CSCE431Project1
         private void updateButton_Click(object sender, EventArgs e)
         {
             cmdSQL.CommandText = "";
+            String title    = this.titleText.Text; 
+            String status   = this.statusComboBox.SelectedItem.ToString();
+            String priority = this.priorityComboBox.SelectedItem.ToString();
+            String notes    = this.Text;
+            string nowTime  = DateTime.Now.ToString();
+            DataRow selectedRow = null;
+            if (TabView.SelectedIndex == 0)
+            {
+                selectedRow = req_dt.Rows.Find(Convert.ToInt32(this.idText.Text));
+            }
+            else
+            {
+                selectedRow = bug_dt.Rows.Find(Convert.ToInt32(this.idText.Text));
+            }
+            Int32 closed = String.Compare("0/0/0000 12:00:00 AM", this.timeClosedText.Text);
+            
+            selectedRow["Title"]    = title;
+            selectedRow["Status"]   = status;
+            selectedRow["Priority"] = priority;
+            selectedRow["Notes"]    = notes;
+            MySql.Data.Types.MySqlDateTime mySqlDt;
+            if (closed == 0 && status == "Closed")
+            {
+                this.timeClosedText.Text = nowTime;
+                mySqlDt = new MySql.Data.Types.MySqlDateTime(DateTime.Now);
+            }
+            else if (status != "Closed")
+            {
+                this.timeClosedText.Text = "0/0/0000 12:00:00 AM";
+                mySqlDt = new MySql.Data.Types.MySqlDateTime("0/0/0000 12:00:00 AM");
+            }
+            else
+            {
+                mySqlDt = new MySql.Data.Types.MySqlDateTime(DateTime.Parse(this.timeClosedText.Text.ToString()));
+            }
+
+            if (TabView.SelectedIndex == 0)
+            {
+                selectedRow["Time Satisfied"] = mySqlDt;
+                cmdSQL.CommandText += "UPDATE requirements SET requirementTitle = '" + title + "', priority = '" +
+                                      priority + "', status = '" + status + "', timeSatisfied = '" + mySqlDt.ToString() + "' WHERE rid = " + selectedRow["ReqID"] + ";";
+            }
+            else
+            {
+                selectedRow["Time Closed"] = mySqlDt;
+                cmdSQL.CommandText += "UPDATE bug SET bugTitle = '" + title + "', priority = '" +
+                                      priority + "', status = '" + status + "', timeClosed = '" + mySqlDt.ToString() + "' WHERE bid = " + selectedRow["BugID"] + ";";
+            }
             foreach (DataRow dr in projUsrs_ds.Tables["Owners"].Rows)
             {
                 if (dr.RowState == DataRowState.Added)
@@ -691,6 +739,7 @@ namespace CSCE431Project1
             }
             if (cmdSQL.CommandText.Length > 0)
                 cmdSQL.ExecuteNonQuery();
+            selectedRow.AcceptChanges();
             projUsrs_ds.AcceptChanges();
         }
 

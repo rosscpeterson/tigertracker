@@ -102,9 +102,9 @@
             // 
             // titleText
             // 
-            this.titleText.Location = new System.Drawing.Point(72, 77);
+            this.titleText.Location = new System.Drawing.Point(62, 74);
             this.titleText.Name = "titleText";
-            this.titleText.Size = new System.Drawing.Size(188, 20);
+            this.titleText.Size = new System.Drawing.Size(215, 20);
             this.titleText.TabIndex = 2;
             // 
             // label2
@@ -142,7 +142,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(16, 109);
+            this.label4.Location = new System.Drawing.Point(12, 108);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(46, 13);
             this.label4.TabIndex = 7;
@@ -152,6 +152,7 @@
             // 
             this.timeClosedText.Location = new System.Drawing.Point(361, 79);
             this.timeClosedText.Name = "timeClosedText";
+            this.timeClosedText.ReadOnly = true;
             this.timeClosedText.Size = new System.Drawing.Size(146, 20);
             this.timeClosedText.TabIndex = 14;
             // 
@@ -177,6 +178,7 @@
             // 
             this.timeOpenText.Location = new System.Drawing.Point(361, 44);
             this.timeOpenText.Name = "timeOpenText";
+            this.timeOpenText.ReadOnly = true;
             this.timeOpenText.Size = new System.Drawing.Size(146, 20);
             this.timeOpenText.TabIndex = 11;
             // 
@@ -237,6 +239,7 @@
             // 
             this.bugTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.bugTable.Location = new System.Drawing.Point(3, 3);
+            this.bugTable.MultiSelect = false;
             this.bugTable.Name = "bugTable";
             this.bugTable.Size = new System.Drawing.Size(954, 220);
             this.bugTable.TabIndex = 23;
@@ -342,16 +345,18 @@
             // 
             // idText
             // 
-            this.idText.Location = new System.Drawing.Point(72, 45);
+            this.idText.Location = new System.Drawing.Point(62, 45);
             this.idText.Name = "idText";
-            this.idText.Size = new System.Drawing.Size(188, 20);
+            this.idText.ReadOnly = true;
+            this.idText.Size = new System.Drawing.Size(215, 20);
             this.idText.TabIndex = 28;
             // 
             // originatorText
             // 
             this.originatorText.Location = new System.Drawing.Point(89, 218);
             this.originatorText.Name = "originatorText";
-            this.originatorText.Size = new System.Drawing.Size(188, 20);
+            this.originatorText.ReadOnly = true;
+            this.originatorText.Size = new System.Drawing.Size(208, 20);
             this.originatorText.TabIndex = 29;
             // 
             // label12
@@ -408,6 +413,7 @@
             // 
             this.reqTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.reqTable.Location = new System.Drawing.Point(0, 0);
+            this.reqTable.MultiSelect = false;
             this.reqTable.Name = "reqTable";
             this.reqTable.Size = new System.Drawing.Size(960, 221);
             this.reqTable.TabIndex = 0;
@@ -468,16 +474,16 @@
             // releaseListBox
             // 
             this.releaseListBox.FormattingEnabled = true;
-            this.releaseListBox.Location = new System.Drawing.Point(72, 132);
+            this.releaseListBox.Location = new System.Drawing.Point(62, 132);
             this.releaseListBox.Name = "releaseListBox";
-            this.releaseListBox.Size = new System.Drawing.Size(188, 69);
+            this.releaseListBox.Size = new System.Drawing.Size(215, 69);
             this.releaseListBox.TabIndex = 40;
             // 
             // addVerButton
             // 
             this.addVerButton.Font = new System.Drawing.Font("Modern No. 20", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.addVerButton.ForeColor = System.Drawing.Color.Green;
-            this.addVerButton.Location = new System.Drawing.Point(233, 103);
+            this.addVerButton.Location = new System.Drawing.Point(250, 101);
             this.addVerButton.Name = "addVerButton";
             this.addVerButton.Size = new System.Drawing.Size(27, 27);
             this.addVerButton.TabIndex = 41;
@@ -540,16 +546,16 @@
             // comboBoxRR
             // 
             this.comboBoxRR.FormattingEnabled = true;
-            this.comboBoxRR.Location = new System.Drawing.Point(72, 105);
+            this.comboBoxRR.Location = new System.Drawing.Point(62, 105);
             this.comboBoxRR.Name = "comboBoxRR";
-            this.comboBoxRR.Size = new System.Drawing.Size(155, 21);
+            this.comboBoxRR.Size = new System.Drawing.Size(134, 21);
             this.comboBoxRR.TabIndex = 49;
             this.comboBoxRR.SelectedIndexChanged += new System.EventHandler(this.comboBoxRR_SelectedIndexChanged);
             // 
             // comboBoxVer
             // 
             this.comboBoxVer.FormattingEnabled = true;
-            this.comboBoxVer.Location = new System.Drawing.Point(19, 132);
+            this.comboBoxVer.Location = new System.Drawing.Point(202, 105);
             this.comboBoxVer.Name = "comboBoxVer";
             this.comboBoxVer.Size = new System.Drawing.Size(42, 21);
             this.comboBoxVer.TabIndex = 50;
