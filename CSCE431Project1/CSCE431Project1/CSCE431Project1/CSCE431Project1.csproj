@@ -151,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\128px-Nuvola_Green_Plus1.png" />
+    <None Include="Resources\App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

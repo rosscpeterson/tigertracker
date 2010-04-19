@@ -18,12 +18,8 @@ namespace CSCE431Project1
         // Connection variable.
         MySqlConnection m_conSQL;
         // Keep a user ID, name, and level.
-        // These are queried by MainForm1 after a successful login.
         String m_userName;
         Int32 m_userID, m_userLvl;
-        // Database authentification parameters.
-        const string databaseHost = "69.93.227.36";
-        const string userAuthURL = "http://69.93.227.36/webservices/bugTrackerAuth.php";
 
         public LogIn(MySqlConnection _conSQL)
         {
@@ -33,8 +29,6 @@ namespace CSCE431Project1
             m_userName = "";
             InitializeComponent();
             // When the enter is pressed login
-            //this.passwordText.KeyDown += new KeyEventHandler(this.Form2_Load_Keypress);
-            //this.user.KeyDown         += new KeyEventHandler(this.Form2_Load_Keypress);
             this.AcceptButton = this.buttonLogIn;
             this.user.Focus();
         }
@@ -54,6 +48,10 @@ namespace CSCE431Project1
 
         private void buttonLogIn_Click(object sender, EventArgs e)
         {
+            System.Configuration.AppSettingsReader appRdr = new System.Configuration.AppSettingsReader();
+            string databaseHost = (string)appRdr.GetValue("databaseHost", typeof(string));
+            string userAuthURL  = (string)appRdr.GetValue("userAuthURL", typeof(string));
+
             string databaseName = null;
             string databaseUser = null;
             string databasePassword = null;

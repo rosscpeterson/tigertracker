@@ -628,22 +628,16 @@ namespace CSCE431Project1
         {
             NewReq newReqWindow = new NewReq(conSQL, currentUser, currentUserID, currentProjectID, ver_dt, req_dt/*, userreq_dt*/);
             newReqWindow.ShowDialog();
+            TabView.SelectedIndex = 0;
+            TabView_SelectedIndexChanged(TabView, null);
         }
 
         private void newBugButton_Click(object sender, EventArgs e)
         {
             NewBug newBugWindow = new NewBug(conSQL, currentUser, currentUserID, currentProjectID, ver_dt, bug_dt, req_dt);
             newBugWindow.ShowDialog();
-        }
-
-        private void statusComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
+            TabView.SelectedIndex = 1;
+            TabView_SelectedIndexChanged(TabView, null);
         }
 
         private void toolProjCombo_SelectedIndexChanged(object sender, EventArgs e)
