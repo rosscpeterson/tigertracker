@@ -98,7 +98,7 @@ namespace CSCE431Project1
                 string newTitle_st = newTitleText.Text;
                 string newReqDesc_st = newDescText.Text;
                 string newPriority_st = newPriorityCombo.Text;
-                string newTimeOpen_st = DateTime.Now.ToString("dd/MM/yyyy HH:MM:ss"); //or DateTime.Now.ToString("dd/MM/yyyy h:MM tt")
+                string newTimeOpen_st = DateTime.Now.ToString(); //or DateTime.Now.ToString("dd/MM/yyyy h:MM tt")
                 string newStatus_st = "Open"; //Open, In Progress, Closed
 
                 // Set command to add requirement

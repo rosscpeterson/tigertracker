@@ -102,8 +102,7 @@ namespace CSCE431Project1
                 string newTitle_st = newTitleText.Text;
                 string newReqDesc_st = newDescText.Text;
                 string newPriority_st = newPriorityCombo.Text;
-                string newTimeOpen_st = DateTime.Now.ToString("dd/MM/yyyy HH:MM:ss"); //or DateTime.Now.ToString("dd/MM/yyyy h:MM tt")
-                //string newTimeClosed_st = "00/00/0000 00:00:00"
+                string newTimeOpen_st = DateTime.Now.ToString(); 
                 string newStatus_st = "Open"; //Open, In Progress, Closed
 
                 // Set command to add bug
