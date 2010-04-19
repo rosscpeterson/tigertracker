@@ -137,7 +137,6 @@
             this.statusComboBox.Name = "statusComboBox";
             this.statusComboBox.Size = new System.Drawing.Size(188, 21);
             this.statusComboBox.TabIndex = 6;
-            this.statusComboBox.SelectedIndexChanged += new System.EventHandler(this.statusComboBox_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -291,7 +290,6 @@
             this.toolStrip1.Size = new System.Drawing.Size(992, 25);
             this.toolStrip1.TabIndex = 27;
             this.toolStrip1.Text = "toolStrip1";
-            this.toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip1_ItemClicked);
             // 
             // toolProjCombo
             // 

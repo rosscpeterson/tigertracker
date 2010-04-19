@@ -77,3 +77,4 @@ H:\431\tigertracker\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CS
 H:\431\tigertracker\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Users.resources
 H:\431\tigertracker\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Versions.resources
 H:\431\tigertracker\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.csproj.GenerateResource.Cache
+C:\Users\Bernardo Cunha\Desktop\Chimerror\CSCE431Project1\CSCE431Project1\CSCE431Project1\bin\Debug\CSCE431Project1.exe.config
