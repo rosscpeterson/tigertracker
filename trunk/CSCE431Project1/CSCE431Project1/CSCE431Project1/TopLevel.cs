@@ -582,10 +582,10 @@ namespace CSCE431Project1
 
             projUsrs_ds.Tables["Watchers"].PrimaryKey = new DataColumn[] { projUsrs_ds.Tables["Watchers"].Columns["uid"] };
 
-            cmdSQL.CommandText = "SELECT requirements.requirementTitle, versions.version, requirementversionlinks.* FROM versions, requirementversionlinks, requirements, bugreqlinks " +
+            cmdSQL.CommandText = "SELECT requirements.requirementTitle, versions.version FROM versions, requirementversionlinks, requirements, bugreqlinks " +
                                  "WHERE bugreqlinks.requirementid = requirements.rid AND bugreqlinks.bugid = " + bug_dt.Rows[row]["BugID"].ToString() +
                                  " AND requirementversionlinks.requirementid = requirements.rid AND requirementversionlinks.versionid = versions.vid " +
-                                 " ORDER BY requirements.rid DESC, requirementversionlinks.versionid DESC;";
+                                 " ORDER BY requirements.rid DESC, versions.vid DESC;";
             if (projUsrs_ds.Tables.Contains("Links"))
                 projUsrs_ds.Tables["Links"].Clear();
             projUsrs_ds.EnforceConstraints = false;
@@ -599,6 +599,8 @@ namespace CSCE431Project1
             {
                 dr["ReqVer"] = String.Format("{0} - {1}", dr["requirementTitle"], dr["version"]);
             }
+
+            projUsrs_ds.Tables["Links"].PrimaryKey = new DataColumn[] { projUsrs_ds.Tables["Links"].Columns["ReqVer"] };
 
             if (projUsrs_ds.Tables["Originator"].Rows.Count > 0)
                 originatorText.Text = projUsrs_ds.Tables["Originator"].Rows[0]["username"].ToString();
@@ -678,21 +680,34 @@ namespace CSCE431Project1
 
         private void addVerButton_Click(object sender, EventArgs e)
         {
+            //trap to see if user is in pool
+            if (this.comboBoxRR.SelectedIndex < 0 || (TabView.SelectedIndex == 1 && comboBoxVer.SelectedIndex < 0))
+                return;
+            
+            DataRow newRow  = projUsrs_ds.Tables["Links"].NewRow();
+
             //are we on a req or a bug?
             if (TabView.SelectedIndex == 1)
             {
-                this.releaseListBox.Items.Add(req_dt.Rows[this.comboBoxRR.SelectedIndex][0]);
-                req_dt.Rows[this.comboBoxRR.SelectedIndex].Delete();
-                req_dt.AcceptChanges();
+                String szReqVer = String.Format("{0} - {1}", this.comboBoxRR.Text, this.comboBoxVer.Text);
+                if (projUsrs_ds.Tables["Links"].Rows.Find(szReqVer) != null)
+                    return;
+                newRow["requirementTitle"] = this.comboBoxRR.Text;
+                newRow["version"] = this.comboBoxVer.Text;
+                newRow["ReqVer"] = szReqVer;
             }
             else
             {
-                this.releaseListBox.Items.Add(ver_dt.Rows[this.comboBoxRR.SelectedIndex][0]);
-                ver_dt.Rows[this.comboBoxRR.SelectedIndex].Delete();
-                ver_dt.AcceptChanges();
+                if (projUsrs_ds.Tables["Links"].Rows.Find(ver_dt.Rows[this.comboBoxRR.SelectedIndex]["vid"]) != null)
+                    return;
+                newRow["vid"] = ver_dt.Rows[this.comboBoxRR.SelectedIndex]["vid"];
+                newRow["projectid"] = ver_dt.Rows[this.comboBoxRR.SelectedIndex]["projectid"];
+                newRow["version"] = ver_dt.Rows[this.comboBoxRR.SelectedIndex]["version"];
+                newRow["verisonInfo"] = ver_dt.Rows[this.comboBoxRR.SelectedIndex]["verisonInfo"];
             }
 
-            this.comboBoxRR.Refresh();
+            projUsrs_ds.Tables["Links"].Rows.Add(newRow);
+            this.releaseListBox.Refresh();
         }
 
         private void updateButton_Click(object sender, EventArgs e)
@@ -771,6 +786,23 @@ namespace CSCE431Project1
                     else
                     {
                         cmdSQL.CommandText += "INSERT INTO userbuglinks VALUES (null, " + dr["uid"] + ", " + idText.Text + ", 'watcher');";
+                    }
+                }
+            }
+            foreach (DataRow dr in projUsrs_ds.Tables["Links"].Rows)
+            {
+                if (dr.RowState == DataRowState.Added)
+                {
+                    if (TabView.SelectedIndex == 0)
+                    {
+                        cmdSQL.CommandText += "INSERT INTO requirementversionlinks VALUES (null, " + dr["vid"] + ", 'Not Satisfied'," + idText.Text + ", '');";
+                    }
+                    else
+                    {
+                        DataRowView ver = (DataRowView)this.comboBoxVer.SelectedItem;
+                        DataRowView req = (DataRowView)this.comboBoxRR.SelectedItem;
+                        cmdSQL.CommandText += "INSERT INTO bugversionlinks VALUES (null, " + idText.Text + ", " + ver.Row.ItemArray[0].ToString() + ");";
+                        cmdSQL.CommandText += "INSERT INTO bugreqlinks VALUES (null, " + idText.Text + ", " + req.Row.ItemArray[0].ToString() + ");";
                     }
                 }
             }

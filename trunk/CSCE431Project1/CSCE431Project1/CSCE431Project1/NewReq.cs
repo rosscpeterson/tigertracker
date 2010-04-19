@@ -132,7 +132,7 @@ namespace CSCE431Project1
                 
                 // Now create version links.
                 foreach (DataRow dr in this.version_dt.Rows)
-                    InsertLinks += "INSERT INTO requirementversionlinks VALUES(null, " + dr[0].ToString() + ", 'Not Satisfied', " + reqID.ToString() + ", null);";
+                    InsertLinks += "INSERT INTO requirementversionlinks VALUES(null, " + dr[0].ToString() + ", 'Not Satisfied', " + reqID.ToString() + ", '');";
 
                 command.CommandText = InsertLinks;
                 // Execute the command
