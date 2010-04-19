@@ -130,9 +130,9 @@ namespace CSCE431Project1
                                      " AND userprojectlinks.userid = " + currentUserID.ToString() + ";";
                 adpSQL.SelectCommand = cmdSQL;
                 adpSQL.Fill(projUsrs_ds, "All");
-                cmdSQL.CommandText = "SELECT userprojectlinks.* FROM userprojectlinks WHERE " + currentProjectID.ToString() + " = userprojectlinks.projectid;";
-                adpSQL.SelectCommand = cmdSQL;
-                adpSQL.Fill(projUsrs_ds, "Links");
+                //cmdSQL.CommandText = "SELECT userprojectlinks.* FROM userprojectlinks WHERE " + currentProjectID.ToString() + " = userprojectlinks.projectid;";
+                //adpSQL.SelectCommand = cmdSQL;
+                //adpSQL.Fill(projUsrs_ds, "Links");
 
                 ownerComboBox.DataSource = projUsrs_ds.Tables["All"].DefaultView;
                 ownerComboBox.DisplayMember = "username";
@@ -413,6 +413,16 @@ namespace CSCE431Project1
 
             projUsrs_ds.Tables["Watchers"].PrimaryKey = new DataColumn[] { projUsrs_ds.Tables["Watchers"].Columns["uid"] };
 
+            cmdSQL.CommandText = "SELECT versions.* FROM versions, requirementversionlinks " +
+                                 "WHERE requirementversionlinks.requirementid = " + req_dt.Rows[row][0].ToString() +
+                                 " AND requirementversionlinks.versionid = versions.vid " +
+                                 " ORDER BY versions.vid DESC;";
+            if (projUsrs_ds.Tables.Contains("Links"))
+                projUsrs_ds.Tables["Links"].Clear();
+            adpSQL.Fill(projUsrs_ds, "Links");
+
+            projUsrs_ds.Tables["Links"].PrimaryKey = new DataColumn[] { projUsrs_ds.Tables["Links"].Columns["vid"] };
+
             if (projUsrs_ds.Tables["Originator"].Rows.Count > 0)
                 originatorText.Text = projUsrs_ds.Tables["Originator"].Rows[0]["username"].ToString();
             else
@@ -430,6 +440,9 @@ namespace CSCE431Project1
             this.comboBoxRR.DisplayMember = "version";
             this.comboBoxRR.Refresh();
 
+            this.releaseListBox.DataSource = projUsrs_ds.Tables["Links"].DefaultView;
+            this.releaseListBox.DisplayMember = "version";
+            this.releaseListBox.Refresh();
             /*
             //owner and watcher array's
             ArrayList ownerIDs = new ArrayList();
@@ -569,6 +582,23 @@ namespace CSCE431Project1
 
             projUsrs_ds.Tables["Watchers"].PrimaryKey = new DataColumn[] { projUsrs_ds.Tables["Watchers"].Columns["uid"] };
 
+            cmdSQL.CommandText = "SELECT requirements.requirementTitle, versions.version, requirementversionlinks.* FROM versions, requirementversionlinks, requirements, bugreqlinks " +
+                                 "WHERE bugreqlinks.requirementid = requirements.rid AND bugreqlinks.bugid = " + bug_dt.Rows[row]["BugID"].ToString() +
+                                 " AND requirementversionlinks.requirementid = requirements.rid AND requirementversionlinks.versionid = versions.vid " +
+                                 " ORDER BY requirements.rid DESC, versions.vid DESC;";
+            if (projUsrs_ds.Tables.Contains("Links"))
+                projUsrs_ds.Tables["Links"].Clear();
+            projUsrs_ds.EnforceConstraints = false;
+            adpSQL.Fill(projUsrs_ds, "Links");
+            try { projUsrs_ds.EnforceConstraints = true; }
+            catch (Exception err) { DataRow[] drc = projUsrs_ds.Tables["Links"].GetErrors(); }
+            projUsrs_ds.Tables["Links"].Columns.Add("ReqVer", typeof(String));
+
+            foreach (DataRow dr in projUsrs_ds.Tables["Links"].Rows)
+            {
+                dr["ReqVer"] = String.Format("{0} - {1}", dr["requirementTitle"], dr["version"]);
+            }
+
             if (projUsrs_ds.Tables["Originator"].Rows.Count > 0)
                 originatorText.Text = projUsrs_ds.Tables["Originator"].Rows[0]["username"].ToString();
             else
@@ -576,13 +606,19 @@ namespace CSCE431Project1
 
             this.ownerListBox.DataSource = projUsrs_ds.Tables["Owners"].DefaultView;
             this.ownerListBox.DisplayMember = "username";
+            this.ownerListBox.Refresh();
 
             this.watchersListBox.DataSource = projUsrs_ds.Tables["Watchers"].DefaultView;
             this.watchersListBox.DisplayMember  = "username";
+            this.watchersListBox.Refresh();
 
             this.comboBoxRR.DataSource = req_dt.DefaultView;
             this.comboBoxRR.DisplayMember = "Title";
             this.comboBoxRR.Refresh();
+
+            this.releaseListBox.DataSource = projUsrs_ds.Tables["Links"].DefaultView;
+            this.releaseListBox.DisplayMember = "ReqVer";
+            this.releaseListBox.Refresh();
         }
 
         private void newReqButton_Click(object sender, EventArgs e)
