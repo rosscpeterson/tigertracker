@@ -585,14 +585,15 @@ namespace CSCE431Project1
             cmdSQL.CommandText = "SELECT requirements.requirementTitle, versions.version, requirementversionlinks.* FROM versions, requirementversionlinks, requirements, bugreqlinks " +
                                  "WHERE bugreqlinks.requirementid = requirements.rid AND bugreqlinks.bugid = " + bug_dt.Rows[row]["BugID"].ToString() +
                                  " AND requirementversionlinks.requirementid = requirements.rid AND requirementversionlinks.versionid = versions.vid " +
-                                 " ORDER BY requirements.rid DESC, versions.vid DESC;";
+                                 " ORDER BY requirements.rid DESC, requirementversionlinks.versionid DESC;";
             if (projUsrs_ds.Tables.Contains("Links"))
                 projUsrs_ds.Tables["Links"].Clear();
             projUsrs_ds.EnforceConstraints = false;
             adpSQL.Fill(projUsrs_ds, "Links");
             try { projUsrs_ds.EnforceConstraints = true; }
             catch (Exception err) { DataRow[] drc = projUsrs_ds.Tables["Links"].GetErrors(); }
-            projUsrs_ds.Tables["Links"].Columns.Add("ReqVer", typeof(String));
+            if (projUsrs_ds.Tables["Links"].Columns.Contains("ReqVer") == false)
+                projUsrs_ds.Tables["Links"].Columns.Add("ReqVer", typeof(String));
 
             foreach (DataRow dr in projUsrs_ds.Tables["Links"].Rows)
             {
