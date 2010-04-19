@@ -706,7 +706,7 @@ namespace CSCE431Project1
             else
             {
                 selectedRow["Time Closed"] = mySqlDt;
-                cmdSQL.CommandText += "UPDATE bug SET bugTitle = '" + title + "', priority = '" +
+                cmdSQL.CommandText += "UPDATE bugs SET bugTitle = '" + title + "', priority = '" +
                                       priority + "', status = '" + status + "', timeClosed = '" + mySqlDt.ToString() + "' WHERE bid = " + selectedRow["BugID"] + ";";
             }
             foreach (DataRow dr in projUsrs_ds.Tables["Owners"].Rows)
