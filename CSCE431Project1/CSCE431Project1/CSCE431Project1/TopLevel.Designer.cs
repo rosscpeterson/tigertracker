@@ -81,6 +81,7 @@
             this.watcherComboBox = new System.Windows.Forms.ComboBox();
             this.watchersAddButton = new System.Windows.Forms.Button();
             this.comboBoxRR = new System.Windows.Forms.ComboBox();
+            this.comboBoxVer = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.bugTable)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.TabView.SuspendLayout();
@@ -390,6 +391,7 @@
             this.TabView.SelectedIndex = 0;
             this.TabView.Size = new System.Drawing.Size(968, 249);
             this.TabView.TabIndex = 33;
+            this.TabView.SelectedIndexChanged += new System.EventHandler(this.TabView_SelectedIndexChanged);
             // 
             // tabPage2
             // 
@@ -542,12 +544,22 @@
             this.comboBoxRR.Name = "comboBoxRR";
             this.comboBoxRR.Size = new System.Drawing.Size(155, 21);
             this.comboBoxRR.TabIndex = 49;
+            this.comboBoxRR.SelectedIndexChanged += new System.EventHandler(this.comboBoxRR_SelectedIndexChanged);
+            // 
+            // comboBoxVer
+            // 
+            this.comboBoxVer.FormattingEnabled = true;
+            this.comboBoxVer.Location = new System.Drawing.Point(19, 132);
+            this.comboBoxVer.Name = "comboBoxVer";
+            this.comboBoxVer.Size = new System.Drawing.Size(42, 21);
+            this.comboBoxVer.TabIndex = 50;
             // 
             // TopLevel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(992, 732);
+            this.Controls.Add(this.comboBoxVer);
             this.Controls.Add(this.comboBoxRR);
             this.Controls.Add(this.watchersAddButton);
             this.Controls.Add(this.watcherComboBox);
@@ -658,6 +670,7 @@
         private System.Windows.Forms.ComboBox watcherComboBox;
         private System.Windows.Forms.Button watchersAddButton;
         private System.Windows.Forms.ComboBox comboBoxRR;
+        private System.Windows.Forms.ComboBox comboBoxVer;
     }
 }
 

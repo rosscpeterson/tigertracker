@@ -141,7 +141,8 @@ namespace CSCE431Project1
                 watcherComboBox.DisplayMember = "username";
 
                 TabView.SelectedIndex = 0;
-                reqTable_CellClick(reqTable, new DataGridViewCellEventArgs(0, 0));
+                TabView_SelectedIndexChanged(TabView, null);
+                //reqTable_CellClick(reqTable, new DataGridViewCellEventArgs(0, 0));
             }
         }
         // Display project related things.
@@ -174,7 +175,7 @@ namespace CSCE431Project1
             cmdSQL.CommandText = "SELECT * FROM versions WHERE projectid = " + currentProjectID + " ORDER BY vid DESC;";
             adpSQL.Fill(ver_dt);
             ver_dt.PrimaryKey = new DataColumn[] { ver_dt.Columns["vid"] };
-
+            /*
             DataTable verReqLnk = new DataTable();
             cmdSQL.CommandText = "SELECT requirementversionlinks.* FROM requirementversionlinks, versions WHERE versions.projectid = " + currentProjectID + " AND versions.vid = versionid;";
             adpSQL.Fill(verReqLnk);
@@ -191,7 +192,7 @@ namespace CSCE431Project1
                         continue;
                     dr1["Title"] = String.Format("{0} - {1}", dr1["Title"].ToString(), dr3["version"]);
                 }
-            }
+            }*/
         }
 
         private void updateReqTable()
@@ -285,6 +286,23 @@ namespace CSCE431Project1
             bugTable.AutoResizeColumns();
         }
 
+        private void TabView_SelectedIndexChanged(Object sender, EventArgs e)
+        {
+            switch (this.TabView.SelectedIndex)
+            {
+                case 0: 
+                    this.label4.Text = "Release";
+                    this.comboBoxVer.Visible = false;
+                    reqTable_CellClick(reqTable, new DataGridViewCellEventArgs(0, 0)); 
+                    break;
+                case 1:
+                    this.label4.Text = "Reqs";
+                    this.comboBoxVer.Visible = true;
+                    bugTable_CellClick(bugTable, new DataGridViewCellEventArgs(0, 0));
+                    break;
+            }
+        }
+
         private void reqTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Int32 row = e.RowIndex;
@@ -296,8 +314,6 @@ namespace CSCE431Project1
                                  " T1.userid = T2.userid AND T1.requirementid = T2.requirementid AND T1.urlid > T2.urlid AND" +
                                  " ( T1.role = T2.role OR (T1.role IN ('owner','originator') AND T2.role IN ('owner','originator')) );";
             cmdSQL.ExecuteNonQuery();
-
-            this.label4.Text = "Release";
 
             //set values found in the requirements table
             idText.Text                     = req_dt.Rows[row][0].ToString(); //get id
@@ -500,8 +516,6 @@ namespace CSCE431Project1
             if (row < 0)
                 return;
 
-            this.label4.Text = "Reqs";
-
             //set values found in the requirements table
             idText.Text                     = bug_dt.Rows[row]["BugID"].ToString(); //get id
             titleText.Text                  = bug_dt.Rows[row]["Title"].ToString();  //get title
@@ -524,7 +538,6 @@ namespace CSCE431Project1
                     break;
             }
 
-            projUsrs_ds = new DataSet();
             adpSQL.SelectCommand = cmdSQL;
             cmdSQL.CommandText = "SELECT users.uid, users.username FROM users, userbuglinks " +
                                  "WHERE userbuglinks.bugid = " + bug_dt.Rows[row]["BugID"].ToString() +
@@ -647,9 +660,38 @@ namespace CSCE431Project1
 
         private void updateButton_Click(object sender, EventArgs e)
         {
-            //sample query from users line 169
-            //m_cmdSQL.CommandText = "UPDATE users SET username = '" + name + "', password = '" + pass + "', permissionLevel = '" +
-              //                         newLevel + "', active = " + activity + ", email = '" + email + "' WHERE uid = " + m_userID;
+            cmdSQL.CommandText = "";
+            foreach (DataRow dr in projUsrs_ds.Tables["Owners"].Rows)
+            {
+                if (dr.RowState == DataRowState.Added)
+                {
+                    if (TabView.SelectedIndex == 0)
+                    {
+                        cmdSQL.CommandText += "INSERT INTO userrequirementlinks VALUES (null, " + dr["uid"] + ", " + idText.Text + ", 'owner');";
+                    }
+                    else
+                    {
+                        cmdSQL.CommandText += "INSERT INTO userbuglinks VALUES (null, " + dr["uid"] + ", " + idText.Text + ", 'owner');";
+                    }
+                }
+            }
+            foreach (DataRow dr in projUsrs_ds.Tables["Watchers"].Rows)
+            {
+                if (dr.RowState == DataRowState.Added)
+                {
+                    if (TabView.SelectedIndex == 0)
+                    {
+                        cmdSQL.CommandText += "INSERT INTO userrequirementlinks VALUES (null, " + dr["uid"] + ", " + idText.Text + ", 'watcher');";
+                    }
+                    else
+                    {
+                        cmdSQL.CommandText += "INSERT INTO userbuglinks VALUES (null, " + dr["uid"] + ", " + idText.Text + ", 'watcher');";
+                    }
+                }
+            }
+            if (cmdSQL.CommandText.Length > 0)
+                cmdSQL.ExecuteNonQuery();
+            projUsrs_ds.AcceptChanges();
         }
 
         private void ownerAddButton_Click(object sender, EventArgs e)
@@ -657,10 +699,7 @@ namespace CSCE431Project1
             //trap to see if user is in pool
             if (this.ownerComboBox.SelectedIndex < 0)
                 return;
-            if (projUsrs_ds.Tables["Owners"] == null)
-            {
-                //***
-            }
+            
             DataRow newRow = projUsrs_ds.Tables["Owners"].NewRow();
             newRow["uid"] = projUsrs_ds.Tables["All"].Rows[ownerComboBox.SelectedIndex]["uid"];
             newRow["username"] = projUsrs_ds.Tables["All"].Rows[ownerComboBox.SelectedIndex]["username"];
@@ -669,11 +708,12 @@ namespace CSCE431Project1
             if (projUsrs_ds.Tables["Owners"].Rows.Find(newRow["uid"]) != null)
                 return;
             projUsrs_ds.Tables["Owners"].Rows.Add(newRow);
-            projUsrs_ds.Tables["Owners"].AcceptChanges();
+            //projUsrs_ds.Tables["Owners"].AcceptChanges();
 
             //make add the user to owners in Database
 
             //are we on a req or a bug?
+            /*
             if (TabView.SelectedIndex == 0)
             {
                 //requirements are selected
@@ -684,7 +724,7 @@ namespace CSCE431Project1
                 //bugs are selected
                 cmdSQL.CommandText = "INSERT INTO userbuglinks VALUES (null, " + newRow["uid"] + ", " + idText.Text + ", 'owner')";
             }
-            cmdSQL.ExecuteNonQuery();
+            cmdSQL.ExecuteNonQuery();*/
         }
 
         private void watchersAddButton_Click(object sender, EventArgs e)
@@ -699,7 +739,7 @@ namespace CSCE431Project1
             if (projUsrs_ds.Tables["Watchers"].Rows.Find(newRow["uid"]) != null)
                 return;
             projUsrs_ds.Tables["Watchers"].Rows.Add(newRow);
-            projUsrs_ds.Tables["Watchers"].AcceptChanges();
+            /*projUsrs_ds.Tables["Watchers"].AcceptChanges();
 
             //are we on a req or a bug?
             if (TabView.SelectedIndex == 0)
@@ -712,7 +752,22 @@ namespace CSCE431Project1
                 //bugs are selected
                 cmdSQL.CommandText = "INSERT INTO userbuglinks VALUES (null, " + newRow["uid"] + ", " + idText.Text + ", 'watcher')";
             }
-            cmdSQL.ExecuteNonQuery();
+            cmdSQL.ExecuteNonQuery();*/
+        }
+
+        private void comboBoxRR_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (TabView.SelectedIndex == 1)
+            {
+                DataTable reqVer = new DataTable();
+                cmdSQL.CommandText = "SELECT versions.* FROM versions, requirementversionlinks" +
+                                     " WHERE requirementversionlinks.requirementid = " + req_dt.Rows[comboBoxRR.SelectedIndex]["ReqID"] + 
+                                     " AND versions.vid = requirementversionlinks.versionid;";
+                adpSQL.SelectCommand = cmdSQL;
+                adpSQL.Fill(reqVer);
+                this.comboBoxVer.DataSource    = reqVer.DefaultView;
+                this.comboBoxVer.DisplayMember = "version";
+            }
         }
     }
 }
