@@ -881,6 +881,17 @@ namespace CSCE431Project1
                 this.comboBoxVer.DisplayMember = "version";
             }
         }
+
+        private void reqTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void reportsButton_Click(object sender, EventArgs e)
+        {
+            Reports reportsWindow = new Reports(conSQL, currentProjectID);
+            reportsWindow.ShowDialog();
+        }
     }
 }
 
