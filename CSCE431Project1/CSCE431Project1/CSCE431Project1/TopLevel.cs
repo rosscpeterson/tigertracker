@@ -206,7 +206,8 @@ namespace CSCE431Project1
             
             cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
                                  " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" +
-                                 " FROM requirements, versions WHERE versions.projectid = " + currentProjectID.ToString() +
+                                 " FROM requirements, versions, requirementversionlinks WHERE requirementversionlinks.requirementid = requirements.rid AND " +
+                                 "requirementversionlinks.versionid = versions.vid AND versions.projectid = " + currentProjectID.ToString() +
                                  " ORDER BY status DESC, priority DESC, rid DESC;";
 
             req_dt = new DataTable();
@@ -257,10 +258,13 @@ namespace CSCE431Project1
             /*cmdSQL.CommandText = "SELECT * FROM bugs, userprojectlinks, userbuglinks WHERE userbuglinks.userid = " + currentProjectID.ToString() + " AND bugs.bid = userbuglinks.bugid AND" +
                                     " userprojectlinks.userid = userbuglinks.userid AND userprojectlinks.projectid = " + currentProjectID.ToString() + ";";*/
             // Get every bug in project.
-            cmdSQL.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
+            cmdSQL.CommandText = "SELECT DISTINCT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
                                  " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority" +
-                                 " FROM bugs, versions WHERE versions.projectid = " + currentProjectID.ToString() +
-                                 " ORDER BY bid DESC;";
+                                 " FROM bugs, bugreqlinks, requirements, requirementversionlinks, bugversionlinks, versions WHERE bugreqlinks.bugid = bugs.bid AND " +
+                                 "bugreqlinks.requirementid = requirements.rid AND requirementversionlinks.requirementid = requirements.rid AND " +
+                                 "requirementversionlinks.versionid = versions.vid AND versions.projectid = " + currentProjectID.ToString() +
+                                 " AND bugversionlinks.versionid = versions.vid AND bugversionlinks.bugid = bugs.bid " + 
+                                 " ORDER BY status DESC, priority DESC, bid DESC;";
             bug_dt = new DataTable();
             adpSQL.Fill(bug_dt);
             // Change names.
@@ -273,7 +277,7 @@ namespace CSCE431Project1
             bug_dt.Columns["timeClosed"].ColumnName     = "Time Closed";
             bug_dt.Columns["status"].ColumnName         = "Status";
             bug_dt.Columns["notes"].ColumnName          = "Notes";
-            bug_dt.DefaultView.Sort = String.Format("{0} DESC", bug_dt.Columns["BugID"].ColumnName);
+            bug_dt.DefaultView.Sort = String.Format("Status DESC, Priority DESC, BugID DESC");
 
             bugTable.DataSource = bug_dt.DefaultView;
             // Blank out ones we don't want.
@@ -293,12 +297,18 @@ namespace CSCE431Project1
                 case 0: 
                     this.label4.Text = "Release";
                     this.comboBoxVer.Visible = false;
-                    reqTable_CellClick(reqTable, new DataGridViewCellEventArgs(0, 0)); 
+                    if (req_dt.Rows.Count > 0)
+                    {
+                        reqTable_CellClick(reqTable, new DataGridViewCellEventArgs(0, 0));
+                    }
                     break;
                 case 1:
                     this.label4.Text = "Reqs";
                     this.comboBoxVer.Visible = true;
-                    bugTable_CellClick(bugTable, new DataGridViewCellEventArgs(0, 0));
+                    if (bug_dt.Rows.Count > 0)
+                    {
+                        bugTable_CellClick(bugTable, new DataGridViewCellEventArgs(0, 0));
+                    }
                     break;
             }
         }
@@ -628,6 +638,7 @@ namespace CSCE431Project1
         {
             NewReq newReqWindow = new NewReq(conSQL, currentUser, currentUserID, currentProjectID, ver_dt, req_dt/*, userreq_dt*/);
             newReqWindow.ShowDialog();
+            updateReqTable();
             TabView.SelectedIndex = 0;
             TabView_SelectedIndexChanged(TabView, null);
         }
@@ -636,6 +647,7 @@ namespace CSCE431Project1
         {
             NewBug newBugWindow = new NewBug(conSQL, currentUser, currentUserID, currentProjectID, ver_dt, bug_dt, req_dt);
             newBugWindow.ShowDialog();
+            updateBugTable();
             TabView.SelectedIndex = 1;
             TabView_SelectedIndexChanged(TabView, null);
         }
@@ -644,7 +656,10 @@ namespace CSCE431Project1
         {
             //Got an error here when I logged out and tried to log in with different user****
             //got error here from adding ross to a project as a developer.  When I closed user boxes it gave problem ****
+            if (this.toolProjCombo.ComboBox.SelectedIndex < 0)
+                return;
             currentProjectID = (Int32)proj_dt.Rows[this.toolProjCombo.ComboBox.SelectedIndex][0];   //gives the id selected
+            setVersionsComboBox();
             updateReqTable();
             updateBugTable();
         }
