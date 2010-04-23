@@ -103,7 +103,7 @@ namespace CSCE431Project1
 
                 // Set command to add requirement
                 command.CommandText = "INSERT INTO requirements VALUES(null, '" + newTitle_st + "', '" + newReqDesc_st + "', '" + newPriority_st + "', " +
-                     "NOW(), null, '" + newStatus_st + "', null);";
+                     "NOW(), '', '" + newStatus_st + "', null);";
 
                 // Execute the command
                 command.ExecuteNonQuery();
@@ -186,8 +186,9 @@ namespace CSCE431Project1
                 return;
             DataRow newRow = version_dt.NewRow();
             newRow.ItemArray = versionPool_dt.Rows[releaseComboBox.SelectedIndex].ItemArray;
+            if (version_dt.Rows.Find(newRow["vid"]) != null)
+                return;
             version_dt.Rows.Add(newRow);
-            versionPool_dt.Rows[releaseComboBox.SelectedIndex].Delete();
             version_dt.AcceptChanges();
             versionPool_dt.AcceptChanges();
         }

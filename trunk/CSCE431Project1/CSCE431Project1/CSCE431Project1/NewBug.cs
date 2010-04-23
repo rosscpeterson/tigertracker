@@ -107,7 +107,7 @@ namespace CSCE431Project1
 
                 // Set command to add bug
                 command.CommandText = "INSERT INTO bugs VALUES(null, '" + newTitle_st + "', '" + newReqDesc_st + "', '" + newStatus_st +
-                     "', NOW(), '00/00/0000 00:00:00', 'notes', '" + newPriority_st + "');";
+                     "', NOW(), '', 'notes', '" + newPriority_st + "');";
 
                 // Execute the command
                 command.ExecuteNonQuery();
