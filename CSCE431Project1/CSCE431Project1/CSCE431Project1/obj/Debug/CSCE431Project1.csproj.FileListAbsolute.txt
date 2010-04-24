@@ -79,7 +79,6 @@ H:\431\tigertracker\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CS
 H:\431\tigertracker\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.csproj.GenerateResource.Cache
 C:\Users\Bernardo Cunha\Desktop\Chimerror\CSCE431Project1\CSCE431Project1\CSCE431Project1\bin\Debug\CSCE431Project1.exe.config
 H:\CSCE431\From SVN\CSCE431Project1\CSCE431Project1\CSCE431Project1\bin\Debug\CSCE431Project1.exe.config
-H:\CSCE431\From SVN\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Reports.resources
 C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\bin\Debug\CSCE431Project1.exe.config
 C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.exe
 C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.pdb
@@ -96,3 +95,4 @@ C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1
 C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\bin\Debug\CSCE431Project1.exe
 C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\bin\Debug\CSCE431Project1.pdb
 C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Notes.resources
+H:\CSCE431\From SVN\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Notes.resources
