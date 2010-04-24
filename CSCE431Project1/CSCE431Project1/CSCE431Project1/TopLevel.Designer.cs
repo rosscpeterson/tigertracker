@@ -52,6 +52,7 @@
             this.newReqButton = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolProjCombo = new System.Windows.Forms.ToolStripComboBox();
+            this.reportsButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonLogOff = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -67,7 +68,6 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.reqTable = new System.Windows.Forms.DataGridView();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.notesText = new System.Windows.Forms.TextBox();
             this.notesLabel = new System.Windows.Forms.Label();
             this.detailedNotesButton = new System.Windows.Forms.Button();
             this.priorityComboBox = new System.Windows.Forms.ComboBox();
@@ -82,7 +82,7 @@
             this.watchersAddButton = new System.Windows.Forms.Button();
             this.comboBoxRR = new System.Windows.Forms.ComboBox();
             this.comboBoxVer = new System.Windows.Forms.ComboBox();
-            this.reportsButton = new System.Windows.Forms.ToolStripButton();
+            this.notesText = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.bugTable)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.TabView.SuspendLayout();
@@ -299,6 +299,16 @@
             this.toolProjCombo.Size = new System.Drawing.Size(121, 25);
             this.toolProjCombo.SelectedIndexChanged += new System.EventHandler(this.toolProjCombo_SelectedIndexChanged);
             // 
+            // reportsButton
+            // 
+            this.reportsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.reportsButton.Image = ((System.Drawing.Image)(resources.GetObject("reportsButton.Image")));
+            this.reportsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.reportsButton.Name = "reportsButton";
+            this.reportsButton.Size = new System.Drawing.Size(49, 22);
+            this.reportsButton.Text = "Reports";
+            this.reportsButton.Click += new System.EventHandler(this.reportsButton_Click);
+            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
@@ -431,14 +441,6 @@
             this.tabPage1.Text = "Bugs";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // notesText
-            // 
-            this.notesText.Location = new System.Drawing.Point(361, 252);
-            this.notesText.Multiline = true;
-            this.notesText.Name = "notesText";
-            this.notesText.Size = new System.Drawing.Size(574, 177);
-            this.notesText.TabIndex = 34;
-            // 
             // notesLabel
             // 
             this.notesLabel.AutoSize = true;
@@ -456,6 +458,7 @@
             this.detailedNotesButton.TabIndex = 36;
             this.detailedNotesButton.Text = "Details";
             this.detailedNotesButton.UseVisualStyleBackColor = true;
+            this.detailedNotesButton.Click += new System.EventHandler(this.detailedNotesButton_Click);
             // 
             // priorityComboBox
             // 
@@ -482,7 +485,7 @@
             // 
             // addVerButton
             // 
-            this.addVerButton.Font = new System.Drawing.Font("Modern No. 20", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.addVerButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.addVerButton.ForeColor = System.Drawing.Color.Green;
             this.addVerButton.Location = new System.Drawing.Point(250, 101);
             this.addVerButton.Name = "addVerButton";
@@ -561,21 +564,21 @@
             this.comboBoxVer.Size = new System.Drawing.Size(42, 21);
             this.comboBoxVer.TabIndex = 50;
             // 
-            // reportsButton
+            // notesText
             // 
-            this.reportsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.reportsButton.Image = ((System.Drawing.Image)(resources.GetObject("reportsButton.Image")));
-            this.reportsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.reportsButton.Name = "reportsButton";
-            this.reportsButton.Size = new System.Drawing.Size(49, 22);
-            this.reportsButton.Text = "Reports";
-            this.reportsButton.Click += new System.EventHandler(this.reportsButton_Click);
+            this.notesText.Location = new System.Drawing.Point(361, 268);
+            this.notesText.Name = "notesText";
+            this.notesText.ReadOnly = true;
+            this.notesText.Size = new System.Drawing.Size(574, 144);
+            this.notesText.TabIndex = 51;
+            this.notesText.Text = "";
             // 
             // TopLevel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(992, 732);
+            this.Controls.Add(this.notesText);
             this.Controls.Add(this.comboBoxVer);
             this.Controls.Add(this.comboBoxRR);
             this.Controls.Add(this.watchersAddButton);
@@ -589,7 +592,6 @@
             this.Controls.Add(this.priorityComboBox);
             this.Controls.Add(this.detailedNotesButton);
             this.Controls.Add(this.notesLabel);
-            this.Controls.Add(this.notesText);
             this.Controls.Add(this.TabView);
             this.Controls.Add(this.labelUserTitle);
             this.Controls.Add(this.labelUserName);
@@ -668,7 +670,6 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.ToolStripButton projects_toolstrip;
         private System.Windows.Forms.DataGridView reqTable;
-        private System.Windows.Forms.TextBox notesText;
         private System.Windows.Forms.Label notesLabel;
         private System.Windows.Forms.Button detailedNotesButton;
         private System.Windows.Forms.ComboBox priorityComboBox;
@@ -689,6 +690,7 @@
         private System.Windows.Forms.ComboBox comboBoxRR;
         private System.Windows.Forms.ComboBox comboBoxVer;
         private System.Windows.Forms.ToolStripButton reportsButton;
+        private System.Windows.Forms.RichTextBox notesText;
     }
 }
 

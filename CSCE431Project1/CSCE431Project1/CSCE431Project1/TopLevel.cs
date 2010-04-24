@@ -32,6 +32,8 @@ namespace CSCE431Project1
         protected DataSet projUsrs_ds;
         protected int currReqOrBugID;   //this is the id of the req or bug selected in the data grid view, used for adding owners or watchers
         //protected DataTable user_dt, userreq_dt;
+        protected String showing;
+        protected int selectedID = 0;
 
         public TopLevel()
         {
@@ -279,6 +281,7 @@ namespace CSCE431Project1
             bug_dt.Columns["notes"].ColumnName          = "Notes";
             bug_dt.DefaultView.Sort = String.Format("Status DESC, Priority DESC, BugID DESC");
 
+
             bugTable.DataSource = bug_dt.DefaultView;
             // Blank out ones we don't want.
             bugTable.Columns["Description"].Visible = false;
@@ -316,6 +319,7 @@ namespace CSCE431Project1
         private void reqTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Int32 row = e.RowIndex;
+            showing = "Req";
             //currReqOrBugID = *****
             if (row < 0)
                 return;
@@ -332,7 +336,8 @@ namespace CSCE431Project1
             priorityComboBox.SelectedIndex  = Convert.ToInt32(req_dt.Rows[row][3]) - 1;  //changes the priority combo box
             timeOpenText.Text               = req_dt.Rows[row][4].ToString(); //get time created
             timeClosedText.Text             = req_dt.Rows[row][5].ToString(); //get time satisfied
-            
+            selectedID = Convert.ToInt32(idText.Text.ToString());
+                notesText.Text = Notes.getNotes(conSQL, showing, selectedID);
             //get status
             switch (req_dt.Rows[row][6].ToString())
             {
@@ -534,7 +539,7 @@ namespace CSCE431Project1
 
         private void bugTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-           
+            showing = "Bug";
             Int32 row = e.RowIndex;
             if (row < 0)
                 return;
@@ -546,7 +551,8 @@ namespace CSCE431Project1
             priorityComboBox.SelectedIndex  = Convert.ToInt32(bug_dt.Rows[row]["Priority"]) - 1;  //changes the priority combo box
             timeOpenText.Text               = bug_dt.Rows[row]["Time Open"].ToString(); //get time created
             timeClosedText.Text             = bug_dt.Rows[row]["Time Closed"].ToString(); //get time satisfied
-
+            selectedID = Convert.ToInt32(idText.Text.ToString());
+            notesText.Text = Notes.getNotes(conSQL, showing, selectedID);
             //get status
             switch (bug_dt.Rows[row]["Status"].ToString())
             {
@@ -904,8 +910,14 @@ namespace CSCE431Project1
 
         private void reportsButton_Click(object sender, EventArgs e)
         {
-            Reports reportsWindow = new Reports(conSQL, currentProjectID);
-            reportsWindow.ShowDialog();
+          //  Reports reportsWindow = new Reports(conSQL, currentProjectID);
+          //  reportsWindow.ShowDialog();
+        }
+
+        private void detailedNotesButton_Click(object sender, EventArgs e)
+        {
+            Notes nf = new Notes(conSQL, showing, selectedID,currentUserID);
+            nf.ShowDialog();
         }
     }
 }

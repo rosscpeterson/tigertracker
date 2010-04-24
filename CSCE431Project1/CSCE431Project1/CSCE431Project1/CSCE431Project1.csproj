@@ -66,17 +66,17 @@
     <Compile Include="NewReq.Designer.cs">
       <DependentUpon>NewReq.cs</DependentUpon>
     </Compile>
+    <Compile Include="Notes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Notes.Designer.cs">
+      <DependentUpon>Notes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Projects.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Projects.designer.cs">
       <DependentUpon>Projects.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Reports.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Reports.Designer.cs">
-      <DependentUpon>Reports.cs</DependentUpon>
     </Compile>
     <Compile Include="TopLevel.cs">
       <SubType>Form</SubType>
@@ -104,6 +104,10 @@
       <DependentUpon>NewReq.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Notes.resx">
+      <DependentUpon>Notes.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Projects.resx">
       <DependentUpon>Projects.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -111,10 +115,6 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports.resx">
-      <DependentUpon>Reports.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="TopLevel.resx">

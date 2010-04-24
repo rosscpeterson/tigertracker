@@ -80,3 +80,19 @@ H:\431\tigertracker\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CS
 C:\Users\Bernardo Cunha\Desktop\Chimerror\CSCE431Project1\CSCE431Project1\CSCE431Project1\bin\Debug\CSCE431Project1.exe.config
 H:\CSCE431\From SVN\CSCE431Project1\CSCE431Project1\CSCE431Project1\bin\Debug\CSCE431Project1.exe.config
 H:\CSCE431\From SVN\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Reports.resources
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\bin\Debug\CSCE431Project1.exe.config
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.exe
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.pdb
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.LogIn.resources
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.NewBug.resources
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.NewReq.resources
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Projects.resources
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Properties.Resources.resources
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.TopLevel.resources
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Users.resources
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Versions.resources
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.csproj.GenerateResource.Cache
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\bin\Debug\CSCE431Project1.exe
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\bin\Debug\CSCE431Project1.pdb
+C:\Documents and Settings\Administrator\Desktop\tigertrackermain\CSCE431Project1\CSCE431Project1\CSCE431Project1\obj\Debug\CSCE431Project1.Notes.resources
