@@ -124,15 +124,16 @@ namespace CSCE431Project1
                 String InsertLinks = "";
                 Int32 reqID = Convert.ToInt32(newRow[0]);
                 for (int i = 0; i < watcher_dt.Rows.Count; ++i)
-                    InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + watcher_dt.Rows[i][1].ToString() + ", " + reqID.ToString() + ", 'watcher');";
+                    InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + watcher_dt.Rows[i][1].ToString() + ", " + reqID.ToString() + ", 'watcher'); ";
                 for (int i = 0; i < owner_dt.Rows.Count; ++i)
-                    InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + owner_dt.Rows[i][1].ToString() + ", " + reqID.ToString() + ", 'owner');";
-                    //insert the originator
-                InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + Convert.ToString(currentUserID) + ", " + reqID.ToString() + ", 'originator');";
+                    InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + owner_dt.Rows[i][1].ToString() + ", " + reqID.ToString() + ", 'owner'); ";
+                
+                //insert the originator
+                InsertLinks += "INSERT INTO userrequirementlinks VALUES(null, " + Convert.ToString(currentUserID) + ", " + reqID.ToString() + ", 'originator'); ";
                 
                 // Now create version links.
                 foreach (DataRow dr in this.version_dt.Rows)
-                    InsertLinks += "INSERT INTO requirementversionlinks VALUES(null, " + dr[0].ToString() + ", 'Not Satisfied', " + reqID.ToString() + ", '');";
+                    InsertLinks += "INSERT INTO requirementversionlinks VALUES(null, " + dr[0].ToString() + ", 'Not Satisfied', " + reqID.ToString() + ", ''); ";
 
                 command.CommandText = InsertLinks;
                 // Execute the command

@@ -319,6 +319,13 @@ namespace CSCE431Project1
         private void reqTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             Int32 row = e.RowIndex;
+
+            //check that its a valid row
+            if (row >= req_dt.Rows.Count || row < 0)
+            {
+                return;
+            }
+
             showing = "Req";
             //currReqOrBugID = *****
             if (row < 0)
@@ -351,52 +358,7 @@ namespace CSCE431Project1
                     statusComboBox.SelectedIndex = 2;
                     break;
             }
-            /*
-            DataTable links = projUsrs_ds.Tables["Links"];
-            // Add originators.
-            DataTable dt = projUsrs_ds.Tables["All"];
-            DataRow[] drc = projUsrs_ds.Select("uid, username WHERE " projUsrs_ds.Tables["Links"] + req_dt.Rows[row][0].ToString() +
-                                                " AND All.uid = Links.userid " + "AND All.role = 'originator';");
-            dt = projUsrs_ds.Tables["All"].Clone();
-            dt.TableName = "Originator";
-            foreach (DataRow dr in drc)
-            {
-                DataRow newRow = dt.NewRow();
-                newRow.ItemArray = dr.ItemArray;
-                dt.Rows.Add(newRow);
-            }
-            dt.AcceptChanges();
-            projUsrs_ds.Tables.Add(dt);
-            // Add owners.
-            dt = projUsrs_ds.Tables["All"];
-            drc = dt.Select("users.uid, users.username FROM users, userrequirementlinks " +
-                                      "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() +
-                                      " AND users.uid = userrequirementlinks.userid " + "AND (role = 'owner' OR role = 'originator');");
-            dt = projUsrs_ds.Tables["All"].Clone();
-            dt.TableName = "Owners";
-            foreach (DataRow dr in drc)
-            {
-                DataRow newRow = dt.NewRow();
-                newRow.ItemArray = dr.ItemArray;
-                dt.Rows.Add(newRow);
-            }
-            dt.AcceptChanges();
-            projUsrs_ds.Tables.Add(dt);
-            // Add watchers.
-            dt = projUsrs_ds.Tables["All"];
-            drc = dt.Select("users.uid, users.username FROM users, userrequirementlinks " +
-                                      "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() +
-                                      " AND users.uid = userrequirementlinks.userid " + "AND role = 'watcher';");
-            dt = projUsrs_ds.Tables["All"].Clone();
-            dt.TableName = "Watchers";
-            foreach (DataRow dr in drc)
-            {
-                DataRow newRow = dt.NewRow();
-                newRow.ItemArray = dr.ItemArray;
-                dt.Rows.Add(newRow);
-            }
-            dt.AcceptChanges();
-            projUsrs_ds.Tables.Add(dt);*/
+            
             adpSQL.SelectCommand = cmdSQL;
             cmdSQL.CommandText = "SELECT users.uid, users.username, userrequirementlinks.role FROM users, userrequirementlinks " +
                                  "WHERE userrequirementlinks.requirementid = " + req_dt.Rows[row][0].ToString() + 
@@ -440,8 +402,8 @@ namespace CSCE431Project1
 
             if (projUsrs_ds.Tables["Originator"].Rows.Count > 0)
                 originatorText.Text = projUsrs_ds.Tables["Originator"].Rows[0]["username"].ToString();
-            else
-                MessageBox.Show("No Originator Found", "SQL DB Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            //else
+                //MessageBox.Show("No Originator Found", "SQL DB Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
             this.ownerListBox.DataSource = projUsrs_ds.Tables["Owners"].DefaultView;
             this.ownerListBox.DisplayMember = "username";
@@ -541,8 +503,11 @@ namespace CSCE431Project1
         {
             showing = "Bug";
             Int32 row = e.RowIndex;
-            if (row < 0)
+          
+            if (row >= bug_dt.Rows.Count || row < 0)
+            {
                 return;
+            }
 
             //set values found in the requirements table
             idText.Text                     = bug_dt.Rows[row]["BugID"].ToString(); //get id
@@ -620,8 +585,8 @@ namespace CSCE431Project1
 
             if (projUsrs_ds.Tables["Originator"].Rows.Count > 0)
                 originatorText.Text = projUsrs_ds.Tables["Originator"].Rows[0]["username"].ToString();
-            else
-                MessageBox.Show("No Origionator Found", "SQL DB Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            //else
+                //MessageBox.Show("No Origionator Found", "SQL DB Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
             this.ownerListBox.DataSource = projUsrs_ds.Tables["Owners"].DefaultView;
             this.ownerListBox.DisplayMember = "username";
