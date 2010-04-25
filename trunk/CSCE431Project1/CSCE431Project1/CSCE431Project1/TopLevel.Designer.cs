@@ -305,7 +305,7 @@
             this.reportsButton.Image = ((System.Drawing.Image)(resources.GetObject("reportsButton.Image")));
             this.reportsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.reportsButton.Name = "reportsButton";
-            this.reportsButton.Size = new System.Drawing.Size(49, 22);
+            this.reportsButton.Size = new System.Drawing.Size(51, 22);
             this.reportsButton.Text = "Reports";
             this.reportsButton.Click += new System.EventHandler(this.reportsButton_Click);
             // 
@@ -320,7 +320,7 @@
             this.toolStripButtonLogOff.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLogOff.Image")));
             this.toolStripButtonLogOff.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLogOff.Name = "toolStripButtonLogOff";
-            this.toolStripButtonLogOff.Size = new System.Drawing.Size(47, 22);
+            this.toolStripButtonLogOff.Size = new System.Drawing.Size(51, 22);
             this.toolStripButtonLogOff.Text = "Log Off";
             this.toolStripButtonLogOff.Click += new System.EventHandler(this.toolStripButtonLogOff_Click);
             // 
@@ -334,7 +334,7 @@
             this.projects_toolstrip.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.projects_toolstrip.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.projects_toolstrip.Name = "projects_toolstrip";
-            this.projects_toolstrip.Size = new System.Drawing.Size(50, 22);
+            this.projects_toolstrip.Size = new System.Drawing.Size(53, 22);
             this.projects_toolstrip.Text = "Projects";
             this.projects_toolstrip.Click += new System.EventHandler(this.projects_toolstrip_Click);
             // 
@@ -349,7 +349,7 @@
             this.toolUsersButton.Image = ((System.Drawing.Image)(resources.GetObject("toolUsersButton.Image")));
             this.toolUsersButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolUsersButton.Name = "toolUsersButton";
-            this.toolUsersButton.Size = new System.Drawing.Size(38, 22);
+            this.toolUsersButton.Size = new System.Drawing.Size(39, 22);
             this.toolUsersButton.Text = "Users";
             this.toolUsersButton.Click += new System.EventHandler(this.toolUsersButton_Click);
             // 

@@ -881,8 +881,10 @@ namespace CSCE431Project1
 
         private void reportsButton_Click(object sender, EventArgs e)
         {
+            this.Hide();
             Reports reportsWindow = new Reports(conSQL, currentProjectID);
             reportsWindow.ShowDialog();
+            this.Show();
         }
 
         private void detailedNotesButton_Click(object sender, EventArgs e)

@@ -7,9 +7,6 @@ using System.Net;
 using System.IO;
 using System.Web;
 using System.Xml;
-using System.Web;
-
-
 
 namespace CSCE431Project1
 {
