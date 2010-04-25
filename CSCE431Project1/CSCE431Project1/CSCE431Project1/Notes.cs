@@ -103,7 +103,7 @@ namespace CSCE431Project1
             }
             catch (Exception e1)
             {
-                notedata = "MySQL Connection Problem.";
+                notedata = "MySQL Connection Problem.\n" + e1.Data;
             }
             finally
             {

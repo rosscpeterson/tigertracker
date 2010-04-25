@@ -78,6 +78,12 @@
     <Compile Include="Projects.designer.cs">
       <DependentUpon>Projects.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reports.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports.Designer.cs">
+      <DependentUpon>Reports.cs</DependentUpon>
+    </Compile>
     <Compile Include="TopLevel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,6 +122,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports.resx">
+      <DependentUpon>Reports.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TopLevel.resx">
       <DependentUpon>TopLevel.cs</DependentUpon>
