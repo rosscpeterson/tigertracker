@@ -572,7 +572,13 @@ namespace CSCE431Project1
             projUsrs_ds.EnforceConstraints = false;
             adpSQL.Fill(projUsrs_ds, "Links");
             try { projUsrs_ds.EnforceConstraints = true; }
-            catch (Exception err) { DataRow[] drc = projUsrs_ds.Tables["Links"].GetErrors(); }
+            catch (Exception err) {
+                //if statement removes the err not used warning.
+                if (err.Message == "" || true)
+                {
+                    DataRow[] drc = projUsrs_ds.Tables["Links"].GetErrors();
+                }
+            }
             if (projUsrs_ds.Tables["Links"].Columns.Contains("ReqVer") == false)
                 projUsrs_ds.Tables["Links"].Columns.Add("ReqVer", typeof(String));
 
@@ -875,8 +881,8 @@ namespace CSCE431Project1
 
         private void reportsButton_Click(object sender, EventArgs e)
         {
-          //  Reports reportsWindow = new Reports(conSQL, currentProjectID);
-          //  reportsWindow.ShowDialog();
+            Reports reportsWindow = new Reports(conSQL, currentProjectID);
+            reportsWindow.ShowDialog();
         }
 
         private void detailedNotesButton_Click(object sender, EventArgs e)
