@@ -170,17 +170,235 @@ namespace CSCE431Project1
             }
         }
 
+        private void reqNoneCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (reqNoneCheckBox.Checked)
+            {
+                reqAllCheckBox.Checked = false;
+                reqOpenCheckBox.Enabled = false;
+                reqInProgressCheckBox.Enabled = false;
+                reqClosedCheckBox.Enabled = false;
+                reqComboBox.Enabled = false;
+                reqAddButton.Enabled = false;
+                reqListBox.Enabled = false;
+            }
+            else
+            {
+                reqOpenCheckBox.Enabled = true;
+                reqInProgressCheckBox.Enabled = true;
+                reqClosedCheckBox.Enabled = true;
+                reqComboBox.Enabled = true;
+                reqAddButton.Enabled = true;
+                reqListBox.Enabled = true;
+            }
+        }
+
+        private void bugNoneCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (bugNoneCheckBox.Checked)
+            {
+                bugAllCheckBox.Checked = false;
+                bugOpenCheckBox.Enabled = false;
+                bugInProgressCheckBox.Enabled = false;
+                bugClosedCheckBox.Enabled = false;
+                bugComboBox.Enabled = false;
+                bugListBox.Enabled = false;
+                bugAddButton.Enabled = false;
+            }
+            else
+            {
+                bugOpenCheckBox.Enabled = true;
+                bugInProgressCheckBox.Enabled = true;
+                bugClosedCheckBox.Enabled = true;
+                bugComboBox.Enabled = true;
+                bugListBox.Enabled = true;
+                bugAddButton.Enabled = true;
+            }
+        }
+
+        //print the needed reports
+        private void genReportButton_Click(object sender, EventArgs e)
+        {
+            //make a requirement report
+            req_Report();
+            //make a bug report
+            bug_Report();
+            //close the report window to prevent SQL duplication
+            this.Close();
+        }
+
+        //generates the requirements report
+        private void req_Report()
+        {
+            //-------------------------HANDLE REQUIREMENTS-------------------------------------
+            //Create the FileName
+            string fileName = get_File_Name("Report", "Requirement");
+            //SQL statement for every requirement in the project
+            string select = "SELECT requirements.rid," +
+                                " requirements.requirementTitle," +
+                                " requirements.requirementDescription," +
+                                " requirements.priority," +
+                                " requirements.timeCreated," +
+                                " requirements.timeSatisfied," +
+                                " requirements.status," +
+                                " requirements.notes ";
+            string from = "FROM requirements, versions, requirementversionlinks ";
+            string where = "WHERE requirementversionlinks.requirementid = requirements.rid" +
+                            " AND requirementversionlinks.versionid = versions.vid" +
+                            " AND versions.projectid = " + currProjID.ToString() + " ";
+            string order = "ORDER BY status DESC, priority DESC, rid DESC;";
+
+            //---All Requirements
+            if (reqAllCheckBox.Checked)
+            {
+                cmdSQL.CommandText = select + from + where + order;
+            }
+
+            //---Some Requirements
+            if (!reqAllCheckBox.Checked && !reqNoneCheckBox.Checked)
+            {
+                //all possible combinations of Open/Closed/In Progress
+                if (reqOpenCheckBox.Checked && reqClosedCheckBox.Checked && reqInProgressCheckBox.Checked)
+                {
+                    where += "And requirements.status = 'Open' Or 'Closed' Or 'In Progress' ";
+                }
+                else if (reqOpenCheckBox.Checked && reqClosedCheckBox.Checked && !reqInProgressCheckBox.Checked)
+                {
+                    where += "And requirements.status = 'Open' Or 'Closed' ";
+                }
+                else if (reqOpenCheckBox.Checked && !reqClosedCheckBox.Checked && reqInProgressCheckBox.Checked)
+                {
+                    where += "And requirements.status = 'Open' Or 'In Progress' ";
+                }
+                else if (reqOpenCheckBox.Checked && !reqClosedCheckBox.Checked && !reqInProgressCheckBox.Checked)
+                {
+                    where += "And requirements.status = 'Open' ";
+                }
+                else if (!reqOpenCheckBox.Checked && reqClosedCheckBox.Checked && reqInProgressCheckBox.Checked)
+                {
+                    where += "And requirements.status = 'Closed' Or 'In Progress' ";
+                }
+                else if (!reqOpenCheckBox.Checked && reqClosedCheckBox.Checked && !reqInProgressCheckBox.Checked)
+                {
+                    where += "And requirements.status = 'Closed' ";
+                }
+                else if (!reqOpenCheckBox.Checked && !reqClosedCheckBox.Checked && reqInProgressCheckBox.Checked)
+                {
+                    where += "And requirements.status = 'In Progress' ";
+                }
+                else if (!reqOpenCheckBox.Checked && !reqClosedCheckBox.Checked && !reqInProgressCheckBox.Checked) {
+                    //will probably result in no results - yet for completeness it is included.
+                    where += "And requirements.status = '' ";
+                }
+                //gets all the possible requirement Titles to Look for
+                //FIX ME!!!!
+                cmdSQL.CommandText = select + from + where + order;
+            }
+
+            //---No Requirements
+            if (reqNoneCheckBox.Checked)
+            {
+                //do nothing.
+            }
+
+            //Set the SQL Statement
+            adpSQL.SelectCommand = cmdSQL;
+            adpSQL.Fill(requirements_dt);
+            //Print Report
+            report(fileName, requirements_dt);
+        }
+
+        //generates the bugs report
+        private void bug_Report()
+        {
+            //Create the FileName
+            string fileName = get_File_Name("Report", "Bug");
+            //SQL statement for every bug in the project
+            string select = "SELECT DISTINCT bugs.bid," +
+                            " bugs.bugTitle," +
+                            " bugs.bugDescription," +
+                            " bugs.status," +
+                            " bugs.timeOpen," +
+                            " bugs.timeClosed," +
+                            " bugs.notes," +
+                            " bugs.priority ";
+            string from = "FROM bugs, bugreqlinks, requirements, requirementversionlinks, bugversionlinks, versions ";
+            string where = "WHERE bugreqlinks.bugid = bugs.bid" +
+                            " AND bugreqlinks.requirementid = requirements.rid" +
+                            " AND requirementversionlinks.requirementid = requirements.rid" +
+                            " AND requirementversionlinks.versionid = versions.vid" +
+                            " AND versions.projectid = " + currProjID.ToString() +
+                            " AND bugversionlinks.versionid = versions.vid" +
+                            " AND bugversionlinks.bugid = bugs.bid ";
+            string order = "ORDER BY status DESC, priority DESC, bid DESC;";
+
+            //---All Bugs
+            if (bugAllCheckBox.Checked)
+            {
+                cmdSQL.CommandText = select + from + where + order;
+            }
+            //---Some Bugs
+            if (!bugNoneCheckBox.Checked && !bugAllCheckBox.Checked)
+            {
+                //all possible combinations of Open/Closed/In Progress
+                if (bugOpenCheckBox.Checked && bugClosedCheckBox.Checked && bugInProgressCheckBox.Checked)
+                {
+                    where += "And bugs.status = 'Open' Or 'Closed' Or 'In Progress' ";
+                }
+                else if (bugOpenCheckBox.Checked && bugClosedCheckBox.Checked && !bugInProgressCheckBox.Checked)
+                {
+                    where += "And bugs.status = 'Open' Or 'Closed' ";
+                }
+                else if (bugOpenCheckBox.Checked && !bugClosedCheckBox.Checked && bugInProgressCheckBox.Checked)
+                {
+                    where += "And bugs.status = 'Open' Or 'In Progress' ";
+                }
+                else if (bugOpenCheckBox.Checked && !bugClosedCheckBox.Checked && !bugInProgressCheckBox.Checked)
+                {
+                    where += "And bugs.status = 'Open' ";
+                }
+                else if (!bugOpenCheckBox.Checked && bugClosedCheckBox.Checked && bugInProgressCheckBox.Checked)
+                {
+                    where += "And bugs.status = 'Closed' Or 'In Progress' ";
+                }
+                else if (!bugOpenCheckBox.Checked && bugClosedCheckBox.Checked && !bugInProgressCheckBox.Checked)
+                {
+                    where += "And bugs.status = 'Closed' ";
+                }
+                else if (!bugOpenCheckBox.Checked && !bugClosedCheckBox.Checked && bugInProgressCheckBox.Checked)
+                {
+                    where += "And bugs.status = 'In Progress' ";
+                }
+                else if (!bugOpenCheckBox.Checked && !bugClosedCheckBox.Checked && !bugInProgressCheckBox.Checked)
+                {
+                    //will probably result in no results - yet for completeness it is included.
+                    where += "And bugs.status = '' ";
+                }
+                //gets all the possible requirement Titles to Look for
+                //FIX ME!!!!
+                cmdSQL.CommandText = select + from + where + order;
+            }
+            //---No Bugs
+            if (bugNoneCheckBox.Checked)
+            {
+                //do nothing.
+            }
+            adpSQL.SelectCommand = cmdSQL;
+            adpSQL.Fill(bugs_dt);
+            report(fileName, bugs_dt);
+        }
+
         //Returns the string with the first available fileName
-        private string get_File_Name(string name)
+        private string get_File_Name(string name, string type)
         {
             string temp = name;
             int count = 0;
-            while (File.Exists(name + ".csv"))
+            while (File.Exists(name + " - " + type + ".csv"))
             {
                 name = temp + count;
                 count++;
             }
-            return name;
+            return name + " - " + type;
         }
 
         //prints the information in the table to a file
@@ -210,388 +428,6 @@ namespace CSCE431Project1
             //close open files/streams
             reader.Close();
             tw.Close();
-        }
-
-        private void genReportButton_Click(object sender, EventArgs e){
-            //-------------------------HANDLE REQUIREMENTS-------------------------------------
-            //Create the FileName
-            string fileName = get_File_Name("Report - Requirement");
-            //setup the basic SQL statement
-            string select = "SELECT requirements.rid," +
-                                " requirements.requirementTitle," +
-                                " requirements.requirementDescription," +
-                                " requirements.priority," +
-                                " requirements.timeCreated," +
-                                " requirements.timeSatisfied," +
-                                " requirements.status," +
-                                " requirements.notes ";
-            string from = "FROM requirements, versions, requirementversionlinks ";
-            string where = "WHERE requirementversionlinks.requirementid = requirements.rid" +
-                            " AND requirementversionlinks.versionid = versions.vid" +
-                            " AND versions.projectid = " + currProjID.ToString();
-            string order = " ORDER BY status DESC, priority DESC, rid DESC;";
-
-            //For All Requirements
-            if (reqAllCheckBox.Checked)
-            {
-                cmdSQL.CommandText = select + from + where + order;
-            }
-
-            //For Some Requirements
-            if (!reqAllCheckBox.Checked && !reqNoneCheckBox.Checked)
-            {
-                //Gets the possible status to look for.
-                if (reqInProgressCheckBox.Checked)
-                {
-                    where = where + " And requirements.status = 'In Progress' ";
-                }
-                if (reqOpenCheckBox.Checked)
-                {
-                    where = where + " And requirements.status = 'Open' ";
-                }
-                if (reqClosedCheckBox.Checked)
-                {
-                    where = where + " And requirements.status = 'Closed' ";
-                }
-                /* ALL possible combinations. debug purpose.
-                if (reqOpenCheckBox.Checked && reqClosedCheckBox.Checked && reqInProgressCheckBox.Checked){
-                    where = where + " And requirements.status = 'Open' Or 'Closed' Or 'In Progress' ";
-                }
-                else if (reqOpenCheckBox.Checked && reqClosedCheckBox.Checked && !reqInProgressCheckBox.Checked){
-                    where = where + " And requirements.status = 'Open' Or 'Closed' ";
-                }
-                else if (reqOpenCheckBox.Checked && !reqClosedCheckBox.Checked && reqInProgressCheckBox.Checked){
-                    where = where + " And requirements.status = 'Open' Or 'In Progress' ";
-                }
-                else if (reqOpenCheckBox.Checked && !reqClosedCheckBox.Checked && !reqInProgressCheckBox.Checked){
-                    where = where + " And requirements.status = 'Open' ";
-                }
-                else if (!reqOpenCheckBox.Checked && reqClosedCheckBox.Checked && reqInProgressCheckBox.Checked){
-                    where = where + " And requirements.status = 'Closed' Or 'In Progress' ";
-                }
-                else if (!reqOpenCheckBox.Checked && reqClosedCheckBox.Checked && !reqInProgressCheckBox.Checked){
-                    where = where + " And requirements.status = 'Closed' ";
-                }
-                else if (!reqOpenCheckBox.Checked && !reqClosedCheckBox.Checked && reqInProgressCheckBox.Checked){
-                    where = where + " And requirements.status = 'In Progress' ";
-                }
-                 */
-                //gets all the possible requirement Titles to Look for
-                //FIX ME!!!!
-                cmdSQL.CommandText = select + from + where + order;
-            }
-            
-            //For No Requirements, do nothing.
-            adpSQL.SelectCommand = cmdSQL;
-            adpSQL.Fill(requirements_dt);
-            report(fileName, requirements_dt);
-            
-            //-------------------------HANDLE BUGS---------------------------------------------
-            //Create the FileName
-            fileName = get_File_Name("Report - Bug");
-
-            //For All Bugs
-            if (bugAllCheckBox.Checked){
-                cmdSQL.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
-                                     " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority" +
-                                     " FROM bugs, versions WHERE versions.projectid = " + currProjID.ToString() +
-                                     " ORDER BY bid DESC;";
-                adpSQL.SelectCommand = cmdSQL;
-                adpSQL.Fill(bugs_dt);
-            }
-            //For No Bugs do nothing.
-            report(fileName, bugs_dt);
-
-
-            /*------------------BREAK BREAK BREAK BREAK-----------------------
-            if (!reqNoneCheckBox.Checked && reqAllCheckBox.Checked)
-            {
-                //if all is selected and none is not (none gets precidence)
-                if (!reqOpenCheckBox.Checked && !reqInProgressCheckBox.Checked && !reqClosedCheckBox.Checked)
-                {
-                    //none of the status boxes checked
-                    cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
-                                     " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" +
-                                     " FROM requirements, versions WHERE versions.projectid = " + currProjID.ToString() +
-                                     " ORDER BY status DESC, priority DESC, rid DESC;";
-                    adpSQL.SelectCommand = cmdSQL;
-                    adpSQL.Fill(requirements_dt);
-                }
-                else if (reqOpenCheckBox.Checked && !reqInProgressCheckBox.Checked && !reqClosedCheckBox.Checked)
-                {
-                    //we want all open bugs
-                    cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
-                                     " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" +
-                                     " FROM requirements, versions WHERE versions.projectid = " + currProjID.ToString() + " AND requirements.status = 'Open'" +
-                                     " ORDER BY status DESC, priority DESC, rid DESC;";
-                    adpSQL.SelectCommand = cmdSQL;
-                    adpSQL.Fill(requirements_dt);
-                }
-                else if (!reqOpenCheckBox.Checked && reqInProgressCheckBox.Checked && !reqClosedCheckBox.Checked)
-                {
-                    //we want all In Progress bugs
-                    cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
-                                     " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" +
-                                     " FROM requirements, versions WHERE versions.projectid = " + currProjID.ToString() + " AND requirements.status = 'In Progress'" +
-                                     " ORDER BY status DESC, priority DESC, rid DESC;";
-                    adpSQL.SelectCommand = cmdSQL;
-                    adpSQL.Fill(requirements_dt);
-                }
-                else if (!reqOpenCheckBox.Checked && !reqInProgressCheckBox.Checked && reqClosedCheckBox.Checked)
-                {
-                    //we want all Closed bugs
-                    cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
-                                     " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" +
-                                     " FROM requirements, versions WHERE versions.projectid = " + currProjID.ToString() + " AND requirements.status = 'Closed'" +
-                                     " ORDER BY status DESC, priority DESC, rid DESC;";
-                    adpSQL.SelectCommand = cmdSQL;
-                    adpSQL.Fill(requirements_dt);
-                }
-                else if (reqOpenCheckBox.Checked && reqInProgressCheckBox.Checked && !reqClosedCheckBox.Checked)
-                {
-                    //we want all open and In Progress bugs
-                    cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
-                                     " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" +
-                                     " FROM requirements, versions WHERE versions.projectid = " + currProjID.ToString() + " AND requirements.status = 'Open'" +
-                                     " OR requirements.status = 'In Progress' ORDER BY status DESC, priority DESC, rid DESC;";
-                    adpSQL.SelectCommand = cmdSQL;
-                    adpSQL.Fill(requirements_dt);
-                }
-                else if (!reqOpenCheckBox.Checked && reqInProgressCheckBox.Checked && reqClosedCheckBox.Checked)
-                {
-                    //we want all In Progress and Closed bugs
-                    cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
-                                     " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" +
-                                     " FROM requirements, versions WHERE versions.projectid = " + currProjID.ToString() + " AND requirements.status = 'Closed'" +
-                                     " OR requirements.status = 'In Progress' ORDER BY status DESC, priority DESC, rid DESC;";
-                    adpSQL.SelectCommand = cmdSQL;
-                    adpSQL.Fill(requirements_dt);
-                }
-                else if (reqOpenCheckBox.Checked && !reqInProgressCheckBox.Checked && reqClosedCheckBox.Checked)
-                {
-                    //we want all open and closed bugs
-                    cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
-                                     " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" +
-                                     " FROM requirements, versions WHERE versions.projectid = " + currProjID.ToString() + " AND requirements.status = 'Open'" +
-                                     " OR requirements.status = 'Closed' ORDER BY status DESC, priority DESC, rid DESC;";
-                    adpSQL.SelectCommand = cmdSQL;
-                    adpSQL.Fill(requirements_dt);
-                }
-            }
-            else if (!reqNoneCheckBox.Checked)
-            {
-                //we need to go throug them one by one.
-                DataTable requirements_temp_dt = new DataTable();
-                cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
-                                 " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" +
-                                 " FROM requirements, versions WHERE versions.projectid = " + currProjID.ToString() +
-                                 " ORDER BY status DESC, priority DESC, rid DESC;";
-                adpSQL.SelectCommand = cmdSQL;
-                adpSQL.Fill(requirements_temp_dt);
-
-                requirements_dt = requirements_temp_dt.Clone();
-
-                for (int i = 0; i < req_pool_dt.Rows.Count; i++)
-                {
-                    String expression = "rid = " + req_pool_dt.Rows[i][0].ToString();
-                    DataRow[] newRow;
-                    newRow = requirements_temp_dt.Select(expression);
-                    for (int j = 0; j < newRow.Length; j++)
-                    {
-                        requirements_dt.ImportRow(newRow[j]);
-                    }
-                }
-                Console.Out.WriteLine("Requirements_dt has length of " + requirements_dt.Rows.Count);   //for debug purposes only
-            }
-            //HANDLE BUGS-----------------------------------------------------------------------------------------------------------------
-            cmdSQL.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
-                                 " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority" +
-                                 " FROM bugs, versions WHERE versions.projectid = " + currProjID.ToString() +
-                                 " ORDER BY bid DESC;";
-            bug_dt = new DataTable();
-            adpSQL.Fill(bug_dt);
-
-            if (!bugNoneCheckBox.Checked && bugAllCheckBox.Checked)
-            {
-                //if all is selected and none is not (none gets precidence)
-                if (!bugOpenCheckBox.Checked && !bugInProgressCheckBox.Checked && !bugClosedCheckBox.Checked)
-                {
-                    //none of the status boxes checked
-                    cmdSQL.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
-                                 " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority" +
-                                 " FROM bugs, versions WHERE versions.projectid = " + currProjID.ToString() +
-                                 " ORDER BY bid DESC;";
-                    adpSQL.SelectCommand = cmdSQL;
-                    adpSQL.Fill(bugs_dt);
-                }
-                else if (bugOpenCheckBox.Checked && !bugInProgressCheckBox.Checked && !bugClosedCheckBox.Checked)
-                {
-                    //we want all open bugs
-                    cmdSQL.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
-                                 " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority" +
-                                 " FROM bugs, versions WHERE versions.projectid = " + currProjID.ToString() +
-                                 " AND bugs.status = 'Open'" +
-                                 " ORDER BY bid DESC;";
-                    adpSQL.SelectCommand = cmdSQL;
-                    adpSQL.Fill(bugs_dt);
-                }
-                else if (!bugOpenCheckBox.Checked && bugInProgressCheckBox.Checked && !bugClosedCheckBox.Checked)
-                {
-                    //we want all In Progress bugs
-                    cmdSQL.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
-                                 " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority" +
-                                 " FROM bugs, versions WHERE versions.projectid = " + currProjID.ToString() +
-                                 " AND bugs.status = 'In Progress'" +
-                                 " ORDER BY bid DESC;";
-                    adpSQL.SelectCommand = cmdSQL;
-                    adpSQL.Fill(bugs_dt);
-                }
-                else if (!bugOpenCheckBox.Checked && !bugInProgressCheckBox.Checked && bugClosedCheckBox.Checked)
-                {
-                    //we want all Closed bugs
-                    cmdSQL.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
-                                 " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority" +
-                                 " FROM bugs, versions WHERE versions.projectid = " + currProjID.ToString() +
-                                 " AND bugs.status = 'Closed'" +
-                                 " ORDER BY bid DESC;";
-                    adpSQL.SelectCommand = cmdSQL;
-                    adpSQL.Fill(bugs_dt);
-                }
-                else if (bugOpenCheckBox.Checked && bugInProgressCheckBox.Checked && !bugClosedCheckBox.Checked)
-                {
-                    //we want all open and In Progress bugs
-                    cmdSQL.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
-                                 " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority" +
-                                 " FROM bugs, versions WHERE versions.projectid = " + currProjID.ToString() +
-                                 " AND bugs.status = 'Open' OR bugs.status = 'In Progress'" +
-                                 " ORDER BY bid DESC;";
-                    adpSQL.SelectCommand = cmdSQL;
-                    adpSQL.Fill(bugs_dt);
-                }
-                else if (!bugOpenCheckBox.Checked && bugInProgressCheckBox.Checked && bugClosedCheckBox.Checked)
-                {
-                    //we want all In Progress and Closed bugs
-                    cmdSQL.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
-                                 " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority" +
-                                 " FROM bugs, versions WHERE versions.projectid = " + currProjID.ToString() +
-                                 " AND bugs.status = 'Closed' OR bugs.status = 'In Progress'" +
-                                 " ORDER BY bid DESC;";
-                    adpSQL.SelectCommand = cmdSQL; 
-                    adpSQL.Fill(bugs_dt);
-                }
-                else if (bugOpenCheckBox.Checked && !bugInProgressCheckBox.Checked && bugClosedCheckBox.Checked)
-                {
-                    //we want all open and closed bugs
-                    cmdSQL.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
-                                 " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority" +
-                                 " FROM bugs, versions WHERE versions.projectid = " + currProjID.ToString() +
-                                 " AND bugs.status = 'Open' AND bugs.status = 'Closed'" +
-                                 " ORDER BY bid DESC;";
-                    adpSQL.SelectCommand = cmdSQL;
-                    adpSQL.Fill(bugs_dt);
-                }
-            }
-            else if (!bugNoneCheckBox.Checked)
-            {
-                //we need to go throug them one by one.
-                DataTable bug_temp_dt = new DataTable();
-                cmdSQL.CommandText = "SELECT bugs.bid, bugs.bugTitle, bugs.bugDescription, bugs.status, " +
-                                  " bugs.timeOpen, bugs.timeClosed, bugs.notes, bugs.priority" +
-                                  " FROM bugs, versions WHERE versions.projectid = " + currProjID.ToString() +
-                                  " ORDER BY bid DESC;";
-                adpSQL.SelectCommand = cmdSQL;
-                adpSQL.Fill(bug_temp_dt);
-
-                bugs_dt = bug_temp_dt.Clone();
-
-                for (int i = 0; i < bug_pool_dt.Rows.Count; i++)
-                {
-                    String expression = "rid = " + bug_pool_dt.Rows[i][0].ToString();
-                    DataRow[] newRow;
-                    newRow = bug_temp_dt.Select(expression);
-                    for (int j = 0; j < newRow.Length; j++)
-                    {
-                        bugs_dt.ImportRow(newRow[j]);
-                    }
-                }
-                Console.Out.WriteLine("bugs_dt has length of " + bugs_dt.Rows.Count);   //for debug purposes only
-            }
-
-            /*cmdSQL.CommandText = "SELECT requirements.rid, requirements.requirementTitle, requirements.requirementDescription," +
-                     " requirements.priority, requirements.timeCreated, requirements.timeSatisfied, requirements.status, requirements.notes" +
-                     " FROM requirements, versions, requirementversionlinks WHERE requirementversionlinks.requirementid = requirements.rid AND " +
-                     "requirementversionlinks.versionid = versions.vid AND versions.projectid = " + currentProjectID.ToString() +
-                     " ORDER BY status DESC, priority DESC, rid DESC;";
-
-            //------------BUG REPORT START-------------------------
-            DataTableReader bugReader = bugs_dt.CreateDataReader();
-            
-            //write the field names to the file.
-            for (int i = 0; i < bugReader.FieldCount; i++){
-                tw.Write(bugReader.GetName(i).Trim());
-                tw.Write("; ");
-            }
-            tw.WriteLine();
-            
-            //write the field values to the file.
-            while (bugReader.Read()){
-                //declared variables for ease of undstanding code
-                for (int i = 0; i < bugReader.FieldCount; i++){
-                    tw.Write(bugReader.GetValue(i).ToString().Trim());
-                    tw.Write("; ");
-                }
-                tw.WriteLine();
-                tw.WriteLine();
-            }
-            //------------BUG REPORT END---------------------------
-
-            // close open readers/streams
-            bugReader.Close();
-            reqReader.Close();
-            tw.Close();
-             */
-        }
-
-        private void reqNoneCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (reqNoneCheckBox.Checked)
-            {
-                reqAllCheckBox.Checked = false;
-                reqOpenCheckBox.Enabled = false;
-                reqInProgressCheckBox.Enabled = false;
-                reqClosedCheckBox.Enabled = false;
-                reqComboBox.Enabled = false;
-                reqAddButton.Enabled = false;
-            }
-            else
-            {
-                reqOpenCheckBox.Enabled = true;
-                reqInProgressCheckBox.Enabled = true;
-                reqClosedCheckBox.Enabled = true;
-                reqComboBox.Enabled = true;
-                reqAddButton.Enabled = true;
-            }
-        }
-
-        private void bugNoneCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (bugNoneCheckBox.Checked)
-            {
-                bugAllCheckBox.Checked = false;
-                bugOpenCheckBox.Enabled = false;
-                bugInProgressCheckBox.Enabled = false;
-                bugClosedCheckBox.Enabled = false;
-                bugComboBox.Enabled = false;
-                bugAddButton.Enabled = false;
-            }
-            else
-            {
-                bugOpenCheckBox.Enabled = true;
-                bugInProgressCheckBox.Enabled = true;
-                bugClosedCheckBox.Enabled = true;
-                bugComboBox.Enabled = true;
-                bugAddButton.Enabled = true;
-            }
         }
     }
 }

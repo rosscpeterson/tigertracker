@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSCE431Project1", "CSCE431Project1\CSCE431Project1.csproj", "{27017D9D-9698-472C-B288-1E2F375D1BEE}"
 EndProject
 Global
